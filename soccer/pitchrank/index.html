@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PitchRank FPL | Premier League Draft Tier List & Ranker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <!-- SheetJS for Multi-Sheet Excel Workbook Exports -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header Navbar -->
+    <header class="app-header">
+      <div class="brand">
+        <div class="logo-icon">⚽</div>
+        <div class="brand-text">
+          <h1>Pitch<span>Rank</span> <span class="badge-fpl">FPL</span></h1>
+          <span class="sub-title">Fantasy Premier League Draft Matchup Ranker</span>
+        </div>
+      </div>
+
+      <!-- Position Selector Tabs -->
+      <nav class="position-tabs" id="positionTabs">
+        <button class="tab-btn active" data-pos="F">
+          <span class="pos-badge pos-f">F</span> Forwards <span class="count-pill" id="cntF">142</span>
+        </button>
+        <button class="tab-btn" data-pos="M">
+          <span class="pos-badge pos-m">M</span> Midfielders <span class="count-pill" id="cntM">247</span>
+        </button>
+        <button class="tab-btn" data-pos="D">
+          <span class="pos-badge pos-d">D</span> Defenders <span class="count-pill" id="cntD">228</span>
+        </button>
+        <button class="tab-btn" data-pos="G">
+          <span class="pos-badge pos-g">G</span> Goalkeepers <span class="count-pill" id="cntG">81</span>
+        </button>
+      </nav>
+
+      <div class="header-actions">
+        <button id="exportExcelBtn" class="action-btn secondary-btn" title="Export Multi-Sheet Excel Workbook (.xlsx)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export Excel (.xlsx)
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="app-main">
+      <!-- Mode View Toggle Header -->
+      <section class="controls-bar">
+        <div class="view-toggle">
+          <button id="matchupModeBtn" class="mode-btn active">
+            <span>⚔️</span> Matchup Duels
+          </button>
+          <button id="boardModeBtn" class="mode-btn">
+            <span>📋</span> Ranked Board (<span id="rankedCountBadge">0/0</span>)
+          </button>
+        </div>
+
+        <div class="session-progress">
+          <div class="progress-info">
+            <span class="progress-label">Ranking Progress</span>
+            <span id="progressText" class="progress-val">0%</span>
+          </div>
+          <div class="progress-bar-bg">
+            <div id="progressBarFill" class="progress-bar-fill" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <div class="history-controls">
+          <button id="undoBtn" class="ctrl-btn" disabled title="Undo Last Choice">
+            ↩ Undo
+          </button>
+          <button id="resetPosBtn" class="ctrl-btn danger" title="Reset Current Position">
+            🔄 Reset Position
+          </button>
+        </div>
+      </section>
+
+      <!-- Matchup Duel View Container -->
+      <section id="matchupView" class="view-panel active">
+        <div class="duel-instruction">
+          <h2>Which player do you rank higher for Draft Day?</h2>
+          <p class="hotkey-tip">Hotkeys: <kbd>←</kbd> Select Left | <kbd>→</kbd> Select Right | <kbd>S</kbd> or <kbd>↓</kbd> Skip Unfamiliar Player</p>
+        </div>
+
+        <div class="duel-stage">
+          <!-- Left Player Card -->
+          <div id="leftPlayerCard" class="player-card card-left">
+            <div class="card-header">
+              <span class="pos-tag" id="leftPos">F</span>
+              <span class="team-tag" id="leftTeam">MCI</span>
+            </div>
+            <div class="card-body">
+              <h3 id="leftName" class="player-name">Erling Haaland</h3>
+              <div class="adp-pill">
+                <span class="adp-label">ADP</span>
+                <span id="leftAdp" class="adp-val">1.5</span>
+              </div>
+            </div>
+            <div class="stats-grid">
+              <div class="stat-box highlight">
+                <span class="stat-lbl">2026 Proj</span>
+                <span id="leftProj" class="stat-num">464.0</span>
+              </div>
+              <div class="stat-box">
+                <span class="stat-lbl">2025 Actual</span>
+                <span id="leftPts2025" class="stat-num">509.0</span>
+              </div>
+              <div class="stat-box">
+                <span class="stat-lbl">2024 Actual</span>
+                <span id="leftPts2024" class="stat-num">427.0</span>
+              </div>
+            </div>
+            <button id="chooseLeftBtn" class="choose-btn choose-left">
+              Select Left Player <span class="hotkey-badge">←</span>
+            </button>
+          </div>
+
+          <!-- VS Divider & Skip Actions -->
+          <div class="vs-container">
+            <div class="vs-badge">
+              <span>VS</span>
+            </div>
+            <button id="skipBtn" class="skip-btn" title="Skip this player if you don't know them">
+              <span>⏭️</span> Skip Player <span class="hotkey-badge">S</span>
+            </button>
+          </div>
+
+          <!-- Right Player Card -->
+          <div id="rightPlayerCard" class="player-card card-right">
+            <div class="card-header">
+              <span class="pos-tag" id="rightPos">F</span>
+              <span class="team-tag" id="rightTeam">MUN</span>
+            </div>
+            <div class="card-body">
+              <h3 id="rightName" class="player-name">Matheus Cunha</h3>
+              <div class="adp-pill">
+                <span class="adp-label">ADP</span>
+                <span id="rightAdp" class="adp-val">12.09</span>
+              </div>
+            </div>
+            <div class="stats-grid">
+              <div class="stat-box highlight">
+                <span class="stat-lbl">2026 Proj</span>
+                <span id="rightProj" class="stat-num">385.0</span>
+              </div>
+              <div class="stat-box">
+                <span class="stat-lbl">2025 Actual</span>
+                <span id="rightPts2025" class="stat-num">337.5</span>
+              </div>
+              <div class="stat-box">
+                <span class="stat-lbl">2024 Actual</span>
+                <span id="rightPts2024" class="stat-num">467.0</span>
+              </div>
+            </div>
+            <button id="chooseRightBtn" class="choose-btn choose-right">
+              Select Right Player <span class="hotkey-badge">→</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Ranked Board View Container -->
+      <section id="boardView" class="view-panel">
+        <div class="board-header">
+          <div class="board-title-group">
+            <h2>Personal Ranked Board (<span id="boardPosName">Forwards</span>)</h2>
+            <p>Fine-tune your custom ranking list using quick action buttons or resume duel comparisons.</p>
+          </div>
+          <div class="board-actions">
+            <button id="continueRankingBtn" class="action-btn primary-btn">
+              ⚡ Resume Matchup Duels
+            </button>
+          </div>
+        </div>
+
+        <div id="rankedListContainer" class="ranked-list-container">
+          <!-- Dynamic Ranked Cards populated by app.js -->
+        </div>
+
+        <!-- Skipped / Unranked Section -->
+        <div id="skippedSection" class="skipped-section" style="display: none;">
+          <h3 class="skipped-title">Skipped / Unfamiliar Players (<span id="skippedCount">0</span>)</h3>
+          <div id="skippedListContainer" class="skipped-list-container">
+            <!-- Dynamic Skipped Cards populated by app.js -->
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

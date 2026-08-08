@@ -1,0 +1,562 @@
+[
+  {
+    "teamName":"Manchester United",
+    "urlName":"bruno-miguel-borges-fernandes",
+    "headshotUrl":"https:\/\/fantraximg.com\/assets\/images\/logos\/sportsteam\/epl\/Manchester_United.png",
+    "scorerId":"05gcr",
+    "rank":1,
+    "teamLogo":true,
+    "posIdsNoFlex":[
+      "702"
+    ],
+    "defaultPosId":"702",
+    "posShortNames":"M",
+    "team":false,
+    "rookie":false,
+    "minorsEligible":false,
+    "posIds":[
+      "702"
+    ],
+    "teamId":"110090",
+    "name":"Bruno Fernandes",
+    "teamShortName":"MUN",
+    "shortName":"Bruno Fernandes",
+    "next_match":"MUN 3<br\/>@BHA 0 F",
+    "opponentShortName":"MUN 3 @BHA 0 F",
+    "fpts":633.5,
+    "fpts_per_game":18.1,
+    "statusId":null
+  },
+  {
+    "teamName":"Manchester City",
+    "urlName":"erling-haaland",
+    "headshotUrl":"https:\/\/fantraximg.com\/assets\/images\/logos\/sportsteam\/epl\/Manchester_City.png",
+    "scorerId":"061vq",
+    "rank":2,
+    "teamLogo":true,
+    "posIdsNoFlex":[
+      "701"
+    ],
+    "defaultPosId":"701",
+    "posShortNames":"F",
+    "team":false,
+    "rookie":false,
+    "minorsEligible":false,
+    "posIds":[
+      "701"
+    ],
+    "teamId":"110080",
+    "name":"Erling Haaland",
+    "teamShortName":"MCI",
+    "shortName":"E. Haaland",
+    "next_match":"AVL 2<br\/>@MCI 1 F",
+    "opponentShortName":"AVL 2 @MCI 1 F",
+    "fpts":509.0,
+    "fpts_per_game":14.54,
+    "statusId":null
+  },
+  {
+    "teamName":"Bournemouth\/Manchester City",
+    "urlName":"antoine-semenyo",
+    "headshotUrl":"https:\/\/fantraximg.com\/assets\/images\/logos\/sportsteam\/epl\/Manchester_City.png",
+    "scorerId":"068y0",
+    "rank":3,
+    "teamLogo":true,
+    "posIdsNoFlex":[
+      "701"
+    ],
+    "defaultPosId":"701",
+    "posShortNames":"F",
+    "team":false,
+    "rookie":false,
+    "minorsEligible":false,
+    "posIds":[
+      "701"
+    ],
+    "teamId":"110080",
+    "name":"Antoine Semenyo",
+    "teamShortName":"BOU\/MCI",
+    "shortName":"A. Semenyo",
+    "next_match":"AVL 2<br\/>@MCI 1 F",
+    "opponentShortName":"AVL 2 @MCI 1 F",
+    "fpts":444.0,
+    "fpts_per_game":12.0,
+    "statusId":null
+  },
+  {
+    "teamName":"Brentford",
+    "urlName":"igor-thiago-nascimento-rodrigues",
+    "headshotUrl":"https:\/\/fantraximg.com\/assets\/images\/logos\/sportsteam\/epl\/Brentford.png",
+    "scorerId":"06mn0",
+    "rank":4,
+    "teamLogo":true,
+    "posIdsNoFlex":[
+      "701"
+    ],
+    "defaultPosId":"701",
+    "posShortNames":"F",
+    "team":false,
+    "rookie":false,
+    "minorsEligible":false,
+    "posIds":[
+      "701"
+    ],
+    "teamId":"110237",
+    "name":"Igor Thiago",
+    "teamShortName":"BRF",
+    "shortName":"Igor Thiago",
+    "next_match":"BRF 1<br\/>@LIV 1 F",
+    "opponentShortName":"BRF 1 @LIV 1 F",
+    "fpts":431.0,
+    "fpts_per_game":11.34,
+    "statusId":null
+  },
+  {
+    "teamName":"Arsenal",
+    "urlName":"bukayo-saka",
+    "headshotUrl":"https:\/\/fantraximg.com\/assets\/images\/logos\/sportsteam\/epl\/Arsenal.png",
+    "scorerId":"04y92",
+    "rank":5,
+    "teamLogo":true,
+    "posIdsNoFlex":[
+      "702"
+    ],
+    "defaultPosId":"701",
+    "posShortNames":"M",
+    "team":false,
+    "rookie":false,
+    "minorsEligible":false,
+    "posIds":[
+      "702"
+    ],
+    "teamId":"110000",
+    "name":"Bukayo Saka",
+    "teamShortName":"ARS",
+    "shortName":"B. Saka",
+    "next_match":"ARS 2<br\/>@CRY 1 F",
+    "opponentShortName":"ARS 2 @CRY 1 F",
+    "fpts":411.0,
+    "fpts_per_game":13.26,
+    "statusId":null
+  },
+  {
+    "teamName":"Liverpool",
+    "urlName":"dominik-szoboszlai",
+    "headshotUrl":"https:\/\/fantraximg.com\/assets\/images\/logos\/sportsteam\/epl\/Liverpool.png",
+    "scorerId":"06cmm",
+    "rank":6,
+    "teamLogo":true,
+    "posIdsNoFlex":[
+      "702"
+    ],
+    "defaultPosId":"702",
+    "posShortNames":"M",
+    "team":false,
+    "rookie":false,
+    "minorsEligible":false,
+    "posIds":[
+      "702"
+    ],
+    "teamId":"110070",
+    "name":"Dominik Szoboszlai",
+    "teamShortName":"LIV",
+    "shortName":"D. Szoboszlai",
+    "next_match":"BRF 1<br\/>@LIV 1 F",
+    "opponentShortName":"BRF 1 @LIV 1 F",
+    "fpts":409.0,
+    "fpts_per_game":11.36,
+    "statusId":null
+  },
+  {
+    "teamName":"West Ham",
+    "urlName":"jarrod-bowen",
+    "headshotUrl":"https:\/\/fantraximg.com\/assets\/images\/logos\/sportsteam\/epl\/West_Ham_United.png",
+    "scorerId":"046c5",
+    "rank":7,
+    "teamLogo":true,
+    "posIdsNoFlex":[
+      "701"
+    ],
+    "defaultPosId":"701",
+    "posShortNames":"F",
+    "team":false,
+    "rookie":false,
+    "minorsEligible":false,
+    "posIds":[
+      "701"
+    ],
+    "teamId":"110175",
+    "name":"Jarrod Bowen",
+    "teamShortName":"WHU",
+    "shortName":"J. Bowen",
+    "next_match":"LEE 0<br\/>@WHU 3 F",
+    "opponentShortName":"LEE 0 @WHU 3 F",
+    "fpts":404.0,
+    "fpts_per_game":10.63,
+    "statusId":null
+  },
+  {
+    "teamName":"Nottingham",
+    "urlName":"morgan-gibbs-white",
+    "headshotUrl":"https:\/\/fantraximg.com\/assets\/images\/logos\/sportsteam\/epl\/Nottingham_Forest.png",
+    "scorerId":"04qr9",
+    "rank":8,
+    "teamLogo":true,
+    "posIdsNoFlex":[
+      "702"
+    ],
+    "defaultPosId":"702",
+    "posShortNames":"M",
+    "team":false,
+    "rookie":false,
+    "minorsEligible":false,
+    "posIds":[
+      "702"
+    ],
+    "teamId":"110105",
+    "name":"Morgan Gibbs-White",
+    "teamShortName":"NOT",
+    "shortName":"M. Gibbs-White",
+    "next_match":"BOU 1<br\/>@NOT 1 F",
+    "opponentShortName":"BOU 1 @NOT 1 F",
+    "fpts":403.5,
+    "fpts_per_game":10.91,
+    "statusId":null
+  },
+  {
+    "teamName":"Arsenal",
+    "urlName":"declan-rice",
+    "headshotUrl":"https:\/\/fantraximg.com\/assets\/images\/logos\/sportsteam\/epl\/Arsenal.png",
+    "scorerId":"04agz",
+    "rank":9,
+    "teamLogo":true,
+    "posIdsNoFlex":[
+      "702"
+    ],
+    "defaultPosId":"702",
+    "posShortNames":"M",
+    "team":false,
+    "rookie":false,
+    "minorsEligible":false,
+    "posIds":[
+      "702"
+    ],
+    "teamId":"110000",
+    "name":"Declan Rice",
+    "teamShortName":"ARS",
+    "shortName":"D. Rice",
+    "next_match":"ARS 2<br\/>@CRY 1 F",
+    "opponentShortName":"ARS 2 @CRY 1 F",
+    "fpts":395.0,
+    "fpts_per_game":10.97,
+    "statusId":null
+  },
+  {
+    "teamName":"Nottingham",
+    "urlName":"elliot-anderson",
+    "headshotUrl":"https:\/\/fantraximg.com\/assets\/images\/logos\/sportsteam\/epl\/Manchester_City.png",
+    "scorerId":"05opj",
+    "rank":10,
+    "teamLogo":true,
+    "posIdsNoFlex":[
+      "702"
+    ],
+    "defaultPosId":"702",
+    "posShortNames":"M",
+    "team":false,
+    "rookie":false,
+    "minorsEligible":false,
+    "posIds":[
+      "702"
+    ],
+    "teamId":"110105",
+    "name":"Elliot Anderson",
+    "teamShortName":"NOT",
+    "shortName":"E. Anderson",
+    "next_match":"BOU 1<br\/>@NOT 1 F",
+    "opponentShortName":"BOU 1 @NOT 1 F",
+    "fpts":387.5,
+    "fpts_per_game":10.2,
+    "statusId":null
+  },
+  {
+    "teamName":"Everton",
+    "urlName":"james-garner",
+    "headshotUrl":"https:\/\/fantraximg.com\/assets\/images\/logos\/sportsteam\/epl\/Everton.png",
+    "scorerId":"04spw",
+    "rank":11,
+    "teamLogo":true,
+    "posIdsNoFlex":[
+      "702"
+    ],
+    "defaultPosId":"702",
+    "posShortNames":"M",
+    "team":false,
+    "rookie":false,
+    "minorsEligible":false,
+    "posIds":[
+      "702"
+    ],
+    "teamId":"110050",
+    "name":"James Garner",
+    "teamShortName":"EVE",
+    "shortName":"J. Garner",
+    "next_match":"EVE 0<br\/>@TOT 1 F",
+    "opponentShortName":"EVE 0 @TOT 1 F",
+    "fpts":383.5,
+    "fpts_per_game":10.09,
+    "statusId":null
+  },
+  {
+    "teamName":"Chelsea",
+    "urlName":"joao-pedro-junqueira-de-jesus",
+    "headshotUrl":"https:\/\/fantraximg.com\/assets\/images\/logos\/sportsteam\/epl\/Chelsea.png",
+    "scorerId":"05g2o",
+    "rank":12,
+    "teamLogo":true,
+    "posIdsNoFlex":[
+      "701"
+    ],
+    "defaultPosId":"701",
+    "posShortNames":"F",
+    "team":false,
+    "rookie":false,
+    "minorsEligible":false,
+    "posIds":[
+      "701"
+    ],
+    "teamId":"110040",
+    "name":"Joao Pedro",
+    "teamShortName":"CHE",
+    "shortName":"Joao Pedro",
+    "next_match":"CHE 1<br\/>@SUN 2 F",
+    "opponentShortName":"CHE 1 @SUN 2 F",
+    "fpts":379.5,
+    "fpts_per_game":10.84,
+    "statusId":null
+  },
+  {
+    "teamName":"Everton",
+    "urlName":"james-tarkowski",
+    "headshotUrl":"https:\/\/fantraximg.com\/assets\/images\/logos\/sportsteam\/epl\/Everton.png",
+    "scorerId":"0427d",
+    "rank":13,
+    "teamLogo":true,
+    "posIdsNoFlex":[
+      "703"
+    ],
+    "defaultPosId":"703",
+    "posShortNames":"D",
+    "team":false,
+    "rookie":false,
+    "minorsEligible":false,
+    "posIds":[
+      "703"
+    ],
+    "teamId":"110050",
+    "name":"James Tarkowski",
+    "teamShortName":"EVE",
+    "shortName":"J. Tarkowski",
+    "next_match":"EVE 0<br\/>@TOT 1 F",
+    "opponentShortName":"EVE 0 @TOT 1 F",
+    "fpts":377.0,
+    "fpts_per_game":10.19,
+    "statusId":null
+  },
+  {
+    "teamName":"Liverpool",
+    "urlName":"virgil-van-dijk",
+    "headshotUrl":"https:\/\/fantraximg.com\/assets\/images\/logos\/sportsteam\/epl\/Liverpool.png",
+    "scorerId":"03vlj",
+    "rank":14,
+    "teamLogo":true,
+    "posIdsNoFlex":[
+      "703"
+    ],
+    "defaultPosId":"703",
+    "posShortNames":"D",
+    "team":false,
+    "rookie":false,
+    "minorsEligible":false,
+    "posIds":[
+      "703"
+    ],
+    "teamId":"110070",
+    "name":"Virgil van Dijk",
+    "teamShortName":"LIV",
+    "shortName":"V. van Dijk",
+    "next_match":"BRF 1<br\/>@LIV 1 F",
+    "opponentShortName":"BRF 1 @LIV 1 F",
+    "fpts":376.25,
+    "fpts_per_game":9.9,
+    "statusId":null
+  },
+  {
+    "teamName":"Arsenal",
+    "urlName":"gabriel-dos-santos-magalhaes",
+    "headshotUrl":"https:\/\/fantraximg.com\/assets\/images\/logos\/sportsteam\/epl\/Arsenal.png",
+    "scorerId":"05nzu",
+    "rank":15,
+    "teamLogo":true,
+    "posIdsNoFlex":[
+      "703"
+    ],
+    "defaultPosId":"703",
+    "posShortNames":"D",
+    "team":false,
+    "rookie":false,
+    "minorsEligible":false,
+    "posIds":[
+      "703"
+    ],
+    "teamId":"110000",
+    "name":"Gabriel Magalhaes",
+    "teamShortName":"ARS",
+    "shortName":"Gabriel Magalhaes",
+    "next_match":"ARS 2<br\/>@CRY 1 F",
+    "opponentShortName":"ARS 2 @CRY 1 F",
+    "fpts":374.5,
+    "fpts_per_game":11.7,
+    "statusId":null
+  },
+  {
+    "teamName":"Crystal Palace\/Manchester City",
+    "urlName":"marc-guehi",
+    "headshotUrl":"https:\/\/fantraximg.com\/assets\/images\/logos\/sportsteam\/epl\/Manchester_City.png",
+    "scorerId":"050jq",
+    "rank":16,
+    "teamLogo":true,
+    "posIdsNoFlex":[
+      "703"
+    ],
+    "defaultPosId":"703",
+    "posShortNames":"D",
+    "team":false,
+    "rookie":false,
+    "minorsEligible":false,
+    "posIds":[
+      "703"
+    ],
+    "teamId":"110080",
+    "name":"Marc Guehi",
+    "teamShortName":"CRY\/MCI",
+    "shortName":"M. Guehi",
+    "next_match":"AVL 2<br\/>@MCI 1 F",
+    "opponentShortName":"AVL 2 @MCI 1 F",
+    "fpts":372.0,
+    "fpts_per_game":10.63,
+    "statusId":null
+  },
+  {
+    "teamName":"Chelsea",
+    "urlName":"enzo-fernandez",
+    "headshotUrl":"https:\/\/fantraximg.com\/assets\/images\/logos\/sportsteam\/epl\/Chelsea.png",
+    "scorerId":"068ym",
+    "rank":17,
+    "teamLogo":true,
+    "posIdsNoFlex":[
+      "702"
+    ],
+    "defaultPosId":"702",
+    "posShortNames":"M",
+    "team":false,
+    "rookie":false,
+    "minorsEligible":false,
+    "posIds":[
+      "702"
+    ],
+    "teamId":"110040",
+    "name":"Enzo Fernandez",
+    "teamShortName":"CHE",
+    "shortName":"E. Fernandez",
+    "next_match":"CHE 1<br\/>@SUN 2 F",
+    "opponentShortName":"CHE 1 @SUN 2 F",
+    "fpts":363.5,
+    "fpts_per_game":10.1,
+    "statusId":null
+  },
+  {
+    "teamName":"Manchester City",
+    "urlName":"jeremy-doku",
+    "headshotUrl":"https:\/\/fantraximg.com\/assets\/images\/logos\/sportsteam\/epl\/Manchester_City.png",
+    "scorerId":"06fup",
+    "rank":18,
+    "teamLogo":true,
+    "posIdsNoFlex":[
+      "702"
+    ],
+    "defaultPosId":"701",
+    "posShortNames":"M",
+    "team":false,
+    "rookie":false,
+    "minorsEligible":false,
+    "posIds":[
+      "702"
+    ],
+    "teamId":"110080",
+    "name":"Jeremy Doku",
+    "teamShortName":"MCI",
+    "shortName":"J. Doku",
+    "next_match":"AVL 2<br\/>@MCI 1 F",
+    "opponentShortName":"AVL 2 @MCI 1 F",
+    "fpts":357.0,
+    "fpts_per_game":11.9,
+    "statusId":null
+  },
+  {
+    "teamName":"Aston Villa",
+    "urlName":"morgan-rogers",
+    "headshotUrl":"https:\/\/fantraximg.com\/assets\/images\/logos\/sportsteam\/epl\/Chelsea.png",
+    "scorerId":"05uht",
+    "rank":19,
+    "teamLogo":true,
+    "posIdsNoFlex":[
+      "702"
+    ],
+    "defaultPosId":"701",
+    "posShortNames":"M",
+    "team":false,
+    "rookie":false,
+    "minorsEligible":false,
+    "posIds":[
+      "702"
+    ],
+    "teamId":"110011",
+    "name":"Morgan Rogers",
+    "teamShortName":"AVL",
+    "shortName":"M. Rogers",
+    "next_match":"AVL 2<br\/>@MCI 1 F",
+    "opponentShortName":"AVL 2 @MCI 1 F",
+    "fpts":348.0,
+    "fpts_per_game":9.41,
+    "statusId":null
+  },
+  {
+    "teamName":"Leeds United",
+    "urlName":"anton-stach",
+    "headshotUrl":"https:\/\/fantraximg.com\/assets\/images\/logos\/sportsteam\/epl\/Leeds_United2.png",
+    "scorerId":"06zbx",
+    "rank":20,
+    "teamLogo":true,
+    "posIdsNoFlex":[
+      "702"
+    ],
+    "defaultPosId":"702",
+    "posShortNames":"M",
+    "team":false,
+    "rookie":false,
+    "minorsEligible":false,
+    "posIds":[
+      "702"
+    ],
+    "teamId":"110261",
+    "name":"Anton Stach",
+    "teamShortName":"LEE",
+    "shortName":"A. Stach",
+    "next_match":"LEE 0<br\/>@WHU 3 F",
+    "opponentShortName":"LEE 0 @WHU 3 F",
+    "fpts":347.0,
+    "fpts_per_game":11.97,
+    "statusId":null
+  }
+]

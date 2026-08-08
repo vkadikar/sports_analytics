@@ -1,0 +1,6990 @@
+{
+  "F": [
+    {
+      "id": "0",
+      "name": "Erling Haaland",
+      "team": "Manchester City",
+      "position": "F",
+      "adp": 1.5,
+      "projected_pts": 464.0,
+      "pts_2025": 509.0,
+      "pts_2024": 427.0
+    },
+    {
+      "id": "3",
+      "name": "Antoine Semenyo",
+      "team": "Manchester City",
+      "position": "F",
+      "adp": 4.81,
+      "projected_pts": 396.5,
+      "pts_2025": 448.0,
+      "pts_2024": 426.0
+    },
+    {
+      "id": "6",
+      "name": "Matheus Cunha",
+      "team": "Manchester United",
+      "position": "F",
+      "adp": 12.09,
+      "projected_pts": 385.0,
+      "pts_2025": 337.5,
+      "pts_2024": 467.0
+    },
+    {
+      "id": "11",
+      "name": "Joao Pedro",
+      "team": "Chelsea",
+      "position": "F",
+      "adp": 16.69,
+      "projected_pts": 360.0,
+      "pts_2025": 379.5,
+      "pts_2024": 275.0
+    },
+    {
+      "id": "12",
+      "name": "Alexander Isak",
+      "team": "Liverpool",
+      "position": "F",
+      "adp": 17.47,
+      "projected_pts": 328.0,
+      "pts_2025": 57.5,
+      "pts_2024": 460.0
+    },
+    {
+      "id": "17",
+      "name": "Rayan",
+      "team": "Bournemouth",
+      "position": "F",
+      "adp": 20.44,
+      "projected_pts": 363.0,
+      "pts_2025": 138.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "18",
+      "name": "Igor Thiago",
+      "team": "Brentford",
+      "position": "F",
+      "adp": 21.31,
+      "projected_pts": 322.0,
+      "pts_2025": 433.0,
+      "pts_2024": 14.5
+    },
+    {
+      "id": "20",
+      "name": "Bryan Mbeumo",
+      "team": "Manchester United",
+      "position": "F",
+      "adp": 25.5,
+      "projected_pts": 336.5,
+      "pts_2025": 316.0,
+      "pts_2024": 569.0
+    },
+    {
+      "id": "21",
+      "name": "Ollie Watkins",
+      "team": "Aston Villa",
+      "position": "F",
+      "adp": 25.72,
+      "projected_pts": 337.0,
+      "pts_2025": 328.5,
+      "pts_2024": 351.0
+    },
+    {
+      "id": "23",
+      "name": "Cody Gakpo",
+      "team": "Liverpool",
+      "position": "F",
+      "adp": 26.91,
+      "projected_pts": 357.0,
+      "pts_2025": 325.0,
+      "pts_2024": 303.5
+    },
+    {
+      "id": "36",
+      "name": "Viktor Gy\u00f6keres",
+      "team": "Arsenal",
+      "position": "F",
+      "adp": 41.56,
+      "projected_pts": 290.5,
+      "pts_2025": 227.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "38",
+      "name": "Pedro Neto",
+      "team": "Chelsea",
+      "position": "F",
+      "adp": 43.22,
+      "projected_pts": 298.5,
+      "pts_2025": 289.0,
+      "pts_2024": 265.0
+    },
+    {
+      "id": "40",
+      "name": "Benjamin Sesko",
+      "team": "Manchester United",
+      "position": "F",
+      "adp": 44.03,
+      "projected_pts": 83.0,
+      "pts_2025": 228.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "43",
+      "name": "Dominic Solanke",
+      "team": "Tottenham Hotspur",
+      "position": "F",
+      "adp": 49.72,
+      "projected_pts": 290.0,
+      "pts_2025": 96.5,
+      "pts_2024": 222.5
+    },
+    {
+      "id": "49",
+      "name": "Dominic Calvert-Lewin",
+      "team": "Leeds United",
+      "position": "F",
+      "adp": 52.72,
+      "projected_pts": 267.5,
+      "pts_2025": 315.5,
+      "pts_2024": 142.5
+    },
+    {
+      "id": "62",
+      "name": "Eli Kroupi",
+      "team": "Bournemouth",
+      "position": "F",
+      "adp": 68.81,
+      "projected_pts": 59.5,
+      "pts_2025": 220.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "66",
+      "name": "Kai Havertz",
+      "team": "Arsenal",
+      "position": "F",
+      "adp": 72.03,
+      "projected_pts": 245.0,
+      "pts_2025": 78.5,
+      "pts_2024": 216.0
+    },
+    {
+      "id": "68",
+      "name": "Kevin Schade",
+      "team": "Brentford",
+      "position": "F",
+      "adp": 72.59,
+      "projected_pts": 263.5,
+      "pts_2025": 277.0,
+      "pts_2024": 315.0
+    },
+    {
+      "id": "69",
+      "name": "Jean-Philippe Mateta",
+      "team": "Crystal Palace",
+      "position": "F",
+      "adp": 72.91,
+      "projected_pts": 318.0,
+      "pts_2025": 237.0,
+      "pts_2024": 310.5
+    },
+    {
+      "id": "72",
+      "name": "Nick Woltemade",
+      "team": "Newcastle United",
+      "position": "F",
+      "adp": 76.94,
+      "projected_pts": 284.5,
+      "pts_2025": 189.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "77",
+      "name": "Estevao",
+      "team": "Chelsea",
+      "position": "F",
+      "adp": 81.41,
+      "projected_pts": 36.5,
+      "pts_2025": 123.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "80",
+      "name": "Victor Mu\u00f1oz",
+      "team": "Liverpool",
+      "position": "F",
+      "adp": 83.58,
+      "projected_pts": 77.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "82",
+      "name": "Mathys Tel",
+      "team": "Tottenham Hotspur",
+      "position": "F",
+      "adp": 86.44,
+      "projected_pts": 319.5,
+      "pts_2025": 181.0,
+      "pts_2024": 97.5
+    },
+    {
+      "id": "84",
+      "name": "Oliver McBurnie",
+      "team": "Hull City",
+      "position": "F",
+      "adp": 90.28,
+      "projected_pts": 293.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "86",
+      "name": "Brian Brobbey",
+      "team": "Sunderland",
+      "position": "F",
+      "adp": 92.94,
+      "projected_pts": 241.0,
+      "pts_2025": 159.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "96",
+      "name": "Daizen Maeda",
+      "team": "Ipswich",
+      "position": "F",
+      "adp": 102.17,
+      "projected_pts": 316.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "97",
+      "name": "Evanilson",
+      "team": "Bournemouth",
+      "position": "F",
+      "adp": 102.28,
+      "projected_pts": 239.0,
+      "pts_2025": 241.0,
+      "pts_2024": 262.0
+    },
+    {
+      "id": "99",
+      "name": "Rodrigo Muniz",
+      "team": "Fulham",
+      "position": "F",
+      "adp": 105.27,
+      "projected_pts": 78.0,
+      "pts_2025": 78.0,
+      "pts_2024": 167.5
+    },
+    {
+      "id": "103",
+      "name": "Noah Okafor",
+      "team": "Leeds United",
+      "position": "F",
+      "adp": 113.13,
+      "projected_pts": 266.0,
+      "pts_2025": 218.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "105",
+      "name": "William Osula",
+      "team": "Newcastle United",
+      "position": "F",
+      "adp": 114.16,
+      "projected_pts": 301.5,
+      "pts_2025": 120.0,
+      "pts_2024": 22.0
+    },
+    {
+      "id": "106",
+      "name": "Beto",
+      "team": "Everton",
+      "position": "F",
+      "adp": 115.39,
+      "projected_pts": 264.5,
+      "pts_2025": 194.0,
+      "pts_2024": 201.0
+    },
+    {
+      "id": "107",
+      "name": "Rio Ngumoha",
+      "team": "Liverpool",
+      "position": "F",
+      "adp": 115.56,
+      "projected_pts": 36.5,
+      "pts_2025": 105.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "112",
+      "name": "Igor Jesus",
+      "team": "Nottingham Forest",
+      "position": "F",
+      "adp": 121.03,
+      "projected_pts": 62.5,
+      "pts_2025": 215.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "121",
+      "name": "Yoane Wissa",
+      "team": "Newcastle United",
+      "position": "F",
+      "adp": 130.0,
+      "projected_pts": 39.0,
+      "pts_2025": 38.5,
+      "pts_2024": 376.5
+    },
+    {
+      "id": "123",
+      "name": "Marcus Rashford",
+      "team": "Manchester United",
+      "position": "F",
+      "adp": 131.08,
+      "projected_pts": 70.5,
+      "pts_2025": 0.0,
+      "pts_2024": 206.5
+    },
+    {
+      "id": "128",
+      "name": "Omar Marmoush",
+      "team": "Manchester City",
+      "position": "F",
+      "adp": 133.93,
+      "projected_pts": 54.5,
+      "pts_2025": 96.0,
+      "pts_2024": 168.0
+    },
+    {
+      "id": "134",
+      "name": "Danny Welbeck",
+      "team": "Chelsea",
+      "position": "F",
+      "adp": 137.38,
+      "projected_pts": 55.5,
+      "pts_2025": 234.5,
+      "pts_2024": 236.5
+    },
+    {
+      "id": "137",
+      "name": "Omari Hutchinson",
+      "team": "Nottingham Forest",
+      "position": "F",
+      "adp": 141.69,
+      "projected_pts": 262.0,
+      "pts_2025": 214.0,
+      "pts_2024": 202.5
+    },
+    {
+      "id": "139",
+      "name": "Chris Wood",
+      "team": "Nottingham Forest",
+      "position": "F",
+      "adp": 143.9,
+      "projected_pts": 258.0,
+      "pts_2025": 74.0,
+      "pts_2024": 365.0
+    },
+    {
+      "id": "140",
+      "name": "Richarlison",
+      "team": "Tottenham Hotspur",
+      "position": "F",
+      "adp": 145.17,
+      "projected_pts": 75.5,
+      "pts_2025": 260.5,
+      "pts_2024": 68.0
+    },
+    {
+      "id": "145",
+      "name": "Kevin",
+      "team": "Fulham",
+      "position": "F",
+      "adp": 148.52,
+      "projected_pts": 71.5,
+      "pts_2025": 142.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "149",
+      "name": "Abdul Fatawu",
+      "team": "Ipswich",
+      "position": "F",
+      "adp": 153.83,
+      "projected_pts": 253.0,
+      "pts_2025": 0.0,
+      "pts_2024": 89.0
+    },
+    {
+      "id": "150",
+      "name": "Haji Wright",
+      "team": "Coventry City",
+      "position": "F",
+      "adp": 155.07,
+      "projected_pts": 252.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "158",
+      "name": "Anthony Elanga",
+      "team": "Newcastle United",
+      "position": "F",
+      "adp": 161.97,
+      "projected_pts": 50.5,
+      "pts_2025": 79.5,
+      "pts_2024": 324.5
+    },
+    {
+      "id": "165",
+      "name": "Callum Hudson-Odoi",
+      "team": "Nottingham Forest",
+      "position": "F",
+      "adp": 172.94,
+      "projected_pts": 69.0,
+      "pts_2025": 208.5,
+      "pts_2024": 252.0
+    },
+    {
+      "id": "166",
+      "name": "Hugo Ekitik\u00e9",
+      "team": "Liverpool",
+      "position": "F",
+      "adp": 173.31,
+      "projected_pts": 95.0,
+      "pts_2025": 256.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "174",
+      "name": "Christos Tzolis",
+      "team": "Arsenal",
+      "position": "F",
+      "adp": 182.07,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "177",
+      "name": "Gonzalo Garc\u00eda",
+      "team": "Fulham",
+      "position": "F",
+      "adp": 188.0,
+      "projected_pts": 226.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "181",
+      "name": "Jorgen Strand Larsen",
+      "team": "Crystal Palace",
+      "position": "F",
+      "adp": 201.99,
+      "projected_pts": 71.0,
+      "pts_2025": 129.5,
+      "pts_2024": 293.5
+    },
+    {
+      "id": "197",
+      "name": "Dan Ndoye",
+      "team": "Nottingham Forest",
+      "position": "F",
+      "adp": 225.24,
+      "projected_pts": 215.5,
+      "pts_2025": 97.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "198",
+      "name": "Bazoumana Tour\u00e9",
+      "team": "Newcastle United",
+      "position": "F",
+      "adp": 225.85,
+      "projected_pts": 90.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "203",
+      "name": "Emersonn",
+      "team": "Ipswich",
+      "position": "F",
+      "adp": 232.7,
+      "projected_pts": 243.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "207",
+      "name": "Georginio Rutter",
+      "team": "Brighton",
+      "position": "F",
+      "adp": 237.16,
+      "projected_pts": 280.0,
+      "pts_2025": 171.0,
+      "pts_2024": 189.0
+    },
+    {
+      "id": "217",
+      "name": "Thierno Barry",
+      "team": "Everton",
+      "position": "F",
+      "adp": 248.81,
+      "projected_pts": 62.0,
+      "pts_2025": 194.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "229",
+      "name": "Emmanuel Emegha",
+      "team": "Chelsea",
+      "position": "F",
+      "adp": 256.78,
+      "projected_pts": 64.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "240",
+      "name": "Charalampos Kostoulas",
+      "team": "Brighton",
+      "position": "F",
+      "adp": 266.46,
+      "projected_pts": 33.5,
+      "pts_2025": 81.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "244",
+      "name": "Brennan Johnson",
+      "team": "Crystal Palace",
+      "position": "F",
+      "adp": 268.59,
+      "projected_pts": 45.5,
+      "pts_2025": 104.0,
+      "pts_2024": 260.0
+    },
+    {
+      "id": "254",
+      "name": "Ellis Simms",
+      "team": "Coventry City",
+      "position": "F",
+      "adp": 275.22,
+      "projected_pts": 41.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "255",
+      "name": "George Hirst",
+      "team": "Ipswich",
+      "position": "F",
+      "adp": 275.28,
+      "projected_pts": 36.0,
+      "pts_2025": 0.0,
+      "pts_2024": 66.0
+    },
+    {
+      "id": "261",
+      "name": "Alvaro Rodr\u00edguez",
+      "team": "Bournemouth",
+      "position": "F",
+      "adp": 278.85,
+      "projected_pts": 78.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "266",
+      "name": "Tyrique George",
+      "team": "Everton",
+      "position": "F",
+      "adp": 280.12,
+      "projected_pts": 13.0,
+      "pts_2025": 27.0,
+      "pts_2024": 33.0
+    },
+    {
+      "id": "267",
+      "name": "Lukas Nmecha",
+      "team": "Leeds United",
+      "position": "F",
+      "adp": 280.65,
+      "projected_pts": 49.5,
+      "pts_2025": 135.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "276",
+      "name": "Amine Adli",
+      "team": "Bournemouth",
+      "position": "F",
+      "adp": 281.81,
+      "projected_pts": 37.0,
+      "pts_2025": 132.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "281",
+      "name": "Liam Delap",
+      "team": "Chelsea",
+      "position": "F",
+      "adp": 282.56,
+      "projected_pts": 28.5,
+      "pts_2025": 58.5,
+      "pts_2024": 256.0
+    },
+    {
+      "id": "283",
+      "name": "Tammy Abraham",
+      "team": "Aston Villa",
+      "position": "F",
+      "adp": 282.97,
+      "projected_pts": 33.5,
+      "pts_2025": 37.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "288",
+      "name": "Simon Adingra",
+      "team": "Sunderland",
+      "position": "F",
+      "adp": 283.62,
+      "projected_pts": 41.0,
+      "pts_2025": 49.5,
+      "pts_2024": 134.5
+    },
+    {
+      "id": "296",
+      "name": "Chemsdine Talbi",
+      "team": "Sunderland",
+      "position": "F",
+      "adp": 285.0,
+      "projected_pts": 45.5,
+      "pts_2025": 118.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "301",
+      "name": "Brandon Thomas-Asante",
+      "team": "Coventry City",
+      "position": "F",
+      "adp": 285.94,
+      "projected_pts": 60.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "306",
+      "name": "Eddie Nketiah",
+      "team": "Crystal Palace",
+      "position": "F",
+      "adp": 286.72,
+      "projected_pts": 47.5,
+      "pts_2025": 52.5,
+      "pts_2024": 109.0
+    },
+    {
+      "id": "312",
+      "name": "Jonah Kusi-Asare",
+      "team": "Fulham",
+      "position": "F",
+      "adp": 287.27,
+      "projected_pts": 3.0,
+      "pts_2025": 1.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "314",
+      "name": "Marc Guiu",
+      "team": "Chelsea",
+      "position": "F",
+      "adp": 287.49,
+      "projected_pts": 4.5,
+      "pts_2025": 17.0,
+      "pts_2024": 3.0
+    },
+    {
+      "id": "315",
+      "name": "Joe Gelhardt",
+      "team": "Leeds United",
+      "position": "F",
+      "adp": 288.03,
+      "projected_pts": 73.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "318",
+      "name": "Stefanos Tzimas",
+      "team": "Brighton",
+      "position": "F",
+      "adp": 288.21,
+      "projected_pts": 26.5,
+      "pts_2025": 28.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "319",
+      "name": "Evann Guessand",
+      "team": "Aston Villa",
+      "position": "F",
+      "adp": 288.24,
+      "projected_pts": 59.0,
+      "pts_2025": 75.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "322",
+      "name": "Shea Lacey",
+      "team": "Manchester United",
+      "position": "F",
+      "adp": 288.46,
+      "projected_pts": 2.5,
+      "pts_2025": 3.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "324",
+      "name": "Wilson Isidor",
+      "team": "Sunderland",
+      "position": "F",
+      "adp": 288.71,
+      "projected_pts": 41.5,
+      "pts_2025": 113.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "328",
+      "name": "Taiwo Awoniyi",
+      "team": "Nottingham Forest",
+      "position": "F",
+      "adp": 288.81,
+      "projected_pts": 20.5,
+      "pts_2025": 81.0,
+      "pts_2024": 25.5
+    },
+    {
+      "id": "339",
+      "name": "Dilane Bakwa",
+      "team": "Nottingham Forest",
+      "position": "F",
+      "adp": 289.81,
+      "projected_pts": 60.0,
+      "pts_2025": 54.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "343",
+      "name": "Jamie Gittens",
+      "team": "Chelsea",
+      "position": "F",
+      "adp": 290.15,
+      "projected_pts": 35.5,
+      "pts_2025": 55.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "609",
+      "name": "Brian Madjo",
+      "team": "Aston Villa",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 13.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "608",
+      "name": "Kaye Furo",
+      "team": "Brentford",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "607",
+      "name": "Dane Scarlett",
+      "team": "Tottenham Hotspur",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 2.5,
+      "pts_2025": 0.5,
+      "pts_2024": 10.0
+    },
+    {
+      "id": "604",
+      "name": "Manor Solomon",
+      "team": "Tottenham Hotspur",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 48.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "589",
+      "name": "Dastan Satpaev",
+      "team": "Chelsea",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "588",
+      "name": "Raphael Borges Rodrigues",
+      "team": "Coventry City",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 8.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "573",
+      "name": "Enis Destan",
+      "team": "Hull City",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "580",
+      "name": "Daniel Jebbison",
+      "team": "Bournemouth",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 52.5,
+      "pts_2025": 0.0,
+      "pts_2024": 25.0
+    },
+    {
+      "id": "578",
+      "name": "Ali Al-Hamadi",
+      "team": "Ipswich",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 9.0,
+      "pts_2025": 0.0,
+      "pts_2024": 2.5
+    },
+    {
+      "id": "612",
+      "name": "Sean Neave",
+      "team": "Newcastle United",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": -0.5,
+      "pts_2025": -0.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "565",
+      "name": "Vakhtang Salia",
+      "team": "Newcastle United",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "564",
+      "name": "Matheos Ferreira",
+      "team": "Newcastle United",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "585",
+      "name": "Aidan Dausch",
+      "team": "Coventry City",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "614",
+      "name": "Luis Semedo",
+      "team": "Sunderland",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 8.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "638",
+      "name": "Joel Piroe",
+      "team": "Leeds United",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 21.5,
+      "pts_2025": 12.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "625",
+      "name": "Chuba Akpom",
+      "team": "Ipswich",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 22.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "628",
+      "name": "Mark O'Mahony",
+      "team": "Brighton",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 26.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "554",
+      "name": "David Datro Fofana",
+      "team": "Chelsea",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 13.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "642",
+      "name": "Jamie Donley",
+      "team": "Tottenham Hotspur",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 22.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "649",
+      "name": "Joel Drakes-Thomas",
+      "team": "Crystal Palace",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 1.0,
+      "pts_2025": 1.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "658",
+      "name": "Jaden Heskey",
+      "team": "Manchester City",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 35.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "662",
+      "name": "Tymur Tutierov",
+      "team": "Sunderland",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "663",
+      "name": "Trey Ogunsuyi",
+      "team": "Sunderland",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "668",
+      "name": "Joseph Gabriel",
+      "team": "Manchester United",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "672",
+      "name": "Enzo Kana Biyik",
+      "team": "Manchester United",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "673",
+      "name": "Joshua Sonni-Lambie",
+      "team": "Liverpool",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "678",
+      "name": "Joshua Abe",
+      "team": "Liverpool",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "689",
+      "name": "Alysson Edward",
+      "team": "Aston Villa",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 22.5,
+      "pts_2025": 3.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "616",
+      "name": "Evan Ferguson",
+      "team": "Brighton",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 49.0,
+      "pts_2025": 0.0,
+      "pts_2024": 35.0
+    },
+    {
+      "id": "551",
+      "name": "Mason Melia",
+      "team": "Tottenham Hotspur",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "536",
+      "name": "Ethan Wheatley",
+      "team": "Manchester United",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 1.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "544",
+      "name": "Gustavo Nunes",
+      "team": "Brentford",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 22.5,
+      "pts_2025": 0.0,
+      "pts_2024": 2.0
+    },
+    {
+      "id": "354",
+      "name": "Gabriel Jesus",
+      "team": "Arsenal",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 31.5,
+      "pts_2025": 61.5,
+      "pts_2024": 82.0
+    },
+    {
+      "id": "356",
+      "name": "Reiss Nelson",
+      "team": "Arsenal",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 23.5,
+      "pts_2025": 19.0,
+      "pts_2024": 77.0
+    },
+    {
+      "id": "364",
+      "name": "Andre Harriman-Annous",
+      "team": "Arsenal",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "371",
+      "name": "Ibrahim Osman",
+      "team": "Brighton",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 70.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "375",
+      "name": "Damola Ajayi",
+      "team": "Tottenham Hotspur",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "378",
+      "name": "Remy Rees-Dottin",
+      "team": "Bournemouth",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "380",
+      "name": "Ryan McAidoo",
+      "team": "Manchester City",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "382",
+      "name": "Finn Geragusyan",
+      "team": "Sunderland",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "404",
+      "name": "Park Seung-Soo",
+      "team": "Newcastle United",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "410",
+      "name": "Ismeal Kabia",
+      "team": "Arsenal",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "412",
+      "name": "Callum Wilson",
+      "team": "Brentford",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 33.0,
+      "pts_2025": 141.0,
+      "pts_2024": 6.0
+    },
+    {
+      "id": "416",
+      "name": "Matheus Franca",
+      "team": "Crystal Palace",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 20.0,
+      "pts_2025": 0.0,
+      "pts_2024": 17.5
+    },
+    {
+      "id": "422",
+      "name": "Trevan Sanusi",
+      "team": "Newcastle United",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "431",
+      "name": "Mikey Moore",
+      "team": "Tottenham Hotspur",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 11.0,
+      "pts_2025": 0.0,
+      "pts_2024": 22.5
+    },
+    {
+      "id": "438",
+      "name": "Mateo Joseph",
+      "team": "Leeds United",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 42.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "468",
+      "name": "Eric da Silva Moreira",
+      "team": "Nottingham Forest",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 3.0
+    },
+    {
+      "id": "470",
+      "name": "Samuel Iling-Junior",
+      "team": "Aston Villa",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 34.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "471",
+      "name": "Enes Unal",
+      "team": "Bournemouth",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 16.0,
+      "pts_2025": 19.0,
+      "pts_2024": 48.5
+    },
+    {
+      "id": "486",
+      "name": "Wilfried Gnonto",
+      "team": "Leeds United",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 24.0,
+      "pts_2025": 52.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "488",
+      "name": "Arnaud Kalimuendo",
+      "team": "Nottingham Forest",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 64.0,
+      "pts_2025": 6.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "502",
+      "name": "Zadok Yohanna",
+      "team": "Brighton",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "511",
+      "name": "Largie Ramazani",
+      "team": "Leeds United",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 46.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "513",
+      "name": "Wilson Odobert",
+      "team": "Tottenham Hotspur",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 33.5,
+      "pts_2025": 102.0,
+      "pts_2024": 47.5
+    },
+    {
+      "id": "514",
+      "name": "Ceadach O\u2019Neill",
+      "team": "Arsenal",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "523",
+      "name": "Joshua Zirkzee",
+      "team": "Manchester United",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 31.5,
+      "pts_2025": 77.5,
+      "pts_2024": 108.5
+    },
+    {
+      "id": "527",
+      "name": "Will Wright",
+      "team": "Liverpool",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "532",
+      "name": "Ryan Kavuma-McQueen",
+      "team": "Chelsea",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "694",
+      "name": "Chiedozie Ogbene",
+      "team": "Ipswich",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 21.5,
+      "pts_2025": 0.0,
+      "pts_2024": 9.5
+    },
+    {
+      "id": "542",
+      "name": "Federico Chiesa",
+      "team": "Liverpool",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 20.5,
+      "pts_2025": 47.5,
+      "pts_2024": 6.0
+    },
+    {
+      "id": "546",
+      "name": "Mahamadou Sangar\u00e9",
+      "team": "Manchester City",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "696",
+      "name": "Louie Koumas",
+      "team": "Liverpool",
+      "position": "F",
+      "adp": 999.0,
+      "projected_pts": 38.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    }
+  ],
+  "M": [
+    {
+      "id": "1",
+      "name": "Bruno Fernandes",
+      "team": "Manchester United",
+      "position": "M",
+      "adp": 2.06,
+      "projected_pts": 480.0,
+      "pts_2025": 633.5,
+      "pts_2024": 496.0
+    },
+    {
+      "id": "2",
+      "name": "Bukayo Saka",
+      "team": "Arsenal",
+      "position": "M",
+      "adp": 3.22,
+      "projected_pts": 500.5,
+      "pts_2025": 411.0,
+      "pts_2024": 342.0
+    },
+    {
+      "id": "4",
+      "name": "Dominik Szoboszlai",
+      "team": "Liverpool",
+      "position": "M",
+      "adp": 6.5,
+      "projected_pts": 378.0,
+      "pts_2025": 409.0,
+      "pts_2024": 333.0
+    },
+    {
+      "id": "5",
+      "name": "Florian Wirtz",
+      "team": "Liverpool",
+      "position": "M",
+      "adp": 7.44,
+      "projected_pts": 413.5,
+      "pts_2025": 297.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "7",
+      "name": "Rayan Cherki",
+      "team": "Manchester City",
+      "position": "M",
+      "adp": 12.16,
+      "projected_pts": 389.0,
+      "pts_2025": 338.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "8",
+      "name": "Declan Rice",
+      "team": "Arsenal",
+      "position": "M",
+      "adp": 12.41,
+      "projected_pts": 340.5,
+      "pts_2025": 395.0,
+      "pts_2024": 315.0
+    },
+    {
+      "id": "9",
+      "name": "Morgan Gibbs-White",
+      "team": "Nottingham Forest",
+      "position": "M",
+      "adp": 12.5,
+      "projected_pts": 347.5,
+      "pts_2025": 403.0,
+      "pts_2024": 357.5
+    },
+    {
+      "id": "10",
+      "name": "Cole Palmer",
+      "team": "Chelsea",
+      "position": "M",
+      "adp": 13.69,
+      "projected_pts": 321.5,
+      "pts_2025": 225.5,
+      "pts_2024": 559.5
+    },
+    {
+      "id": "13",
+      "name": "Jeremy Doku",
+      "team": "Manchester City",
+      "position": "M",
+      "adp": 17.81,
+      "projected_pts": 366.5,
+      "pts_2025": 358.5,
+      "pts_2024": 266.5
+    },
+    {
+      "id": "14",
+      "name": "Morgan Rogers",
+      "team": "Chelsea",
+      "position": "M",
+      "adp": 19.34,
+      "projected_pts": 309.5,
+      "pts_2025": 348.0,
+      "pts_2024": 348.5
+    },
+    {
+      "id": "15",
+      "name": "Anton Stach",
+      "team": "Leeds United",
+      "position": "M",
+      "adp": 20.03,
+      "projected_pts": 366.5,
+      "pts_2025": 347.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "19",
+      "name": "Enzo Fernandez",
+      "team": "Chelsea",
+      "position": "M",
+      "adp": 24.06,
+      "projected_pts": 322.5,
+      "pts_2025": 363.5,
+      "pts_2024": 378.5
+    },
+    {
+      "id": "24",
+      "name": "Martin Odegaard",
+      "team": "Arsenal",
+      "position": "M",
+      "adp": 29.06,
+      "projected_pts": 356.0,
+      "pts_2025": 174.0,
+      "pts_2024": 282.0
+    },
+    {
+      "id": "25",
+      "name": "Bruno Guimaraes",
+      "team": "Newcastle United",
+      "position": "M",
+      "adp": 29.84,
+      "projected_pts": 315.5,
+      "pts_2025": 327.5,
+      "pts_2024": 312.5
+    },
+    {
+      "id": "27",
+      "name": "Mohammed Kudus",
+      "team": "Tottenham Hotspur",
+      "position": "M",
+      "adp": 31.88,
+      "projected_pts": 344.0,
+      "pts_2025": 190.5,
+      "pts_2024": 271.0
+    },
+    {
+      "id": "30",
+      "name": "Iliman Ndiaye",
+      "team": "Everton",
+      "position": "M",
+      "adp": 34.09,
+      "projected_pts": 311.5,
+      "pts_2025": 294.5,
+      "pts_2024": 274.0
+    },
+    {
+      "id": "31",
+      "name": "Elliot Anderson",
+      "team": "Manchester City",
+      "position": "M",
+      "adp": 36.5,
+      "projected_pts": 68.5,
+      "pts_2025": 388.0,
+      "pts_2024": 273.0
+    },
+    {
+      "id": "32",
+      "name": "Pascal Gross",
+      "team": "Brighton",
+      "position": "M",
+      "adp": 36.59,
+      "projected_pts": 263.0,
+      "pts_2025": 210.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "33",
+      "name": "James Garner",
+      "team": "Everton",
+      "position": "M",
+      "adp": 39.78,
+      "projected_pts": 270.0,
+      "pts_2025": 383.5,
+      "pts_2024": 110.0
+    },
+    {
+      "id": "34",
+      "name": "Yankuba Minteh",
+      "team": "Brighton",
+      "position": "M",
+      "adp": 40.0,
+      "projected_pts": 77.0,
+      "pts_2025": 335.5,
+      "pts_2024": 272.0
+    },
+    {
+      "id": "37",
+      "name": "Marcus Tavernier",
+      "team": "Bournemouth",
+      "position": "M",
+      "adp": 42.0,
+      "projected_pts": 306.5,
+      "pts_2025": 326.0,
+      "pts_2024": 249.5
+    },
+    {
+      "id": "41",
+      "name": "Ismaila Sarr",
+      "team": "Crystal Palace",
+      "position": "M",
+      "adp": 47.22,
+      "projected_pts": 277.5,
+      "pts_2025": 207.5,
+      "pts_2024": 318.0
+    },
+    {
+      "id": "42",
+      "name": "Harry Wilson",
+      "team": "Leeds United",
+      "position": "M",
+      "adp": 48.56,
+      "projected_pts": 277.5,
+      "pts_2025": 329.0,
+      "pts_2024": 175.5
+    },
+    {
+      "id": "44",
+      "name": "Kiernan Dewsbury-Hall",
+      "team": "Everton",
+      "position": "M",
+      "adp": 50.03,
+      "projected_pts": 281.0,
+      "pts_2025": 282.0,
+      "pts_2024": 19.5
+    },
+    {
+      "id": "45",
+      "name": "Dango Ouattara",
+      "team": "Brentford",
+      "position": "M",
+      "adp": 50.22,
+      "projected_pts": 302.0,
+      "pts_2025": 293.5,
+      "pts_2024": 308.0
+    },
+    {
+      "id": "46",
+      "name": "Phil Foden",
+      "team": "Manchester City",
+      "position": "M",
+      "adp": 50.38,
+      "projected_pts": 52.0,
+      "pts_2025": 285.5,
+      "pts_2024": 232.0
+    },
+    {
+      "id": "48",
+      "name": "Enzo Le F\u00e9e",
+      "team": "Sunderland",
+      "position": "M",
+      "adp": 51.69,
+      "projected_pts": 342.5,
+      "pts_2025": 322.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "50",
+      "name": "Amad Diallo",
+      "team": "Manchester United",
+      "position": "M",
+      "adp": 57.81,
+      "projected_pts": 287.0,
+      "pts_2025": 267.0,
+      "pts_2024": 335.5
+    },
+    {
+      "id": "51",
+      "name": "Youri Tielemans",
+      "team": "Manchester United",
+      "position": "M",
+      "adp": 58.63,
+      "projected_pts": 288.0,
+      "pts_2025": 196.5,
+      "pts_2024": 344.5
+    },
+    {
+      "id": "58",
+      "name": "James Maddison",
+      "team": "Tottenham Hotspur",
+      "position": "M",
+      "adp": 65.19,
+      "projected_pts": 53.0,
+      "pts_2025": 0.5,
+      "pts_2024": 309.0
+    },
+    {
+      "id": "59",
+      "name": "Eberechi Eze",
+      "team": "Arsenal",
+      "position": "M",
+      "adp": 65.56,
+      "projected_pts": 236.5,
+      "pts_2025": 212.0,
+      "pts_2024": 397.0
+    },
+    {
+      "id": "63",
+      "name": "Johan Manzambi",
+      "team": "Aston Villa",
+      "position": "M",
+      "adp": 69.42,
+      "projected_pts": 272.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "64",
+      "name": "Alex Iwobi",
+      "team": "Fulham",
+      "position": "M",
+      "adp": 70.31,
+      "projected_pts": 304.5,
+      "pts_2025": 237.5,
+      "pts_2024": 393.5
+    },
+    {
+      "id": "65",
+      "name": "Mikkel Damsgaard",
+      "team": "Brentford",
+      "position": "M",
+      "adp": 70.72,
+      "projected_pts": 324.0,
+      "pts_2025": 261.0,
+      "pts_2024": 359.5
+    },
+    {
+      "id": "73",
+      "name": "Kaoru Mitoma",
+      "team": "Brighton",
+      "position": "M",
+      "adp": 79.19,
+      "projected_pts": 321.5,
+      "pts_2025": 168.0,
+      "pts_2024": 361.0
+    },
+    {
+      "id": "75",
+      "name": "Mateus Fernandes",
+      "team": "Tottenham Hotspur",
+      "position": "M",
+      "adp": 80.06,
+      "projected_pts": 273.5,
+      "pts_2025": 278.5,
+      "pts_2024": 261.5
+    },
+    {
+      "id": "83",
+      "name": "Alex Scott",
+      "team": "Bournemouth",
+      "position": "M",
+      "adp": 87.41,
+      "projected_pts": 207.5,
+      "pts_2025": 252.5,
+      "pts_2024": 69.5
+    },
+    {
+      "id": "85",
+      "name": "Jack Grealish",
+      "team": "Manchester City",
+      "position": "M",
+      "adp": 90.78,
+      "projected_pts": 64.0,
+      "pts_2025": 193.0,
+      "pts_2024": 86.5
+    },
+    {
+      "id": "87",
+      "name": "Ryan Gravenberch",
+      "team": "Liverpool",
+      "position": "M",
+      "adp": 93.69,
+      "projected_pts": 262.5,
+      "pts_2025": 286.5,
+      "pts_2024": 227.0
+    },
+    {
+      "id": "88",
+      "name": "Harvey Barnes",
+      "team": "Newcastle United",
+      "position": "M",
+      "adp": 95.06,
+      "projected_pts": 235.5,
+      "pts_2025": 188.5,
+      "pts_2024": 258.0
+    },
+    {
+      "id": "89",
+      "name": "Nilson Angulo",
+      "team": "Sunderland",
+      "position": "M",
+      "adp": 95.97,
+      "projected_pts": 329.5,
+      "pts_2025": 31.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "91",
+      "name": "Granit Xhaka",
+      "team": "Sunderland",
+      "position": "M",
+      "adp": 97.69,
+      "projected_pts": 253.0,
+      "pts_2025": 241.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "94",
+      "name": "Yeremy Pino",
+      "team": "Crystal Palace",
+      "position": "M",
+      "adp": 100.06,
+      "projected_pts": 276.5,
+      "pts_2025": 196.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "98",
+      "name": "Sandro Tonali",
+      "team": "Tottenham Hotspur",
+      "position": "M",
+      "adp": 102.97,
+      "projected_pts": 197.5,
+      "pts_2025": 183.0,
+      "pts_2024": 230.5
+    },
+    {
+      "id": "101",
+      "name": "John McGinn",
+      "team": "Aston Villa",
+      "position": "M",
+      "adp": 108.88,
+      "projected_pts": 245.5,
+      "pts_2025": 225.5,
+      "pts_2024": 166.0
+    },
+    {
+      "id": "104",
+      "name": "Savio",
+      "team": "Manchester City",
+      "position": "M",
+      "adp": 113.56,
+      "projected_pts": 29.0,
+      "pts_2025": 90.5,
+      "pts_2024": 289.5
+    },
+    {
+      "id": "109",
+      "name": "Diego Gomez",
+      "team": "Brighton",
+      "position": "M",
+      "adp": 115.9,
+      "projected_pts": 281.0,
+      "pts_2025": 220.0,
+      "pts_2024": 70.5
+    },
+    {
+      "id": "110",
+      "name": "Hayden Hackney",
+      "team": "Everton",
+      "position": "M",
+      "adp": 116.92,
+      "projected_pts": 286.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "111",
+      "name": "Adam Wharton",
+      "team": "Crystal Palace",
+      "position": "M",
+      "adp": 117.74,
+      "projected_pts": 235.5,
+      "pts_2025": 232.5,
+      "pts_2024": 114.0
+    },
+    {
+      "id": "114",
+      "name": "Jaidon Anthony",
+      "team": "Brentford",
+      "position": "M",
+      "adp": 122.53,
+      "projected_pts": 97.5,
+      "pts_2025": 288.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "116",
+      "name": "Justin Kluivert",
+      "team": "Bournemouth",
+      "position": "M",
+      "adp": 123.59,
+      "projected_pts": 234.5,
+      "pts_2025": 86.5,
+      "pts_2024": 354.5
+    },
+    {
+      "id": "118",
+      "name": "Emiliano Buendia",
+      "team": "Aston Villa",
+      "position": "M",
+      "adp": 126.44,
+      "projected_pts": 294.0,
+      "pts_2025": 191.0,
+      "pts_2024": 5.5
+    },
+    {
+      "id": "119",
+      "name": "Alexis Mac Allister",
+      "team": "Liverpool",
+      "position": "M",
+      "adp": 127.69,
+      "projected_pts": 257.5,
+      "pts_2025": 198.0,
+      "pts_2024": 303.5
+    },
+    {
+      "id": "125",
+      "name": "Ethan Ampadu",
+      "team": "Leeds United",
+      "position": "M",
+      "adp": 133.37,
+      "projected_pts": 170.0,
+      "pts_2025": 231.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "126",
+      "name": "Noni Madueke",
+      "team": "Arsenal",
+      "position": "M",
+      "adp": 133.39,
+      "projected_pts": 67.5,
+      "pts_2025": 153.5,
+      "pts_2024": 298.0
+    },
+    {
+      "id": "132",
+      "name": "Rodri",
+      "team": "Manchester City",
+      "position": "M",
+      "adp": 136.63,
+      "projected_pts": 196.5,
+      "pts_2025": 131.0,
+      "pts_2024": 4.5
+    },
+    {
+      "id": "141",
+      "name": "Kobbie Mainoo",
+      "team": "Manchester United",
+      "position": "M",
+      "adp": 145.48,
+      "projected_pts": 143.5,
+      "pts_2025": 138.0,
+      "pts_2024": 93.5
+    },
+    {
+      "id": "143",
+      "name": "Oscar Bobb",
+      "team": "Fulham",
+      "position": "M",
+      "adp": 146.58,
+      "projected_pts": 200.5,
+      "pts_2025": 106.5,
+      "pts_2024": 4.0
+    },
+    {
+      "id": "147",
+      "name": "Dejan Kulusevski",
+      "team": "Tottenham Hotspur",
+      "position": "M",
+      "adp": 152.34,
+      "projected_pts": 75.0,
+      "pts_2025": 0.0,
+      "pts_2024": 307.0
+    },
+    {
+      "id": "153",
+      "name": "Moises Caicedo",
+      "team": "Chelsea",
+      "position": "M",
+      "adp": 158.13,
+      "projected_pts": 194.5,
+      "pts_2025": 195.0,
+      "pts_2024": 263.5
+    },
+    {
+      "id": "156",
+      "name": "Mohamed Belloumi",
+      "team": "Hull City",
+      "position": "M",
+      "adp": 161.48,
+      "projected_pts": 269.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "157",
+      "name": "Jaden Philogene",
+      "team": "Ipswich",
+      "position": "M",
+      "adp": 161.83,
+      "projected_pts": 224.5,
+      "pts_2025": 0.0,
+      "pts_2024": 66.0
+    },
+    {
+      "id": "159",
+      "name": "Yasin Ayari",
+      "team": "Brighton",
+      "position": "M",
+      "adp": 162.68,
+      "projected_pts": 244.0,
+      "pts_2025": 175.0,
+      "pts_2024": 186.0
+    },
+    {
+      "id": "160",
+      "name": "Jack Hinshelwood",
+      "team": "Brighton",
+      "position": "M",
+      "adp": 166.63,
+      "projected_pts": 206.5,
+      "pts_2025": 156.5,
+      "pts_2024": 165.5
+    },
+    {
+      "id": "170",
+      "name": "Gabriel Martinelli",
+      "team": "Arsenal",
+      "position": "M",
+      "adp": 177.59,
+      "projected_pts": 54.5,
+      "pts_2025": 118.0,
+      "pts_2024": 297.5
+    },
+    {
+      "id": "171",
+      "name": "Mathias Jensen",
+      "team": "Brentford",
+      "position": "M",
+      "adp": 179.53,
+      "projected_pts": 210.0,
+      "pts_2025": 203.5,
+      "pts_2024": 83.5
+    },
+    {
+      "id": "176",
+      "name": "Alejandro Garnacho",
+      "team": "Aston Villa",
+      "position": "M",
+      "adp": 185.06,
+      "projected_pts": 45.0,
+      "pts_2025": 138.5,
+      "pts_2024": 253.5
+    },
+    {
+      "id": "180",
+      "name": "Keane Lewis-Potter",
+      "team": "Brentford",
+      "position": "M",
+      "adp": 200.9,
+      "projected_pts": 204.5,
+      "pts_2025": 177.0,
+      "pts_2024": 242.5
+    },
+    {
+      "id": "185",
+      "name": "Tijjani Reijnders",
+      "team": "Manchester City",
+      "position": "M",
+      "adp": 209.84,
+      "projected_pts": 51.5,
+      "pts_2025": 162.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "190",
+      "name": "Brenden Aaronson",
+      "team": "Leeds United",
+      "position": "M",
+      "adp": 215.31,
+      "projected_pts": 54.5,
+      "pts_2025": 249.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "191",
+      "name": "Geovany Quenda",
+      "team": "Chelsea",
+      "position": "M",
+      "adp": 219.94,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "195",
+      "name": "Ephron Mason-Clark",
+      "team": "Coventry City",
+      "position": "M",
+      "adp": 222.28,
+      "projected_pts": 75.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "196",
+      "name": "Lewis Miley",
+      "team": "Newcastle United",
+      "position": "M",
+      "adp": 223.31,
+      "projected_pts": 56.0,
+      "pts_2025": 147.0,
+      "pts_2024": 32.5
+    },
+    {
+      "id": "205",
+      "name": "Victor Torp",
+      "team": "Coventry City",
+      "position": "M",
+      "adp": 234.99,
+      "projected_pts": 261.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "206",
+      "name": "Conor Gallagher",
+      "team": "Tottenham Hotspur",
+      "position": "M",
+      "adp": 236.96,
+      "projected_pts": 35.0,
+      "pts_2025": 102.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "210",
+      "name": "Boubacar Kamara",
+      "team": "Aston Villa",
+      "position": "M",
+      "adp": 240.34,
+      "projected_pts": 257.0,
+      "pts_2025": 127.5,
+      "pts_2024": 97.0
+    },
+    {
+      "id": "212",
+      "name": "Sasa Lukic",
+      "team": "Fulham",
+      "position": "M",
+      "adp": 242.53,
+      "projected_pts": 232.0,
+      "pts_2025": 162.0,
+      "pts_2024": 145.5
+    },
+    {
+      "id": "215",
+      "name": "Mikel Merino",
+      "team": "Arsenal",
+      "position": "M",
+      "adp": 247.34,
+      "projected_pts": 119.0,
+      "pts_2025": 131.5,
+      "pts_2024": 209.5
+    },
+    {
+      "id": "218",
+      "name": "Jacob Murphy",
+      "team": "Newcastle United",
+      "position": "M",
+      "adp": 248.96,
+      "projected_pts": 215.0,
+      "pts_2025": 175.0,
+      "pts_2024": 342.0
+    },
+    {
+      "id": "220",
+      "name": "Jack Rudoni",
+      "team": "Coventry City",
+      "position": "M",
+      "adp": 250.13,
+      "projected_pts": 297.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "223",
+      "name": "Andrey Santos",
+      "team": "Manchester United",
+      "position": "M",
+      "adp": 254.66,
+      "projected_pts": 38.5,
+      "pts_2025": 75.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "224",
+      "name": "Martin Zubimendi",
+      "team": "Arsenal",
+      "position": "M",
+      "adp": 254.77,
+      "projected_pts": 112.0,
+      "pts_2025": 233.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "225",
+      "name": "Joao Gomes",
+      "team": "Aston Villa",
+      "position": "M",
+      "adp": 255.03,
+      "projected_pts": 208.0,
+      "pts_2025": 201.0,
+      "pts_2024": 191.0
+    },
+    {
+      "id": "226",
+      "name": "Jacob Ramsey",
+      "team": "Newcastle United",
+      "position": "M",
+      "adp": 255.69,
+      "projected_pts": 228.5,
+      "pts_2025": 128.0,
+      "pts_2024": 125.0
+    },
+    {
+      "id": "233",
+      "name": "Vitaly Janelt",
+      "team": "Brentford",
+      "position": "M",
+      "adp": 261.06,
+      "projected_pts": 59.0,
+      "pts_2025": 145.5,
+      "pts_2024": 129.5
+    },
+    {
+      "id": "234",
+      "name": "Tyler Adams",
+      "team": "Bournemouth",
+      "position": "M",
+      "adp": 261.09,
+      "projected_pts": 214.0,
+      "pts_2025": 128.0,
+      "pts_2024": 156.5
+    },
+    {
+      "id": "236",
+      "name": "Dwight McNeil",
+      "team": "Everton",
+      "position": "M",
+      "adp": 262.09,
+      "projected_pts": 52.0,
+      "pts_2025": 100.0,
+      "pts_2024": 223.0
+    },
+    {
+      "id": "237",
+      "name": "Joelinton",
+      "team": "Newcastle United",
+      "position": "M",
+      "adp": 265.43,
+      "projected_pts": 219.5,
+      "pts_2025": 158.5,
+      "pts_2024": 210.0
+    },
+    {
+      "id": "245",
+      "name": "Ross Barkley",
+      "team": "Aston Villa",
+      "position": "M",
+      "adp": 268.78,
+      "projected_pts": 59.0,
+      "pts_2025": 101.0,
+      "pts_2024": 85.0
+    },
+    {
+      "id": "249",
+      "name": "Mason Mount",
+      "team": "Manchester United",
+      "position": "M",
+      "adp": 272.34,
+      "projected_pts": 25.5,
+      "pts_2025": 92.0,
+      "pts_2024": 50.5
+    },
+    {
+      "id": "250",
+      "name": "Matt O'Riley",
+      "team": "Brighton",
+      "position": "M",
+      "adp": 272.84,
+      "projected_pts": 41.5,
+      "pts_2025": 27.5,
+      "pts_2024": 129.0
+    },
+    {
+      "id": "256",
+      "name": "Max Dowman",
+      "team": "Arsenal",
+      "position": "M",
+      "adp": 275.35,
+      "projected_pts": 16.5,
+      "pts_2025": 34.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "258",
+      "name": "Matt Grimes",
+      "team": "Coventry City",
+      "position": "M",
+      "adp": 278.03,
+      "projected_pts": 216.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "260",
+      "name": "Christian Norgaard",
+      "team": "Everton",
+      "position": "M",
+      "adp": 278.25,
+      "projected_pts": 30.5,
+      "pts_2025": 5.5,
+      "pts_2024": 272.0
+    },
+    {
+      "id": "262",
+      "name": "Leon Bailey",
+      "team": "Aston Villa",
+      "position": "M",
+      "adp": 278.96,
+      "projected_pts": 28.0,
+      "pts_2025": 49.5,
+      "pts_2024": 85.5
+    },
+    {
+      "id": "263",
+      "name": "Emile Smith Rowe",
+      "team": "Fulham",
+      "position": "M",
+      "adp": 278.97,
+      "projected_pts": 200.0,
+      "pts_2025": 142.0,
+      "pts_2024": 189.0
+    },
+    {
+      "id": "271",
+      "name": "Divin Mubama",
+      "team": "Manchester City",
+      "position": "M",
+      "adp": 280.85,
+      "projected_pts": 26.0,
+      "pts_2025": 0.0,
+      "pts_2024": -0.5
+    },
+    {
+      "id": "274",
+      "name": "Xaver Schlager",
+      "team": "Nottingham Forest",
+      "position": "M",
+      "adp": 281.54,
+      "projected_pts": 33.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "275",
+      "name": "Myles Lewis-Skelly",
+      "team": "Arsenal",
+      "position": "M",
+      "adp": 281.78,
+      "projected_pts": 9.5,
+      "pts_2025": 22.5,
+      "pts_2024": 51.0
+    },
+    {
+      "id": "279",
+      "name": "Xavi Simons",
+      "team": "Tottenham Hotspur",
+      "position": "M",
+      "adp": 281.84,
+      "projected_pts": 70.5,
+      "pts_2025": 187.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "280",
+      "name": "Carlos Alcaraz",
+      "team": "Everton",
+      "position": "M",
+      "adp": 282.5,
+      "projected_pts": 47.0,
+      "pts_2025": 57.5,
+      "pts_2024": 108.0
+    },
+    {
+      "id": "282",
+      "name": "Ben Doak",
+      "team": "Bournemouth",
+      "position": "M",
+      "adp": 282.66,
+      "projected_pts": 24.5,
+      "pts_2025": 15.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "284",
+      "name": "Joshua King",
+      "team": "Fulham",
+      "position": "M",
+      "adp": 283.22,
+      "projected_pts": 32.5,
+      "pts_2025": 106.0,
+      "pts_2024": 15.5
+    },
+    {
+      "id": "291",
+      "name": "Loum Tchaouna",
+      "team": "Coventry City",
+      "position": "M",
+      "adp": 283.77,
+      "projected_pts": 192.0,
+      "pts_2025": 99.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "292",
+      "name": "Romain Esse",
+      "team": "Crystal Palace",
+      "position": "M",
+      "adp": 284.5,
+      "projected_pts": 39.0,
+      "pts_2025": 1.5,
+      "pts_2024": 38.5
+    },
+    {
+      "id": "300",
+      "name": "Tatsuhiro Sakamoto",
+      "team": "Coventry City",
+      "position": "M",
+      "adp": 285.56,
+      "projected_pts": 206.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "302",
+      "name": "Lucas Bergvall",
+      "team": "Tottenham Hotspur",
+      "position": "M",
+      "adp": 286.0,
+      "projected_pts": 23.0,
+      "pts_2025": 81.0,
+      "pts_2024": 106.0
+    },
+    {
+      "id": "303",
+      "name": "Daniel James",
+      "team": "Leeds United",
+      "position": "M",
+      "adp": 286.21,
+      "projected_pts": 40.5,
+      "pts_2025": 44.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "307",
+      "name": "Sander Berge",
+      "team": "Fulham",
+      "position": "M",
+      "adp": 286.84,
+      "projected_pts": 160.5,
+      "pts_2025": 167.0,
+      "pts_2024": 106.0
+    },
+    {
+      "id": "309",
+      "name": "Jack Clarke",
+      "team": "Ipswich",
+      "position": "M",
+      "adp": 287.0,
+      "projected_pts": 62.0,
+      "pts_2025": 0.0,
+      "pts_2024": 126.5
+    },
+    {
+      "id": "316",
+      "name": "Pape Sarr",
+      "team": "Tottenham Hotspur",
+      "position": "M",
+      "adp": 288.06,
+      "projected_pts": 44.0,
+      "pts_2025": 141.5,
+      "pts_2024": 180.0
+    },
+    {
+      "id": "317",
+      "name": "Will Hughes",
+      "team": "Crystal Palace",
+      "position": "M",
+      "adp": 288.15,
+      "projected_pts": 36.0,
+      "pts_2025": 91.5,
+      "pts_2024": 154.5
+    },
+    {
+      "id": "321",
+      "name": "Sean Longstaff",
+      "team": "Leeds United",
+      "position": "M",
+      "adp": 288.43,
+      "projected_pts": 38.5,
+      "pts_2025": 136.0,
+      "pts_2024": 45.0
+    },
+    {
+      "id": "323",
+      "name": "Habib Diarra",
+      "team": "Sunderland",
+      "position": "M",
+      "adp": 288.68,
+      "projected_pts": 43.5,
+      "pts_2025": 98.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "325",
+      "name": "Ehor Yarmolyuk",
+      "team": "Brentford",
+      "position": "M",
+      "adp": 288.71,
+      "projected_pts": 148.0,
+      "pts_2025": 171.5,
+      "pts_2024": 74.5
+    },
+    {
+      "id": "326",
+      "name": "Nico Gonz\u00e1lez",
+      "team": "Manchester City",
+      "position": "M",
+      "adp": 288.71,
+      "projected_pts": 17.5,
+      "pts_2025": 112.0,
+      "pts_2024": 38.5
+    },
+    {
+      "id": "327",
+      "name": "Ryan Christie",
+      "team": "Bournemouth",
+      "position": "M",
+      "adp": 288.78,
+      "projected_pts": 52.0,
+      "pts_2025": 105.0,
+      "pts_2024": 234.5
+    },
+    {
+      "id": "330",
+      "name": "Noah Sadiki",
+      "team": "Sunderland",
+      "position": "M",
+      "adp": 288.87,
+      "projected_pts": 177.5,
+      "pts_2025": 144.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "331",
+      "name": "Frank Onyeka",
+      "team": "Coventry City",
+      "position": "M",
+      "adp": 289.03,
+      "projected_pts": 171.0,
+      "pts_2025": 16.5,
+      "pts_2024": -0.5
+    },
+    {
+      "id": "334",
+      "name": "Ao Tanaka",
+      "team": "Leeds United",
+      "position": "M",
+      "adp": 289.09,
+      "projected_pts": 35.5,
+      "pts_2025": 122.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "336",
+      "name": "Marcelino N\u00fa\u00f1ez",
+      "team": "Ipswich",
+      "position": "M",
+      "adp": 289.37,
+      "projected_pts": 64.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "344",
+      "name": "Daichi Kamada",
+      "team": "Crystal Palace",
+      "position": "M",
+      "adp": 290.18,
+      "projected_pts": 176.5,
+      "pts_2025": 133.0,
+      "pts_2024": 92.0
+    },
+    {
+      "id": "541",
+      "name": "Theo Julienne",
+      "team": "Arsenal",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "615",
+      "name": "Abdoullah Ba",
+      "team": "Sunderland",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 4.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "611",
+      "name": "Cesar Palacios",
+      "team": "Fulham",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 8.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "606",
+      "name": "Carlos Baleba",
+      "team": "Brighton",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 44.5,
+      "pts_2025": 91.0,
+      "pts_2024": 223.5
+    },
+    {
+      "id": "605",
+      "name": "Jocelin Ta Bi",
+      "team": "Sunderland",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 8.5,
+      "pts_2025": 1.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "603",
+      "name": "Callum Mills",
+      "team": "Leeds United",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "602",
+      "name": "Idrissa Gueye",
+      "team": "Everton",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 211.0,
+      "pts_2025": 140.0,
+      "pts_2024": 212.5
+    },
+    {
+      "id": "598",
+      "name": "Freddie Lane",
+      "team": "Leeds United",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "597",
+      "name": "Ollie Pickles",
+      "team": "Leeds United",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "596",
+      "name": "Nicolas Dominguez",
+      "team": "Nottingham Forest",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 187.0,
+      "pts_2025": 100.0,
+      "pts_2024": 137.5
+    },
+    {
+      "id": "592",
+      "name": "Mahdi Nicoll-Jazuli",
+      "team": "Chelsea",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "591",
+      "name": "Reggie Watson",
+      "team": "Chelsea",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "582",
+      "name": "Hidemasa Morita",
+      "team": "Hull City",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "622",
+      "name": "David Ozoh",
+      "team": "Crystal Palace",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 50.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "579",
+      "name": "Oscar Zambrano",
+      "team": "Hull City",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 38.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "576",
+      "name": "Xavier Parker",
+      "team": "Manchester City",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "572",
+      "name": "Kieran Morrison",
+      "team": "Liverpool",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "569",
+      "name": "Sean Steur",
+      "team": "Newcastle United",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "568",
+      "name": "Mason Miley",
+      "team": "Newcastle United",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "566",
+      "name": "Rory Finneran",
+      "team": "Newcastle United",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "560",
+      "name": "Omari Kellyman",
+      "team": "Chelsea",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "559",
+      "name": "Archie Lightfoot",
+      "team": "Sunderland",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "556",
+      "name": "Charlie Dinsdale",
+      "team": "Sunderland",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "555",
+      "name": "Tom Proctor",
+      "team": "Sunderland",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "550",
+      "name": "Harry Byrne",
+      "team": "Tottenham Hotspur",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "549",
+      "name": "Stefan Bajcetic",
+      "team": "Liverpool",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 53.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "547",
+      "name": "Mamadou Sangar\u00e9",
+      "team": "Brentford",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 95.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "577",
+      "name": "Abdulkadir \u00d6m\u00fcr",
+      "team": "Hull City",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 32.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "623",
+      "name": "Jeremy Monga",
+      "team": "Manchester City",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 10.5,
+      "pts_2025": 0.0,
+      "pts_2024": 8.0
+    },
+    {
+      "id": "650",
+      "name": "Lewis Cook",
+      "team": "Bournemouth",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 45.5,
+      "pts_2025": 78.0,
+      "pts_2024": 257.5
+    },
+    {
+      "id": "626",
+      "name": "Facundo Buonanotte",
+      "team": "Brighton",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 26.5,
+      "pts_2025": 6.5,
+      "pts_2024": 193.5
+    },
+    {
+      "id": "690",
+      "name": "Modou Ciss\u00e9",
+      "team": "Aston Villa",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "688",
+      "name": "Jordan Henderson",
+      "team": "Chelsea",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 42.0,
+      "pts_2025": 120.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "687",
+      "name": "Rhys Chadwick",
+      "team": "Leeds United",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "684",
+      "name": "Tyler Fletcher",
+      "team": "Manchester United",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "683",
+      "name": "Jim Thwaites",
+      "team": "Manchester United",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "680",
+      "name": "Alan Browne",
+      "team": "Sunderland",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 48.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "676",
+      "name": "Chris Rigg",
+      "team": "Sunderland",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 27.0,
+      "pts_2025": 63.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "671",
+      "name": "Jacob Devaney",
+      "team": "Manchester United",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "669",
+      "name": "Jenson Jones",
+      "team": "Sunderland",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "667",
+      "name": "Aladji Bamba",
+      "team": "Newcastle United",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 25.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "666",
+      "name": "Jack Whittaker",
+      "team": "Sunderland",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "664",
+      "name": "Jaydon Jones",
+      "team": "Sunderland",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "657",
+      "name": "Wataru Endo",
+      "team": "Liverpool",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 4.5,
+      "pts_2025": 13.5,
+      "pts_2024": 21.0
+    },
+    {
+      "id": "624",
+      "name": "Cheick Doucoure",
+      "team": "Crystal Palace",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 22.5,
+      "pts_2025": 0.0,
+      "pts_2024": 27.0
+    },
+    {
+      "id": "655",
+      "name": "Claudio Echeverri",
+      "team": "Manchester City",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 7.0,
+      "pts_2025": 0.0,
+      "pts_2024": -0.5
+    },
+    {
+      "id": "540",
+      "name": "Demiane Agustien",
+      "team": "Arsenal",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "648",
+      "name": "Archie Gray",
+      "team": "Tottenham Hotspur",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 29.5,
+      "pts_2025": 87.0,
+      "pts_2024": 48.0
+    },
+    {
+      "id": "646",
+      "name": "Antoni Milambo",
+      "team": "Brentford",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 8.0,
+      "pts_2025": 2.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "643",
+      "name": "Mateo Kovacic",
+      "team": "Manchester City",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 17.5,
+      "pts_2025": 16.5,
+      "pts_2024": 230.5
+    },
+    {
+      "id": "641",
+      "name": "Daniel Gore",
+      "team": "Manchester United",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 1.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "640",
+      "name": "Ilia Gruev",
+      "team": "Leeds United",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 35.5,
+      "pts_2025": 94.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "639",
+      "name": "Sam Chambers",
+      "team": "Leeds United",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "637",
+      "name": "Divine Mukasa",
+      "team": "Manchester City",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 41.0,
+      "pts_2025": 3.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "635",
+      "name": "Manuel Ugarte",
+      "team": "Manchester United",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 21.5,
+      "pts_2025": 68.0,
+      "pts_2024": 123.5
+    },
+    {
+      "id": "634",
+      "name": "Florentino",
+      "team": "Ipswich",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 47.0,
+      "pts_2025": 147.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "632",
+      "name": "Fabio Carvalho",
+      "team": "Brentford",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 22.0,
+      "pts_2025": 14.0,
+      "pts_2024": 55.0
+    },
+    {
+      "id": "630",
+      "name": "Merlin R\u00f6hl",
+      "team": "Everton",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 57.5,
+      "pts_2025": 55.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "629",
+      "name": "Treymaurice Nyoni",
+      "team": "Liverpool",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 1.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "651",
+      "name": "Jesurun Rak-Sakyi",
+      "team": "Crystal Palace",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 50.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "535",
+      "name": "Liam Millar",
+      "team": "Hull City",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 221.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "346",
+      "name": "Harrison Armstrong",
+      "team": "Everton",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 32.0,
+      "pts_2025": 28.0,
+      "pts_2024": -0.5
+    },
+    {
+      "id": "526",
+      "name": "Darko Gyabi",
+      "team": "Hull City",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 38.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "435",
+      "name": "Luka Bentt",
+      "team": "Brentford",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "428",
+      "name": "Rodrigo Bentancur",
+      "team": "Tottenham Hotspur",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 49.5,
+      "pts_2025": 145.5,
+      "pts_2024": 124.0
+    },
+    {
+      "id": "427",
+      "name": "Josh Eccles",
+      "team": "Coventry City",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 45.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "426",
+      "name": "Romaine Mundle",
+      "team": "Sunderland",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 31.5,
+      "pts_2025": 14.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "419",
+      "name": "Malick Yalcouye",
+      "team": "Brighton",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 24.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "411",
+      "name": "Rio Kyerematen",
+      "team": "Tottenham Hotspur",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "409",
+      "name": "Tim Iroegbunam",
+      "team": "Everton",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 165.5,
+      "pts_2025": 119.0,
+      "pts_2024": 42.5
+    },
+    {
+      "id": "408",
+      "name": "Luca Williams-Barnett",
+      "team": "Tottenham Hotspur",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "405",
+      "name": "Mykhailo Mudryk",
+      "team": "Chelsea",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 8.0,
+      "pts_2025": 0.0,
+      "pts_2024": 10.5
+    },
+    {
+      "id": "403",
+      "name": "Reiss-Alexander Russell-Denny",
+      "team": "Tottenham Hotspur",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "401",
+      "name": "Reggie Walsh",
+      "team": "Chelsea",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "399",
+      "name": "Anthony Munda",
+      "team": "Newcastle United",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "396",
+      "name": "Tom Cairney",
+      "team": "Fulham",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 24.5,
+      "pts_2025": 56.0,
+      "pts_2024": 55.5
+    },
+    {
+      "id": "436",
+      "name": "Jack Fletcher",
+      "team": "Manchester United",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 4.0,
+      "pts_2025": 6.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "395",
+      "name": "Jack Taylor",
+      "team": "Ipswich",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 148.5,
+      "pts_2025": 0.0,
+      "pts_2024": 46.5
+    },
+    {
+      "id": "393",
+      "name": "Toby Collyer",
+      "team": "Manchester United",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 10.0,
+      "pts_2025": 0.0,
+      "pts_2024": 18.0
+    },
+    {
+      "id": "392",
+      "name": "Ibrahim Sangare",
+      "team": "Nottingham Forest",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 166.5,
+      "pts_2025": 151.5,
+      "pts_2024": 43.0
+    },
+    {
+      "id": "390",
+      "name": "Jefferson Lerma",
+      "team": "Crystal Palace",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 47.5,
+      "pts_2025": 136.0,
+      "pts_2024": 131.5
+    },
+    {
+      "id": "386",
+      "name": "Alex T\u00f3th",
+      "team": "Bournemouth",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 8.0,
+      "pts_2025": 12.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "379",
+      "name": "Kalvin Phillips",
+      "team": "Manchester City",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 12.0,
+      "pts_2025": 0.0,
+      "pts_2024": 52.0
+    },
+    {
+      "id": "368",
+      "name": "Yang Min-Hyeok",
+      "team": "Tottenham Hotspur",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 24.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "367",
+      "name": "Louie Copley",
+      "team": "Arsenal",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "366",
+      "name": "Lamare Bogarde",
+      "team": "Aston Villa",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 8.0,
+      "pts_2025": 27.5,
+      "pts_2024": 13.0
+    },
+    {
+      "id": "362",
+      "name": "Rio Cardines",
+      "team": "Crystal Palace",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 6.5,
+      "pts_2025": 8.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "355",
+      "name": "Joe Willock",
+      "team": "Newcastle United",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 32.5,
+      "pts_2025": 83.0,
+      "pts_2024": 91.0
+    },
+    {
+      "id": "350",
+      "name": "Dario Essugo",
+      "team": "Chelsea",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 13.5,
+      "pts_2025": 0.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "693",
+      "name": "Amario Cozier-Duberry",
+      "team": "Brighton",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 14.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "345",
+      "name": "Alfie Cresswell",
+      "team": "Leeds United",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "394",
+      "name": "Cameron Humphreys",
+      "team": "Ipswich",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 4.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "533",
+      "name": "Tyrese Hall",
+      "team": "Tottenham Hotspur",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "437",
+      "name": "Ethan Williams",
+      "team": "Manchester United",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "441",
+      "name": "Anis Mehmeti",
+      "team": "Ipswich",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 49.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "520",
+      "name": "James Mcatee",
+      "team": "Nottingham Forest",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 9.0,
+      "pts_2025": 23.0,
+      "pts_2024": 47.5
+    },
+    {
+      "id": "515",
+      "name": "Floyd Samba",
+      "team": "Manchester City",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "512",
+      "name": "David Brooks",
+      "team": "Bournemouth",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 43.0,
+      "pts_2025": 137.0,
+      "pts_2024": 116.5
+    },
+    {
+      "id": "510",
+      "name": "Romeo Lavia",
+      "team": "Chelsea",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 11.0,
+      "pts_2025": 15.5,
+      "pts_2024": 56.5
+    },
+    {
+      "id": "504",
+      "name": "Justin Devenny",
+      "team": "Crystal Palace",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 13.5,
+      "pts_2025": 45.5,
+      "pts_2024": 54.5
+    },
+    {
+      "id": "503",
+      "name": "Josh Dasilva",
+      "team": "Brentford",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 4.5,
+      "pts_2025": 2.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "497",
+      "name": "Kasey McAteer",
+      "team": "Ipswich",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 17.5,
+      "pts_2025": 0.0,
+      "pts_2024": 75.5
+    },
+    {
+      "id": "495",
+      "name": "Amadou Onana",
+      "team": "Aston Villa",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 63.0,
+      "pts_2025": 142.5,
+      "pts_2024": 148.0
+    },
+    {
+      "id": "492",
+      "name": "Tyler Dibling",
+      "team": "Everton",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 16.5,
+      "pts_2025": 26.0,
+      "pts_2024": 142.5
+    },
+    {
+      "id": "487",
+      "name": "Ethan Nwaneri",
+      "team": "Arsenal",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 24.0,
+      "pts_2025": 5.5,
+      "pts_2024": 149.5
+    },
+    {
+      "id": "483",
+      "name": "Keith Andrews",
+      "team": "Coventry City",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "481",
+      "name": "Juanlu S\u00e1nchez",
+      "team": "Bournemouth",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 180.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "477",
+      "name": "Regan Slater",
+      "team": "Hull City",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 168.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "440",
+      "name": "Yunus Konak",
+      "team": "Brentford",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 13.0,
+      "pts_2025": 0.0,
+      "pts_2024": 5.0
+    },
+    {
+      "id": "476",
+      "name": "Ryan Yates",
+      "team": "Nottingham Forest",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 25.0,
+      "pts_2025": 52.0,
+      "pts_2024": 151.0
+    },
+    {
+      "id": "472",
+      "name": "Tye Hall",
+      "team": "Tottenham Hotspur",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "467",
+      "name": "Kieran Dowell",
+      "team": "Hull City",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 20.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "463",
+      "name": "Fabio Vieira",
+      "team": "Arsenal",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 115.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "461",
+      "name": "Curtis Jones",
+      "team": "Liverpool",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 52.5,
+      "pts_2025": 147.0,
+      "pts_2024": 166.0
+    },
+    {
+      "id": "457",
+      "name": "Harrison Reed",
+      "team": "Fulham",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 7.0,
+      "pts_2025": 18.5,
+      "pts_2024": 6.5
+    },
+    {
+      "id": "455",
+      "name": "Ben Winterburn",
+      "team": "Bournemouth",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 1.0,
+      "pts_2025": 0.0,
+      "pts_2024": 2.5
+    },
+    {
+      "id": "454",
+      "name": "Harvey Elliott",
+      "team": "Liverpool",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 7.0,
+      "pts_2025": 4.5,
+      "pts_2024": 56.5
+    },
+    {
+      "id": "452",
+      "name": "Jahnoah Markelo",
+      "team": "Coventry City",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 6.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "447",
+      "name": "Eliot Matazo",
+      "team": "Hull City",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 5.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "446",
+      "name": "Matt Crooks",
+      "team": "Hull City",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 207.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "445",
+      "name": "David Akintola",
+      "team": "Hull City",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 27.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "443",
+      "name": "Azor Matusiwa",
+      "team": "Ipswich",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 192.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "442",
+      "name": "Sindre Egeli",
+      "team": "Ipswich",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 25.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "474",
+      "name": "Ife Ibrahim",
+      "team": "Arsenal",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "695",
+      "name": "James McConnell",
+      "team": "Liverpool",
+      "position": "M",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    }
+  ],
+  "D": [
+    {
+      "id": "16",
+      "name": "Daniel Munoz",
+      "team": "Crystal Palace",
+      "position": "D",
+      "adp": 20.41,
+      "projected_pts": 265.5,
+      "pts_2025": 283.8,
+      "pts_2024": 405.5
+    },
+    {
+      "id": "22",
+      "name": "Gabriel Magalhaes",
+      "team": "Arsenal",
+      "position": "D",
+      "adp": 26.03,
+      "projected_pts": 202.5,
+      "pts_2025": 374.5,
+      "pts_2024": 230.2
+    },
+    {
+      "id": "26",
+      "name": "Virgil van Dijk",
+      "team": "Liverpool",
+      "position": "D",
+      "adp": 30.44,
+      "projected_pts": 259.2,
+      "pts_2025": 376.2,
+      "pts_2024": 334.0
+    },
+    {
+      "id": "28",
+      "name": "Pedro Porro",
+      "team": "Tottenham Hotspur",
+      "position": "D",
+      "adp": 32.78,
+      "projected_pts": 204.2,
+      "pts_2025": 295.0,
+      "pts_2024": 301.2
+    },
+    {
+      "id": "29",
+      "name": "James Tarkowski",
+      "team": "Everton",
+      "position": "D",
+      "adp": 32.81,
+      "projected_pts": 232.5,
+      "pts_2025": 377.0,
+      "pts_2024": 308.8
+    },
+    {
+      "id": "35",
+      "name": "Marc Guehi",
+      "team": "Manchester City",
+      "position": "D",
+      "adp": 40.5,
+      "projected_pts": 192.5,
+      "pts_2025": 372.0,
+      "pts_2024": 235.0
+    },
+    {
+      "id": "39",
+      "name": "Patrick Dorgu",
+      "team": "Manchester United",
+      "position": "D",
+      "adp": 43.97,
+      "projected_pts": 51.2,
+      "pts_2025": 236.0,
+      "pts_2024": 54.8
+    },
+    {
+      "id": "47",
+      "name": "Nico O'Reilly",
+      "team": "Manchester City",
+      "position": "D",
+      "adp": 51.28,
+      "projected_pts": 174.2,
+      "pts_2025": 331.0,
+      "pts_2024": 66.0
+    },
+    {
+      "id": "52",
+      "name": "Jurrien Timber",
+      "team": "Arsenal",
+      "position": "D",
+      "adp": 58.66,
+      "projected_pts": 189.2,
+      "pts_2025": 296.8,
+      "pts_2024": 195.2
+    },
+    {
+      "id": "53",
+      "name": "Nordi Mukiele",
+      "team": "Sunderland",
+      "position": "D",
+      "adp": 59.31,
+      "projected_pts": 224.0,
+      "pts_2025": 313.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "54",
+      "name": "James Hill",
+      "team": "Bournemouth",
+      "position": "D",
+      "adp": 59.53,
+      "projected_pts": 208.5,
+      "pts_2025": 262.5,
+      "pts_2024": 39.8
+    },
+    {
+      "id": "55",
+      "name": "Matheus Nunes",
+      "team": "Manchester City",
+      "position": "D",
+      "adp": 62.66,
+      "projected_pts": 167.2,
+      "pts_2025": 314.0,
+      "pts_2024": 206.0
+    },
+    {
+      "id": "56",
+      "name": "Neco Williams",
+      "team": "Nottingham Forest",
+      "position": "D",
+      "adp": 63.75,
+      "projected_pts": 179.0,
+      "pts_2025": 319.0,
+      "pts_2024": 253.5
+    },
+    {
+      "id": "57",
+      "name": "Antonee Robinson",
+      "team": "Fulham",
+      "position": "D",
+      "adp": 65.06,
+      "projected_pts": 215.5,
+      "pts_2025": 148.2,
+      "pts_2024": 360.8
+    },
+    {
+      "id": "60",
+      "name": "Reece James",
+      "team": "Chelsea",
+      "position": "D",
+      "adp": 66.44,
+      "projected_pts": 223.0,
+      "pts_2025": 260.8,
+      "pts_2024": 103.8
+    },
+    {
+      "id": "61",
+      "name": "Adrien Truffert",
+      "team": "Bournemouth",
+      "position": "D",
+      "adp": 66.44,
+      "projected_pts": 165.8,
+      "pts_2025": 326.8,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "67",
+      "name": "Milos Kerkez",
+      "team": "Liverpool",
+      "position": "D",
+      "adp": 72.31,
+      "projected_pts": 151.2,
+      "pts_2025": 159.2,
+      "pts_2024": 282.8
+    },
+    {
+      "id": "70",
+      "name": "Riccardo Calafiori",
+      "team": "Arsenal",
+      "position": "D",
+      "adp": 75.22,
+      "projected_pts": 205.5,
+      "pts_2025": 223.5,
+      "pts_2024": 95.5
+    },
+    {
+      "id": "71",
+      "name": "Danny Ballard",
+      "team": "Sunderland",
+      "position": "D",
+      "adp": 76.44,
+      "projected_pts": 218.0,
+      "pts_2025": 251.2,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "74",
+      "name": "Lewis Hall",
+      "team": "Newcastle United",
+      "position": "D",
+      "adp": 79.66,
+      "projected_pts": 193.5,
+      "pts_2025": 175.2,
+      "pts_2024": 233.8
+    },
+    {
+      "id": "76",
+      "name": "Maxence Lacroix",
+      "team": "Chelsea",
+      "position": "D",
+      "adp": 80.16,
+      "projected_pts": 148.0,
+      "pts_2025": 302.0,
+      "pts_2024": 253.8
+    },
+    {
+      "id": "78",
+      "name": "Josko Gvardiol",
+      "team": "Manchester City",
+      "position": "D",
+      "adp": 82.13,
+      "projected_pts": 203.2,
+      "pts_2025": 143.2,
+      "pts_2024": 322.8
+    },
+    {
+      "id": "79",
+      "name": "Jan-Paul van Hecke",
+      "team": "Tottenham Hotspur",
+      "position": "D",
+      "adp": 83.03,
+      "projected_pts": 180.2,
+      "pts_2025": 322.2,
+      "pts_2024": 185.2
+    },
+    {
+      "id": "81",
+      "name": "Marcos Senesi",
+      "team": "Tottenham Hotspur",
+      "position": "D",
+      "adp": 85.88,
+      "projected_pts": 157.0,
+      "pts_2025": 346.2,
+      "pts_2024": 69.5
+    },
+    {
+      "id": "90",
+      "name": "Sven Botman",
+      "team": "Newcastle United",
+      "position": "D",
+      "adp": 96.9,
+      "projected_pts": 237.5,
+      "pts_2025": 198.8,
+      "pts_2024": 51.8
+    },
+    {
+      "id": "92",
+      "name": "Malick Thiaw",
+      "team": "Newcastle United",
+      "position": "D",
+      "adp": 98.22,
+      "projected_pts": 205.0,
+      "pts_2025": 261.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "93",
+      "name": "Chris Richards",
+      "team": "Crystal Palace",
+      "position": "D",
+      "adp": 98.7,
+      "projected_pts": 169.5,
+      "pts_2025": 262.5,
+      "pts_2024": 142.8
+    },
+    {
+      "id": "95",
+      "name": "Jeremie Frimpong",
+      "team": "Liverpool",
+      "position": "D",
+      "adp": 101.19,
+      "projected_pts": 166.5,
+      "pts_2025": 117.8,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "100",
+      "name": "Michael Kayode",
+      "team": "Brentford",
+      "position": "D",
+      "adp": 105.83,
+      "projected_pts": 159.0,
+      "pts_2025": 256.2,
+      "pts_2024": 62.8
+    },
+    {
+      "id": "102",
+      "name": "Mats Wieffer",
+      "team": "Brighton",
+      "position": "D",
+      "adp": 110.06,
+      "projected_pts": 209.2,
+      "pts_2025": 204.8,
+      "pts_2024": 141.8
+    },
+    {
+      "id": "108",
+      "name": "Harry Maguire",
+      "team": "Manchester United",
+      "position": "D",
+      "adp": 115.62,
+      "projected_pts": 38.2,
+      "pts_2025": 158.2,
+      "pts_2024": 143.2
+    },
+    {
+      "id": "113",
+      "name": "Luka Vuskovic",
+      "team": "Brighton",
+      "position": "D",
+      "adp": 122.48,
+      "projected_pts": 81.2,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "117",
+      "name": "Matty Cash",
+      "team": "Aston Villa",
+      "position": "D",
+      "adp": 125.52,
+      "projected_pts": 176.5,
+      "pts_2025": 223.5,
+      "pts_2024": 151.5
+    },
+    {
+      "id": "120",
+      "name": "Piero Hincapi\u00e9",
+      "team": "Arsenal",
+      "position": "D",
+      "adp": 127.69,
+      "projected_pts": 68.2,
+      "pts_2025": 161.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "122",
+      "name": "Pascal Struijk",
+      "team": "Brighton",
+      "position": "D",
+      "adp": 130.17,
+      "projected_pts": 154.2,
+      "pts_2025": 211.8,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "127",
+      "name": "Maxim De Cuyper",
+      "team": "Brighton",
+      "position": "D",
+      "adp": 133.45,
+      "projected_pts": 40.0,
+      "pts_2025": 162.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "129",
+      "name": "Rayan Ait-Nouri",
+      "team": "Manchester City",
+      "position": "D",
+      "adp": 134.0,
+      "projected_pts": 35.0,
+      "pts_2025": 125.5,
+      "pts_2024": 280.0
+    },
+    {
+      "id": "130",
+      "name": "Diogo Dalot",
+      "team": "Manchester United",
+      "position": "D",
+      "adp": 134.61,
+      "projected_pts": 152.2,
+      "pts_2025": 242.0,
+      "pts_2024": 206.5
+    },
+    {
+      "id": "131",
+      "name": "Jarrad Branthwaite",
+      "team": "Everton",
+      "position": "D",
+      "adp": 135.87,
+      "projected_pts": 129.8,
+      "pts_2025": 72.2,
+      "pts_2024": 189.0
+    },
+    {
+      "id": "133",
+      "name": "Ferdi Kadioglu",
+      "team": "Brighton",
+      "position": "D",
+      "adp": 136.76,
+      "projected_pts": 124.0,
+      "pts_2025": 203.2,
+      "pts_2024": 45.2
+    },
+    {
+      "id": "135",
+      "name": "Tyrick Mitchell",
+      "team": "Crystal Palace",
+      "position": "D",
+      "adp": 137.55,
+      "projected_pts": 151.0,
+      "pts_2025": 253.0,
+      "pts_2024": 257.8
+    },
+    {
+      "id": "136",
+      "name": "Omar Alderete",
+      "team": "Sunderland",
+      "position": "D",
+      "adp": 138.09,
+      "projected_pts": 168.8,
+      "pts_2025": 260.2,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "138",
+      "name": "Levi Colwill",
+      "team": "Chelsea",
+      "position": "D",
+      "adp": 143.03,
+      "projected_pts": 169.5,
+      "pts_2025": 11.0,
+      "pts_2024": 234.0
+    },
+    {
+      "id": "144",
+      "name": "Bobby Thomas",
+      "team": "Coventry City",
+      "position": "D",
+      "adp": 147.53,
+      "projected_pts": 202.8,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "146",
+      "name": "Ian Maatsen",
+      "team": "Aston Villa",
+      "position": "D",
+      "adp": 149.57,
+      "projected_pts": 173.0,
+      "pts_2025": 128.5,
+      "pts_2024": 112.2
+    },
+    {
+      "id": "151",
+      "name": "Leif Davis",
+      "team": "Ipswich",
+      "position": "D",
+      "adp": 157.03,
+      "projected_pts": 121.0,
+      "pts_2025": 0.0,
+      "pts_2024": 146.8
+    },
+    {
+      "id": "152",
+      "name": "Trai Hume",
+      "team": "Sunderland",
+      "position": "D",
+      "adp": 157.75,
+      "projected_pts": 171.8,
+      "pts_2025": 228.2,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "155",
+      "name": "Sepp van den Berg",
+      "team": "Brentford",
+      "position": "D",
+      "adp": 160.69,
+      "projected_pts": 151.8,
+      "pts_2025": 260.8,
+      "pts_2024": 172.2
+    },
+    {
+      "id": "162",
+      "name": "Jeremy Jacquet",
+      "team": "Liverpool",
+      "position": "D",
+      "adp": 169.99,
+      "projected_pts": 188.2,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "163",
+      "name": "Jaka Bijol",
+      "team": "Leeds United",
+      "position": "D",
+      "adp": 170.18,
+      "projected_pts": 39.5,
+      "pts_2025": 187.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "164",
+      "name": "Nathan Collins",
+      "team": "Brentford",
+      "position": "D",
+      "adp": 172.43,
+      "projected_pts": 140.5,
+      "pts_2025": 243.2,
+      "pts_2024": 322.0
+    },
+    {
+      "id": "167",
+      "name": "Djed Spence",
+      "team": "Tottenham Hotspur",
+      "position": "D",
+      "adp": 175.99,
+      "projected_pts": 92.2,
+      "pts_2025": 132.5,
+      "pts_2024": 105.0
+    },
+    {
+      "id": "168",
+      "name": "Tarik Muharemovic",
+      "team": "Leeds United",
+      "position": "D",
+      "adp": 176.08,
+      "projected_pts": 183.8,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "172",
+      "name": "Andrew Robertson",
+      "team": "Tottenham Hotspur",
+      "position": "D",
+      "adp": 179.93,
+      "projected_pts": 12.2,
+      "pts_2025": 105.5,
+      "pts_2024": 160.0
+    },
+    {
+      "id": "173",
+      "name": "James Justin",
+      "team": "Leeds United",
+      "position": "D",
+      "adp": 181.94,
+      "projected_pts": 151.0,
+      "pts_2025": 177.5,
+      "pts_2024": 156.2
+    },
+    {
+      "id": "179",
+      "name": "Nikola Milenkovic",
+      "team": "Nottingham Forest",
+      "position": "D",
+      "adp": 200.21,
+      "projected_pts": 115.2,
+      "pts_2025": 177.5,
+      "pts_2024": 311.0
+    },
+    {
+      "id": "182",
+      "name": "Ola Aina",
+      "team": "Nottingham Forest",
+      "position": "D",
+      "adp": 203.34,
+      "projected_pts": 93.5,
+      "pts_2025": 132.2,
+      "pts_2024": 208.5
+    },
+    {
+      "id": "183",
+      "name": "Jorrel Hato",
+      "team": "Chelsea",
+      "position": "D",
+      "adp": 207.12,
+      "projected_pts": 125.0,
+      "pts_2025": 29.8,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "184",
+      "name": "Marco Palestra",
+      "team": "Chelsea",
+      "position": "D",
+      "adp": 207.38,
+      "projected_pts": 32.2,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "186",
+      "name": "William Saliba",
+      "team": "Arsenal",
+      "position": "D",
+      "adp": 211.06,
+      "projected_pts": 132.5,
+      "pts_2025": 236.8,
+      "pts_2024": 219.5
+    },
+    {
+      "id": "187",
+      "name": "Oscar Mingueza",
+      "team": "Crystal Palace",
+      "position": "D",
+      "adp": 211.15,
+      "projected_pts": 204.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "192",
+      "name": "Cristhian Mosquera",
+      "team": "Arsenal",
+      "position": "D",
+      "adp": 221.81,
+      "projected_pts": 16.8,
+      "pts_2025": 67.8,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "193",
+      "name": "Joachim Andersen",
+      "team": "Fulham",
+      "position": "D",
+      "adp": 222.22,
+      "projected_pts": 166.0,
+      "pts_2025": 194.8,
+      "pts_2024": 140.2
+    },
+    {
+      "id": "194",
+      "name": "Jake O'Brien",
+      "team": "Everton",
+      "position": "D",
+      "adp": 222.27,
+      "projected_pts": 98.5,
+      "pts_2025": 249.5,
+      "pts_2024": 120.8
+    },
+    {
+      "id": "199",
+      "name": "Murillo",
+      "team": "Nottingham Forest",
+      "position": "D",
+      "adp": 228.69,
+      "projected_pts": 116.8,
+      "pts_2025": 133.0,
+      "pts_2024": 279.5
+    },
+    {
+      "id": "200",
+      "name": "Ruben Dias",
+      "team": "Manchester City",
+      "position": "D",
+      "adp": 229.15,
+      "projected_pts": 35.8,
+      "pts_2025": 201.8,
+      "pts_2024": 142.0
+    },
+    {
+      "id": "201",
+      "name": "Abdukodir Khusanov",
+      "team": "Manchester City",
+      "position": "D",
+      "adp": 230.62,
+      "projected_pts": 118.8,
+      "pts_2025": 118.0,
+      "pts_2024": 21.5
+    },
+    {
+      "id": "204",
+      "name": "Milan van Ewijk",
+      "team": "Coventry City",
+      "position": "D",
+      "adp": 233.91,
+      "projected_pts": 116.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "208",
+      "name": "Vitalii Mykolenko",
+      "team": "Everton",
+      "position": "D",
+      "adp": 237.53,
+      "projected_pts": 111.2,
+      "pts_2025": 175.8,
+      "pts_2024": 267.2
+    },
+    {
+      "id": "209",
+      "name": "Luke Shaw",
+      "team": "Manchester United",
+      "position": "D",
+      "adp": 237.59,
+      "projected_pts": 84.8,
+      "pts_2025": 207.8,
+      "pts_2024": 4.8
+    },
+    {
+      "id": "211",
+      "name": "Micky van de Ven",
+      "team": "Tottenham Hotspur",
+      "position": "D",
+      "adp": 242.22,
+      "projected_pts": 87.0,
+      "pts_2025": 157.2,
+      "pts_2024": 46.0
+    },
+    {
+      "id": "214",
+      "name": "Kenny Tete",
+      "team": "Fulham",
+      "position": "D",
+      "adp": 247.19,
+      "projected_pts": 161.8,
+      "pts_2025": 148.0,
+      "pts_2024": 129.5
+    },
+    {
+      "id": "216",
+      "name": "Malo Gusto",
+      "team": "Chelsea",
+      "position": "D",
+      "adp": 248.09,
+      "projected_pts": 35.2,
+      "pts_2025": 160.8,
+      "pts_2024": 110.5
+    },
+    {
+      "id": "221",
+      "name": "Ezri Konsa",
+      "team": "Aston Villa",
+      "position": "D",
+      "adp": 250.34,
+      "projected_pts": 75.8,
+      "pts_2025": 108.5,
+      "pts_2024": 111.8
+    },
+    {
+      "id": "227",
+      "name": "Jaydee Canvot",
+      "team": "Crystal Palace",
+      "position": "D",
+      "adp": 255.87,
+      "projected_pts": 100.8,
+      "pts_2025": 97.2,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "228",
+      "name": "Liam Kitching",
+      "team": "Coventry City",
+      "position": "D",
+      "adp": 256.72,
+      "projected_pts": 135.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "230",
+      "name": "Lucas Digne",
+      "team": "Aston Villa",
+      "position": "D",
+      "adp": 259.59,
+      "projected_pts": 44.8,
+      "pts_2025": 214.8,
+      "pts_2024": 221.0
+    },
+    {
+      "id": "231",
+      "name": "Michael Keane",
+      "team": "Everton",
+      "position": "D",
+      "adp": 260.59,
+      "projected_pts": 50.2,
+      "pts_2025": 257.2,
+      "pts_2024": 86.2
+    },
+    {
+      "id": "235",
+      "name": "Cristian Romero",
+      "team": "Tottenham Hotspur",
+      "position": "D",
+      "adp": 261.5,
+      "projected_pts": 58.5,
+      "pts_2025": 191.5,
+      "pts_2024": 122.5
+    },
+    {
+      "id": "238",
+      "name": "Dara O'Shea",
+      "team": "Ipswich",
+      "position": "D",
+      "adp": 265.56,
+      "projected_pts": 147.0,
+      "pts_2025": 0.0,
+      "pts_2024": 159.5
+    },
+    {
+      "id": "239",
+      "name": "Valentino Livramento",
+      "team": "Newcastle United",
+      "position": "D",
+      "adp": 266.06,
+      "projected_pts": 89.8,
+      "pts_2025": 93.2,
+      "pts_2024": 178.0
+    },
+    {
+      "id": "241",
+      "name": "Destiny Udogie",
+      "team": "Tottenham Hotspur",
+      "position": "D",
+      "adp": 266.87,
+      "projected_pts": 22.2,
+      "pts_2025": 31.2,
+      "pts_2024": 76.5
+    },
+    {
+      "id": "242",
+      "name": "Ben White",
+      "team": "Arsenal",
+      "position": "D",
+      "adp": 267.31,
+      "projected_pts": 27.0,
+      "pts_2025": 88.2,
+      "pts_2024": 103.5
+    },
+    {
+      "id": "243",
+      "name": "Antonio Silva",
+      "team": "Bournemouth",
+      "position": "D",
+      "adp": 268.5,
+      "projected_pts": 141.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "252",
+      "name": "Ryan Sessegnon",
+      "team": "Fulham",
+      "position": "D",
+      "adp": 273.47,
+      "projected_pts": 63.5,
+      "pts_2025": 168.0,
+      "pts_2024": 115.2
+    },
+    {
+      "id": "257",
+      "name": "Conor Bradley",
+      "team": "Liverpool",
+      "position": "D",
+      "adp": 277.9,
+      "projected_pts": 28.5,
+      "pts_2025": 69.8,
+      "pts_2024": 65.8
+    },
+    {
+      "id": "259",
+      "name": "Jacob Greaves",
+      "team": "Ipswich",
+      "position": "D",
+      "adp": 278.15,
+      "projected_pts": 158.8,
+      "pts_2025": 0.0,
+      "pts_2024": 116.0
+    },
+    {
+      "id": "264",
+      "name": "Trevoh Chalobah",
+      "team": "Chelsea",
+      "position": "D",
+      "adp": 279.52,
+      "projected_pts": 34.0,
+      "pts_2025": 224.0,
+      "pts_2024": 186.5
+    },
+    {
+      "id": "265",
+      "name": "Dan Burn",
+      "team": "Newcastle United",
+      "position": "D",
+      "adp": 279.59,
+      "projected_pts": 64.8,
+      "pts_2025": 191.0,
+      "pts_2024": 280.0
+    },
+    {
+      "id": "268",
+      "name": "Jayden Bogle",
+      "team": "Leeds United",
+      "position": "D",
+      "adp": 280.72,
+      "projected_pts": 97.8,
+      "pts_2025": 175.2,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "270",
+      "name": "Fabian Schar",
+      "team": "Newcastle United",
+      "position": "D",
+      "adp": 280.78,
+      "projected_pts": 57.2,
+      "pts_2025": 116.2,
+      "pts_2024": 232.2
+    },
+    {
+      "id": "269",
+      "name": "Lisandro Martinez",
+      "team": "Manchester United",
+      "position": "D",
+      "adp": 280.78,
+      "projected_pts": 100.0,
+      "pts_2025": 75.5,
+      "pts_2024": 126.0
+    },
+    {
+      "id": "273",
+      "name": "Matthijs de Ligt",
+      "team": "Manchester United",
+      "position": "D",
+      "adp": 281.24,
+      "projected_pts": 49.0,
+      "pts_2025": 94.5,
+      "pts_2024": 157.2
+    },
+    {
+      "id": "278",
+      "name": "Charlie Hughes",
+      "team": "Hull City",
+      "position": "D",
+      "adp": 281.84,
+      "projected_pts": 104.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "285",
+      "name": "Wesley Fofana",
+      "team": "Chelsea",
+      "position": "D",
+      "adp": 283.37,
+      "projected_pts": 39.5,
+      "pts_2025": 158.8,
+      "pts_2024": 64.5
+    },
+    {
+      "id": "293",
+      "name": "Olivier Boscagli",
+      "team": "Brighton",
+      "position": "D",
+      "adp": 284.69,
+      "projected_pts": 34.8,
+      "pts_2025": 72.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "297",
+      "name": "Ryan Giles",
+      "team": "Hull City",
+      "position": "D",
+      "adp": 285.19,
+      "projected_pts": 37.2,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "299",
+      "name": "Joe Rodon",
+      "team": "Leeds United",
+      "position": "D",
+      "adp": 285.34,
+      "projected_pts": 113.0,
+      "pts_2025": 179.2,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "298",
+      "name": "Pau Torres",
+      "team": "Aston Villa",
+      "position": "D",
+      "adp": 285.34,
+      "projected_pts": 87.2,
+      "pts_2025": 91.2,
+      "pts_2024": 58.0
+    },
+    {
+      "id": "305",
+      "name": "Issa Diop",
+      "team": "Ipswich",
+      "position": "D",
+      "adp": 286.69,
+      "projected_pts": 6.2,
+      "pts_2025": 31.5,
+      "pts_2024": 34.5
+    },
+    {
+      "id": "311",
+      "name": "Noussair Mazraoui",
+      "team": "Manchester United",
+      "position": "D",
+      "adp": 287.21,
+      "projected_pts": 19.8,
+      "pts_2025": 89.5,
+      "pts_2024": 209.2
+    },
+    {
+      "id": "320",
+      "name": "Luke O'Nien",
+      "team": "Sunderland",
+      "position": "D",
+      "adp": 288.31,
+      "projected_pts": 18.8,
+      "pts_2025": 31.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "329",
+      "name": "Lewis Dunk",
+      "team": "Brighton",
+      "position": "D",
+      "adp": 288.84,
+      "projected_pts": 97.2,
+      "pts_2025": 174.0,
+      "pts_2024": 61.0
+    },
+    {
+      "id": "340",
+      "name": "Jannik Schuster",
+      "team": "Brentford",
+      "position": "D",
+      "adp": 289.97,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "341",
+      "name": "Jair Cunha",
+      "team": "Nottingham Forest",
+      "position": "D",
+      "adp": 290.06,
+      "projected_pts": 7.2,
+      "pts_2025": 16.2,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "342",
+      "name": "Bafode Diakit\u00e9",
+      "team": "Bournemouth",
+      "position": "D",
+      "adp": 290.12,
+      "projected_pts": 40.8,
+      "pts_2025": 61.2,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "557",
+      "name": "Eiran Cashin",
+      "team": "Brighton",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 36.5,
+      "pts_2025": 0.0,
+      "pts_2024": -1.5
+    },
+    {
+      "id": "558",
+      "name": "Thomas Meunier",
+      "team": "Sunderland",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 32.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "561",
+      "name": "Felix Scott",
+      "team": "Sunderland",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "562",
+      "name": "Kim Ji-Soo",
+      "team": "Brentford",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": -0.2,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "563",
+      "name": "Ben Kindon",
+      "team": "Sunderland",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "571",
+      "name": "Josh Ogunnaike",
+      "team": "Arsenal",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "570",
+      "name": "Veljko Milosavljevic",
+      "team": "Bournemouth",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 11.8,
+      "pts_2025": 26.8,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "553",
+      "name": "Tyler Tingey",
+      "team": "Tottenham Hotspur",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "574",
+      "name": "Arthur Masuaku",
+      "team": "Sunderland",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 2.2,
+      "pts_2025": 5.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "584",
+      "name": "Charlie Walker-Smith",
+      "team": "Crystal Palace",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "587",
+      "name": "Aurele Amenda",
+      "team": "Coventry City",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 26.8,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "567",
+      "name": "Cody Drameh",
+      "team": "Hull City",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 23.8,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "548",
+      "name": "Luke Chambers",
+      "team": "Liverpool",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 20.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "518",
+      "name": "Ollie Shield",
+      "team": "Brentford",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "538",
+      "name": "Jorge Cuenca",
+      "team": "Fulham",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 14.8,
+      "pts_2025": 57.8,
+      "pts_2024": 6.5
+    },
+    {
+      "id": "537",
+      "name": "Joshua Stephenson",
+      "team": "Brentford",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "534",
+      "name": "Issa Kabore",
+      "team": "Manchester City",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 42.8,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "531",
+      "name": "Valentin Barco",
+      "team": "Chelsea",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 40.8,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "529",
+      "name": "Benoit Badiashile",
+      "team": "Chelsea",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 6.8,
+      "pts_2025": 8.8,
+      "pts_2024": 15.0
+    },
+    {
+      "id": "528",
+      "name": "Leo Fuhr Hjelde",
+      "team": "Sunderland",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 7.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "525",
+      "name": "Dean Benamar",
+      "team": "Crystal Palace",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "524",
+      "name": "Ayden Heaven",
+      "team": "Manchester United",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 4.8,
+      "pts_2025": 47.5,
+      "pts_2024": 18.5
+    },
+    {
+      "id": "522",
+      "name": "Matt Targett",
+      "team": "Hull City",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 18.8,
+      "pts_2025": 0.0,
+      "pts_2024": 2.0
+    },
+    {
+      "id": "519",
+      "name": "Finley Burns",
+      "team": "Manchester City",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 1.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "590",
+      "name": "Harvey Broad",
+      "team": "Coventry City",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "517",
+      "name": "Leny Yoro",
+      "team": "Manchester United",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 81.8,
+      "pts_2025": 93.8,
+      "pts_2024": 13.8
+    },
+    {
+      "id": "516",
+      "name": "Harry Amass",
+      "team": "Manchester United",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 36.8,
+      "pts_2025": 0.0,
+      "pts_2024": -1.2
+    },
+    {
+      "id": "545",
+      "name": "Matty Henderson-Hall",
+      "team": "Manchester City",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "593",
+      "name": "Calvin Bassey",
+      "team": "Fulham",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 108.0,
+      "pts_2025": 142.2,
+      "pts_2024": 101.2
+    },
+    {
+      "id": "633",
+      "name": "Aaron Hickey",
+      "team": "Brentford",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 1.8,
+      "pts_2025": 27.2,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "595",
+      "name": "Calvin Diakite",
+      "team": "Chelsea",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "686",
+      "name": "Joshua Wilson-Esbrand",
+      "team": "Manchester City",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 25.2,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "681",
+      "name": "Jenson Seelt",
+      "team": "Sunderland",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 19.0,
+      "pts_2025": 3.2,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "679",
+      "name": "Ajibola Alese",
+      "team": "Sunderland",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": -7.2,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "677",
+      "name": "Ifeanyi Ndukwe",
+      "team": "Liverpool",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "675",
+      "name": "Max Alleyne",
+      "team": "Manchester City",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 12.2,
+      "pts_2025": 15.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "674",
+      "name": "Juma Bah",
+      "team": "Manchester City",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 26.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "670",
+      "name": "Luke Craggs",
+      "team": "Newcastle United",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "665",
+      "name": "Miodrag Pivas",
+      "team": "Newcastle United",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "661",
+      "name": "Rico Henry",
+      "team": "Brentford",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 9.0,
+      "pts_2025": 64.8,
+      "pts_2024": -0.5
+    },
+    {
+      "id": "660",
+      "name": "Stephen Mfuni",
+      "team": "Manchester City",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 17.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "659",
+      "name": "Nicolo Savona",
+      "team": "Nottingham Forest",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 22.5,
+      "pts_2025": 60.2,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "656",
+      "name": "Michael Svoboda",
+      "team": "Brighton",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 56.2,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "654",
+      "name": "Kosta Nedeljkovic",
+      "team": "Aston Villa",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": -1.0,
+      "pts_2025": 0.0,
+      "pts_2024": -0.2
+    },
+    {
+      "id": "653",
+      "name": "Ben Davies",
+      "team": "Tottenham Hotspur",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 17.5,
+      "pts_2025": 21.5,
+      "pts_2024": 78.8
+    },
+    {
+      "id": "652",
+      "name": "Ben Johnson",
+      "team": "Ipswich",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 8.0,
+      "pts_2025": 0.0,
+      "pts_2024": 42.8
+    },
+    {
+      "id": "647",
+      "name": "Darnell Furlong",
+      "team": "Ipswich",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 66.2,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "645",
+      "name": "Max Aarons",
+      "team": "Bournemouth",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 1.2,
+      "pts_2025": 0.0,
+      "pts_2024": 10.0
+    },
+    {
+      "id": "636",
+      "name": "Daniel Armer",
+      "team": "Manchester United",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "509",
+      "name": "Joel Latibeaudiere",
+      "team": "Coventry City",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 13.2,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "631",
+      "name": "Morato",
+      "team": "Nottingham Forest",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 8.5,
+      "pts_2025": 66.8,
+      "pts_2024": 36.2
+    },
+    {
+      "id": "627",
+      "name": "Omar Richards",
+      "team": "Nottingham Forest",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "618",
+      "name": "Tyler Bindon",
+      "team": "Nottingham Forest",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 32.8,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "617",
+      "name": "Jayden Lienou",
+      "team": "Leeds United",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "613",
+      "name": "Adam Smith",
+      "team": "Bournemouth",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 13.2,
+      "pts_2025": 75.5,
+      "pts_2024": 67.0
+    },
+    {
+      "id": "610",
+      "name": "Zach Abbott",
+      "team": "Nottingham Forest",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 1.2,
+      "pts_2025": 6.8,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "601",
+      "name": "Tosin Adarabioyo",
+      "team": "Chelsea",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 14.8,
+      "pts_2025": 61.0,
+      "pts_2024": 125.8
+    },
+    {
+      "id": "599",
+      "name": "Axel Disasi",
+      "team": "Chelsea",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 12.5,
+      "pts_2025": 68.8,
+      "pts_2024": 55.5
+    },
+    {
+      "id": "594",
+      "name": "Olutayo Subuloye",
+      "team": "Chelsea",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "508",
+      "name": "Talla Ndiaye",
+      "team": "Liverpool",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "365",
+      "name": "Marli Salmon",
+      "team": "Arsenal",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "506",
+      "name": "Kaine Hayden",
+      "team": "Coventry City",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 14.2,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "423",
+      "name": "Tayo Adaramola",
+      "team": "Crystal Palace",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "421",
+      "name": "Tyrone Mings",
+      "team": "Aston Villa",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 30.2,
+      "pts_2025": 73.2,
+      "pts_2024": 83.2
+    },
+    {
+      "id": "420",
+      "name": "Kristoffer Ajer",
+      "team": "Brentford",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 26.8,
+      "pts_2025": 132.8,
+      "pts_2024": 58.8
+    },
+    {
+      "id": "418",
+      "name": "Alex Murphy",
+      "team": "Newcastle United",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.2,
+      "pts_2025": 0.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "417",
+      "name": "Dylan Charlton",
+      "team": "Newcastle United",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "415",
+      "name": "Jayden Meghoma",
+      "team": "Brentford",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 3.8,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "407",
+      "name": "Ashley Phillips",
+      "team": "Tottenham Hotspur",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 18.2,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "406",
+      "name": "Souza",
+      "team": "Tottenham Hotspur",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 4.8,
+      "pts_2025": 2.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "402",
+      "name": "Kota Takai",
+      "team": "Tottenham Hotspur",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 9.2,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "398",
+      "name": "Leo Shahar",
+      "team": "Newcastle United",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "391",
+      "name": "Jake Bidwell",
+      "team": "Coventry City",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 5.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "389",
+      "name": "Joseph Gomez",
+      "team": "Liverpool",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 48.2,
+      "pts_2025": 42.2,
+      "pts_2024": 32.8
+    },
+    {
+      "id": "387",
+      "name": "Luke Woolfenden",
+      "team": "Coventry City",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 12.0,
+      "pts_2025": 0.0,
+      "pts_2024": 19.0
+    },
+    {
+      "id": "384",
+      "name": "John Egan",
+      "team": "Hull City",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 97.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "383",
+      "name": "Kevin Danso",
+      "team": "Tottenham Hotspur",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 26.5,
+      "pts_2025": 128.8,
+      "pts_2024": 45.0
+    },
+    {
+      "id": "381",
+      "name": "Abu Kamara",
+      "team": "Hull City",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 9.2,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "376",
+      "name": "Adam Aznou",
+      "team": "Everton",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 7.2,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "372",
+      "name": "Jay da Silva",
+      "team": "Coventry City",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 76.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "369",
+      "name": "Kaden Braithwaite",
+      "team": "Manchester City",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "691",
+      "name": "Ethan Pinnock",
+      "team": "Brentford",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 15.0,
+      "pts_2025": 25.2,
+      "pts_2024": 142.8
+    },
+    {
+      "id": "363",
+      "name": "Nathan Patterson",
+      "team": "Everton",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 5.8,
+      "pts_2025": 29.8,
+      "pts_2024": 24.2
+    },
+    {
+      "id": "361",
+      "name": "Diego Le\u00f3n",
+      "team": "Manchester United",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "359",
+      "name": "Gabriel Gudmundsson",
+      "team": "Leeds United",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 90.8,
+      "pts_2025": 133.8,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "358",
+      "name": "Reinildo",
+      "team": "Sunderland",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 81.8,
+      "pts_2025": 125.8,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "357",
+      "name": "Paddy McNair",
+      "team": "Hull City",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 8.8,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "352",
+      "name": "Rico Lewis",
+      "team": "Manchester City",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 4.8,
+      "pts_2025": 20.5,
+      "pts_2024": 59.5
+    },
+    {
+      "id": "349",
+      "name": "Mamadou Sarr",
+      "team": "Chelsea",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 9.0,
+      "pts_2025": -1.8,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "424",
+      "name": "Sam Byram",
+      "team": "Leeds United",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 4.8,
+      "pts_2025": -1.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "507",
+      "name": "Landon Emenalo",
+      "team": "Chelsea",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "430",
+      "name": "Miguel Angel Brau",
+      "team": "Coventry City",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "433",
+      "name": "Vitor Reis",
+      "team": "Manchester City",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 31.2,
+      "pts_2025": 0.0,
+      "pts_2024": 1.2
+    },
+    {
+      "id": "501",
+      "name": "Costinha",
+      "team": "Brighton",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "499",
+      "name": "Brayden Clarke",
+      "team": "Arsenal",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "498",
+      "name": "Igor Julio",
+      "team": "Brighton",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 4.5,
+      "pts_2025": 1.5,
+      "pts_2024": 14.5
+    },
+    {
+      "id": "496",
+      "name": "Benjamin Arthur",
+      "team": "Brentford",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "494",
+      "name": "Sebastiaan Bornauw",
+      "team": "Leeds United",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 11.5,
+      "pts_2025": 35.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "493",
+      "name": "Josh Acheampong",
+      "team": "Chelsea",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 5.5,
+      "pts_2025": 47.0,
+      "pts_2024": -3.8
+    },
+    {
+      "id": "491",
+      "name": "Benjamin Fredrick",
+      "team": "Brentford",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "489",
+      "name": "George King",
+      "team": "Crystal Palace",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "485",
+      "name": "Julian Araujo",
+      "team": "Bournemouth",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 3.5,
+      "pts_2025": 0.0,
+      "pts_2024": -3.0
+    },
+    {
+      "id": "484",
+      "name": "Harry Clarke",
+      "team": "Ipswich",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 23.2,
+      "pts_2025": 0.0,
+      "pts_2024": 1.0
+    },
+    {
+      "id": "482",
+      "name": "Konstantinos Tsimikas",
+      "team": "Liverpool",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 10.2,
+      "pts_2025": 0.0,
+      "pts_2024": 99.2
+    },
+    {
+      "id": "480",
+      "name": "Cedric Kipre",
+      "team": "Ipswich",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 26.8,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "479",
+      "name": "Aaron Anselmino",
+      "team": "Chelsea",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 11.8,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "478",
+      "name": "Matai Akinmboni",
+      "team": "Bournemouth",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 8.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "473",
+      "name": "Jaydan Kamason",
+      "team": "Manchester United",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "466",
+      "name": "Semi Ajayi",
+      "team": "Hull City",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 65.2,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "465",
+      "name": "Calvin Ramsay",
+      "team": "Liverpool",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 1.2,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "464",
+      "name": "Chadi Riad",
+      "team": "Crystal Palace",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 19.2,
+      "pts_2025": 31.5,
+      "pts_2024": 2.0
+    },
+    {
+      "id": "462",
+      "name": "Borna Sosa",
+      "team": "Crystal Palace",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 11.0,
+      "pts_2025": 4.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "460",
+      "name": "Malachi Hardy",
+      "team": "Tottenham Hotspur",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "459",
+      "name": "Giovanni Leoni",
+      "team": "Liverpool",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 3.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "458",
+      "name": "Timothy Castagne",
+      "team": "Fulham",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 39.5,
+      "pts_2025": 137.2,
+      "pts_2024": 108.2
+    },
+    {
+      "id": "456",
+      "name": "Julio Soler",
+      "team": "Bournemouth",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": -4.0,
+      "pts_2024": -1.0
+    },
+    {
+      "id": "450",
+      "name": "Mofe Jemide",
+      "team": "Crystal Palace",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "449",
+      "name": "Lewie Coyle",
+      "team": "Hull City",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 40.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "448",
+      "name": "Matty Jacob",
+      "team": "Hull City",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 10.2,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "434",
+      "name": "Luca Netz",
+      "team": "Nottingham Forest",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 21.8,
+      "pts_2025": 13.2,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "432",
+      "name": "Victor Lindelof",
+      "team": "Aston Villa",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 8.8,
+      "pts_2025": 21.5,
+      "pts_2024": 38.5
+    },
+    {
+      "id": "697",
+      "name": "Callum Scanlon",
+      "team": "Liverpool",
+      "position": "D",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    }
+  ],
+  "G": [
+    {
+      "id": "115",
+      "name": "David Raya",
+      "team": "Arsenal",
+      "position": "G",
+      "adp": 123.35,
+      "projected_pts": 81.5,
+      "pts_2025": 284.2,
+      "pts_2024": 281.2
+    },
+    {
+      "id": "124",
+      "name": "Robin Roefs",
+      "team": "Sunderland",
+      "position": "G",
+      "adp": 133.06,
+      "projected_pts": 99.0,
+      "pts_2025": 299.2,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "142",
+      "name": "Caoimhin Kelleher",
+      "team": "Brentford",
+      "position": "G",
+      "adp": 146.55,
+      "projected_pts": 120.5,
+      "pts_2025": 283.8,
+      "pts_2024": 81.8
+    },
+    {
+      "id": "148",
+      "name": "Jordan Pickford",
+      "team": "Everton",
+      "position": "G",
+      "adp": 153.16,
+      "projected_pts": 131.8,
+      "pts_2025": 227.0,
+      "pts_2024": 321.0
+    },
+    {
+      "id": "154",
+      "name": "Djordje Petrovic",
+      "team": "Bournemouth",
+      "position": "G",
+      "adp": 160.37,
+      "projected_pts": 155.2,
+      "pts_2025": 257.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "161",
+      "name": "Gianluigi Donnarumma",
+      "team": "Manchester City",
+      "position": "G",
+      "adp": 167.28,
+      "projected_pts": 104.8,
+      "pts_2025": 262.8,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "169",
+      "name": "Emiliano Martinez",
+      "team": "Aston Villa",
+      "position": "G",
+      "adp": 177.24,
+      "projected_pts": 150.0,
+      "pts_2025": 253.8,
+      "pts_2024": 246.0
+    },
+    {
+      "id": "175",
+      "name": "Senne Lammens",
+      "team": "Manchester United",
+      "position": "G",
+      "adp": 185.02,
+      "projected_pts": 89.8,
+      "pts_2025": 191.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "178",
+      "name": "Nick Pope",
+      "team": "Newcastle United",
+      "position": "G",
+      "adp": 199.34,
+      "projected_pts": 81.5,
+      "pts_2025": 221.8,
+      "pts_2024": 242.8
+    },
+    {
+      "id": "188",
+      "name": "Dean Henderson",
+      "team": "Crystal Palace",
+      "position": "G",
+      "adp": 211.59,
+      "projected_pts": 140.5,
+      "pts_2025": 255.5,
+      "pts_2024": 258.0
+    },
+    {
+      "id": "189",
+      "name": "Alisson Becker",
+      "team": "Liverpool",
+      "position": "G",
+      "adp": 212.5,
+      "projected_pts": 90.2,
+      "pts_2025": 150.2,
+      "pts_2024": 214.8
+    },
+    {
+      "id": "202",
+      "name": "Matz Sels",
+      "team": "Nottingham Forest",
+      "position": "G",
+      "adp": 230.81,
+      "projected_pts": 111.0,
+      "pts_2025": 203.5,
+      "pts_2024": 307.5
+    },
+    {
+      "id": "213",
+      "name": "James Trafford",
+      "team": "Leeds United",
+      "position": "G",
+      "adp": 244.06,
+      "projected_pts": 123.0,
+      "pts_2025": 31.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "219",
+      "name": "Bart Verbruggen",
+      "team": "Brighton",
+      "position": "G",
+      "adp": 249.84,
+      "projected_pts": 134.5,
+      "pts_2025": 250.0,
+      "pts_2024": 167.5
+    },
+    {
+      "id": "222",
+      "name": "Antonin Kinsky",
+      "team": "Tottenham Hotspur",
+      "position": "G",
+      "adp": 253.91,
+      "projected_pts": 79.2,
+      "pts_2025": 28.5,
+      "pts_2024": 55.8
+    },
+    {
+      "id": "232",
+      "name": "Bernd Leno",
+      "team": "Fulham",
+      "position": "G",
+      "adp": 261.03,
+      "projected_pts": 122.0,
+      "pts_2025": 222.2,
+      "pts_2024": 213.0
+    },
+    {
+      "id": "246",
+      "name": "Lucas Perri",
+      "team": "Leeds United",
+      "position": "G",
+      "adp": 269.53,
+      "projected_pts": 28.2,
+      "pts_2025": 56.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "247",
+      "name": "Robert Sanchez",
+      "team": "Chelsea",
+      "position": "G",
+      "adp": 271.06,
+      "projected_pts": 115.0,
+      "pts_2025": 238.0,
+      "pts_2024": 278.0
+    },
+    {
+      "id": "248",
+      "name": "Ted Curd",
+      "team": "Chelsea",
+      "position": "G",
+      "adp": 271.62,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "251",
+      "name": "Jack Butland",
+      "team": "Hull City",
+      "position": "G",
+      "adp": 272.94,
+      "projected_pts": 87.8,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "253",
+      "name": "Carl Rushworth",
+      "team": "Coventry City",
+      "position": "G",
+      "adp": 274.66,
+      "projected_pts": 100.2,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "272",
+      "name": "Christian Walton",
+      "team": "Ipswich",
+      "position": "G",
+      "adp": 281.03,
+      "projected_pts": 30.5,
+      "pts_2025": 0.0,
+      "pts_2024": 28.0
+    },
+    {
+      "id": "277",
+      "name": "Guglielmo Vicario",
+      "team": "Tottenham Hotspur",
+      "position": "G",
+      "adp": 281.84,
+      "projected_pts": 26.0,
+      "pts_2025": 172.2,
+      "pts_2024": 139.2
+    },
+    {
+      "id": "286",
+      "name": "Jack Wint",
+      "team": "Manchester City",
+      "position": "G",
+      "adp": 283.39,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "287",
+      "name": "Tom Heaton",
+      "team": "Manchester United",
+      "position": "G",
+      "adp": 283.52,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "289",
+      "name": "Trialist",
+      "team": "Manchester City",
+      "position": "G",
+      "adp": 283.67,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "290",
+      "name": "Dermot Mee",
+      "team": "Manchester United",
+      "position": "G",
+      "adp": 283.69,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "294",
+      "name": "Karl Darlow",
+      "team": "Manchester United",
+      "position": "G",
+      "adp": 284.71,
+      "projected_pts": 13.8,
+      "pts_2025": 143.2,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "295",
+      "name": "Melker Ellborg",
+      "team": "Sunderland",
+      "position": "G",
+      "adp": 284.96,
+      "projected_pts": 5.8,
+      "pts_2025": 27.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "304",
+      "name": "Giorgi Mamardashvili",
+      "team": "Liverpool",
+      "position": "G",
+      "adp": 286.43,
+      "projected_pts": 15.0,
+      "pts_2025": 67.2,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "308",
+      "name": "Marco Bizot",
+      "team": "Aston Villa",
+      "position": "G",
+      "adp": 286.91,
+      "projected_pts": 19.0,
+      "pts_2025": 32.5,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "310",
+      "name": "Gabriel Slonina",
+      "team": "Chelsea",
+      "position": "G",
+      "adp": 287.15,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "313",
+      "name": "Teddy Sharman-Lowe",
+      "team": "Chelsea",
+      "position": "G",
+      "adp": 287.34,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "332",
+      "name": "Tom King",
+      "team": "Everton",
+      "position": "G",
+      "adp": 289.03,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "333",
+      "name": "David Button",
+      "team": "Ipswich",
+      "position": "G",
+      "adp": 289.09,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "335",
+      "name": "Aidan Harris",
+      "team": "Newcastle United",
+      "position": "G",
+      "adp": 289.18,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "337",
+      "name": "Oliver Dovin",
+      "team": "Coventry City",
+      "position": "G",
+      "adp": 289.53,
+      "projected_pts": 20.2,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "338",
+      "name": "Kepa",
+      "team": "Arsenal",
+      "position": "G",
+      "adp": 289.81,
+      "projected_pts": 7.8,
+      "pts_2025": 4.8,
+      "pts_2024": 214.0
+    },
+    {
+      "id": "490",
+      "name": "Remi Matthews",
+      "team": "Crystal Palace",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "500",
+      "name": "Ewen Jaouen",
+      "team": "Newcastle United",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "505",
+      "name": "Harvey Davies",
+      "team": "Liverpool",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "521",
+      "name": "Thomas McGill",
+      "team": "Brighton",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "530",
+      "name": "Jason Steele",
+      "team": "Brighton",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 0.2,
+      "pts_2025": 0.0,
+      "pts_2024": 15.8
+    },
+    {
+      "id": "539",
+      "name": "Illan Meslier",
+      "team": "Arsenal",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 7.8,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "543",
+      "name": "John Victor",
+      "team": "Nottingham Forest",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 4.8,
+      "pts_2025": 4.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "552",
+      "name": "Dylan Thompson",
+      "team": "Tottenham Hotspur",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "575",
+      "name": "Kayne van Oevelen",
+      "team": "Ipswich",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "600",
+      "name": "Darryl Ombang",
+      "team": "Leeds United",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "583",
+      "name": "Ellery Balcombe",
+      "team": "Brentford",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "586",
+      "name": "Lucca Benetton",
+      "team": "Crystal Palace",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "475",
+      "name": "Konstantinos Tzolakis",
+      "team": "Hull City",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "619",
+      "name": "Joseph Whitworth",
+      "team": "Crystal Palace",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "620",
+      "name": "Walter Ben\u00edtez",
+      "team": "Crystal Palace",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 2.0,
+      "pts_2025": 15.2,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "621",
+      "name": "Altay Bayindir",
+      "team": "Manchester United",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 2.5,
+      "pts_2025": 14.8,
+      "pts_2024": 12.5
+    },
+    {
+      "id": "644",
+      "name": "Brandon Austin",
+      "team": "Tottenham Hotspur",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 2.0,
+      "pts_2025": 0.0,
+      "pts_2024": 8.2
+    },
+    {
+      "id": "682",
+      "name": "Anthony Patterson",
+      "team": "Sunderland",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 15.8,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "581",
+      "name": "Thimothee Lo-Tutala",
+      "team": "Hull City",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "469",
+      "name": "Freddie Woodman",
+      "team": "Liverpool",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 12.0,
+      "pts_2025": 12.8,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "351",
+      "name": "Martin Dubravka",
+      "team": "Tottenham Hotspur",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 20.5,
+      "pts_2025": 210.8,
+      "pts_2024": 87.2
+    },
+    {
+      "id": "451",
+      "name": "Dillon Phillips",
+      "team": "Hull City",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 3.2,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "347",
+      "name": "Fraser Forster",
+      "team": "Bournemouth",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 6.0,
+      "pts_2025": 0.0,
+      "pts_2024": 43.8
+    },
+    {
+      "id": "348",
+      "name": "Alex Cairns",
+      "team": "Leeds United",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "685",
+      "name": "Rory Mahady",
+      "team": "Leeds United",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "353",
+      "name": "Mike Penders",
+      "team": "Chelsea",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 23.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "360",
+      "name": "Benjamin Lecomte",
+      "team": "Fulham",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 14.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "370",
+      "name": "Alex Palmer",
+      "team": "Ipswich",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 25.2,
+      "pts_2025": 0.0,
+      "pts_2024": 62.2
+    },
+    {
+      "id": "373",
+      "name": "Khari Ranson",
+      "team": "Arsenal",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "374",
+      "name": "Hakon Valdimarsson",
+      "team": "Brentford",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": -4.0,
+      "pts_2024": 5.8
+    },
+    {
+      "id": "377",
+      "name": "Mark Gillespie",
+      "team": "Newcastle United",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "385",
+      "name": "William Dennis",
+      "team": "Bournemouth",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "388",
+      "name": "Radek Vitek",
+      "team": "Manchester United",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 23.2,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "397",
+      "name": "Lukas Horn\u00edcek",
+      "team": "Newcastle United",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 80.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "400",
+      "name": "Julian Eyestone",
+      "team": "Brentford",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "413",
+      "name": "Marcus Bettinelli",
+      "team": "Manchester City",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "414",
+      "name": "Tommy Setford",
+      "team": "Arsenal",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 0.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "425",
+      "name": "Filip J\u00f8rgensen",
+      "team": "Chelsea",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 5.2,
+      "pts_2025": 15.0,
+      "pts_2024": 32.0
+    },
+    {
+      "id": "429",
+      "name": "Kjell Scherpen",
+      "team": "Ipswich",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 42.5,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "439",
+      "name": "Vitezslav Jaros",
+      "team": "Liverpool",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 0.2,
+      "pts_2025": 0.0,
+      "pts_2024": 3.2
+    },
+    {
+      "id": "444",
+      "name": "Simon Moore",
+      "team": "Sunderland",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 2.0,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "453",
+      "name": "Ben Wilson",
+      "team": "Coventry City",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": -2.8,
+      "pts_2025": 0.0,
+      "pts_2024": 0.0
+    },
+    {
+      "id": "692",
+      "name": "Mark Travers",
+      "team": "Everton",
+      "position": "G",
+      "adp": 999.0,
+      "projected_pts": 7.5,
+      "pts_2025": 0.0,
+      "pts_2024": 43.2
+    }
+  ]
+}
