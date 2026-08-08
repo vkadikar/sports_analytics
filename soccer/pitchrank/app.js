@@ -189,6 +189,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById(`${side}Proj`).textContent = player.projected_pts;
     document.getElementById(`${side}Pts2025`).textContent = player.pts_2025;
     document.getElementById(`${side}Pts2024`).textContent = player.pts_2024;
+
+    const shortName = player.name.split(" ").pop() || player.name;
+    const mobileTextElem = document.getElementById(side === "left" ? "mobileLeftText" : "mobileRightText");
+    if (mobileTextElem) mobileTextElem.textContent = shortName;
   }
 
   function makeChoice(winnerSide) {

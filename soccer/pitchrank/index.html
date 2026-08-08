@@ -28,24 +28,24 @@
 
       <!-- Position Selector Tabs -->
       <nav class="position-tabs" id="positionTabs">
-        <button class="tab-btn active" data-pos="F">
-          <span class="pos-badge pos-f">F</span> Forwards <span class="count-pill" id="cntF">142</span>
+        <button class="tab-btn active" data-pos="F" title="Forwards">
+          <span class="pos-badge pos-f">F</span> <span class="tab-text">Forwards</span> <span class="count-pill" id="cntF">142</span>
         </button>
-        <button class="tab-btn" data-pos="M">
-          <span class="pos-badge pos-m">M</span> Midfielders <span class="count-pill" id="cntM">247</span>
+        <button class="tab-btn" data-pos="M" title="Midfielders">
+          <span class="pos-badge pos-m">M</span> <span class="tab-text">Midfielders</span> <span class="count-pill" id="cntM">247</span>
         </button>
-        <button class="tab-btn" data-pos="D">
-          <span class="pos-badge pos-d">D</span> Defenders <span class="count-pill" id="cntD">228</span>
+        <button class="tab-btn" data-pos="D" title="Defenders">
+          <span class="pos-badge pos-d">D</span> <span class="tab-text">Defenders</span> <span class="count-pill" id="cntD">228</span>
         </button>
-        <button class="tab-btn" data-pos="G">
-          <span class="pos-badge pos-g">G</span> Goalkeepers <span class="count-pill" id="cntG">81</span>
+        <button class="tab-btn" data-pos="G" title="Goalkeepers">
+          <span class="pos-badge pos-g">G</span> <span class="tab-text">Goalkeepers</span> <span class="count-pill" id="cntG">81</span>
         </button>
       </nav>
 
       <div class="header-actions">
         <button id="exportExcelBtn" class="action-btn secondary-btn" title="Export Multi-Sheet Excel Workbook (.xlsx)">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Export Excel (.xlsx)
+          <span class="btn-text">Export Excel</span>
         </button>
       </div>
     </header>
@@ -176,14 +176,14 @@
         <div class="mobile-action-bar">
           <button id="mobileChooseLeftBtn" class="mobile-action-btn mobile-left" aria-label="Select Left Player">
             <span class="btn-icon">👈</span>
-            <span class="btn-text">Left</span>
+            <span id="mobileLeftText" class="btn-text">Left</span>
           </button>
           <button id="mobileSkipBtn" class="mobile-action-btn mobile-skip" aria-label="Skip Player">
             <span class="btn-icon">⏭️</span>
             <span class="btn-text">Skip</span>
           </button>
           <button id="mobileChooseRightBtn" class="mobile-action-btn mobile-right" aria-label="Select Right Player">
-            <span class="btn-text">Right</span>
+            <span id="mobileRightText" class="btn-text">Right</span>
             <span class="btn-icon">👉</span>
           </button>
         </div>
