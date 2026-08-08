@@ -504,6 +504,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Choices & Skip
     chooseLeftBtn.addEventListener("click", () => makeChoice("left"));
     chooseRightBtn.addEventListener("click", () => makeChoice("right"));
+    leftPlayerCard.addEventListener("click", () => makeChoice("left"));
+    rightPlayerCard.addEventListener("click", () => makeChoice("right"));
     skipBtn.addEventListener("click", skipPlayer);
 
     // Mobile Action Buttons
