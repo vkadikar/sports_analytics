@@ -951,7 +951,11 @@ kbd {
     gap: 6px;
   }
 
-  /* === VERTICALLY STACKED PLAYER CARDS === */
+  /* === BIG CENTERED NAME & FOOTER STATS ROW — Mobile Card Redesign === 
+     The player name is prominently displayed in big bold letters in the 
+     center of the card with ADP. Projections (2026 Proj) and historical 
+     performances (2025 & 2024 Actuals) sit in a clean 3-column footer row.
+  */
   .duel-stage {
     display: flex;
     flex-direction: column;
@@ -968,11 +972,10 @@ kbd {
     min-height: 0;
     width: 100%;
     max-width: none;
-    padding: 10px 14px;
+    padding: 0;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    gap: 4px;
+    justify-content: space-between;
     cursor: pointer;
     border-radius: var(--radius-md);
     background: var(--bg-card);
@@ -980,7 +983,20 @@ kbd {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
     transition: transform 0.15s ease, border-color 0.15s ease;
     overflow: hidden;
+    position: relative;
   }
+
+  /* Position-color accent stripe at top of card */
+  .player-card::before {
+    content: '';
+    display: block;
+    height: 3px;
+    flex-shrink: 0;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+  }
+
+  .card-left::before { background: var(--accent-fpl); }
+  .card-right::before { background: var(--accent-blue); }
 
   .player-card:active {
     transform: scale(0.98);
@@ -993,93 +1009,126 @@ kbd {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
   }
 
+  /* --- Card Header: Position Tag + Team Name --- */
   .card-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    padding: 8px 12px 0;
+    flex-shrink: 0;
   }
 
   .pos-tag {
     font-size: 10px;
-    padding: 2px 6px;
+    padding: 2px 7px;
     border-radius: 4px;
+    font-weight: 800;
   }
 
   .team-tag {
     font-size: 11px;
     font-weight: 700;
     color: var(--text-muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
   }
 
+  /* --- Card Body: Big Centered Player Name & ADP Badge --- */
   .card-body {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .player-name {
-    font-size: 16px;
-    font-weight: 800;
-    line-height: 1.2;
-    margin: 0;
-    color: #ffffff;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .adp-pill {
-    padding: 2px 6px;
-    font-size: 10px;
-    font-weight: 800;
-    margin: 0;
-    flex-shrink: 0;
-    background: rgba(245, 158, 11, 0.15);
-    border: 1px solid rgba(245, 158, 11, 0.3);
-    color: var(--accent-gold);
-    border-radius: 6px;
-  }
-
-  .adp-label { font-size: 9px; }
-  .adp-val { font-size: 11px; }
-
-  /* Horizontal inline stats row */
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 4px;
-    margin-top: 2px;
-    width: 100%;
-  }
-
-  .stat-box {
-    padding: 4px 6px;
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1px;
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 6px;
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    justify-content: center;
+    text-align: center;
+    gap: 6px;
+    padding: 10px 14px;
+    min-height: 0;
   }
 
+  .player-name {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(20px, 5.5vw, 26px);
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 0;
+    color: #ffffff;
+    text-align: center;
+    word-break: break-word;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .adp-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 10px;
+    font-size: 10px;
+    font-weight: 800;
+    margin: 0;
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    color: var(--accent-gold);
+    border-radius: 12px;
+  }
+
+  .adp-label { font-size: 9px; font-weight: 700; }
+  .adp-val { font-size: 11px; font-weight: 800; }
+
+  /* --- Stats Footer Row: 3 Columns (Proj 2026, 2025 Actual, 2024 Actual) --- */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    width: 100%;
+    margin: 0;
+    padding: 8px 10px 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    flex-shrink: 0;
+  }
+
+  .stat-box {
+    padding: 6px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    background: rgba(10, 15, 26, 0.6);
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  /* 2026 Proj Highlight box styling */
   .stat-box.highlight {
-    background: rgba(16, 185, 129, 0.1);
-    border-color: rgba(16, 185, 129, 0.2);
+    background: rgba(16, 185, 129, 0.12);
+    border-color: rgba(16, 185, 129, 0.3);
+  }
+
+  .card-left .stat-box.highlight .stat-num {
+    color: var(--accent-fpl);
+    font-weight: 800;
+  }
+
+  .card-right .stat-box.highlight .stat-num {
+    color: #60a5fa;
+    font-weight: 800;
   }
 
   .stat-lbl {
     font-size: 8px;
     color: var(--text-muted);
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.5px;
   }
 
   .stat-num {
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
+    color: var(--text-main);
   }
 
   /* Hide desktop select buttons */
