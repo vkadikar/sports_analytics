@@ -1,19 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#080c14">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>PitchRank FPL | Premier League Draft Tier List & Ranker</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <!-- SheetJS for Multi-Sheet Excel Workbook Exports -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 </head>
+
 <body>
   <div class="app-container">
     <!-- Header Navbar -->
@@ -29,22 +34,34 @@
       <!-- Position Selector Tabs -->
       <nav class="position-tabs" id="positionTabs">
         <button class="tab-btn active" data-pos="F" title="Forwards">
-          <span class="pos-badge pos-f">F</span> <span class="tab-text">Forwards</span> <span class="count-pill" id="cntF">142</span>
+          <span class="pos-badge pos-f">F</span> <span class="tab-text">Forwards</span> <span class="count-pill"
+            id="cntF">142</span>
         </button>
         <button class="tab-btn" data-pos="M" title="Midfielders">
-          <span class="pos-badge pos-m">M</span> <span class="tab-text">Midfielders</span> <span class="count-pill" id="cntM">247</span>
+          <span class="pos-badge pos-m">M</span> <span class="tab-text">Midfielders</span> <span class="count-pill"
+            id="cntM">247</span>
         </button>
         <button class="tab-btn" data-pos="D" title="Defenders">
-          <span class="pos-badge pos-d">D</span> <span class="tab-text">Defenders</span> <span class="count-pill" id="cntD">228</span>
+          <span class="pos-badge pos-d">D</span> <span class="tab-text">Defenders</span> <span class="count-pill"
+            id="cntD">228</span>
         </button>
         <button class="tab-btn" data-pos="G" title="Goalkeepers">
-          <span class="pos-badge pos-g">G</span> <span class="tab-text">Goalkeepers</span> <span class="count-pill" id="cntG">81</span>
+          <span class="pos-badge pos-g">G</span> <span class="tab-text">Goalkeepers</span> <span class="count-pill"
+            id="cntG">81</span>
         </button>
       </nav>
 
       <div class="header-actions">
-        <button id="exportExcelBtn" class="action-btn secondary-btn" title="Export Multi-Sheet Excel Workbook (.xlsx)">
+        <button id="exportCsvBtn" class="action-btn secondary-btn" title="Export Draft Rankings to CSV (.csv)">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span class="btn-text">Export CSV</span>
+        </button>
+        <button id="exportExcelBtn" class="action-btn secondary-btn" title="Export Multi-Sheet Excel Workbook (.xlsx)">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
           <span class="btn-text">Export Excel</span>
         </button>
       </div>
@@ -87,8 +104,10 @@
       <section id="matchupView" class="view-panel active">
         <div class="duel-instruction">
           <h2>Which player do you rank higher for Draft Day?</h2>
-          <p class="hotkey-tip desktop-only-tip">Hotkeys: <kbd>←</kbd> Select Left | <kbd>→</kbd> Select Right | <kbd>S</kbd> or <kbd>↓</kbd> Skip Unfamiliar Player</p>
-          <p class="mobile-gesture-tip">📱 <b>Swipe Left</b> for Left Player | <b>Swipe Right</b> for Right Player | <b>Swipe Down</b> to Skip</p>
+          <p class="hotkey-tip desktop-only-tip">Hotkeys: <kbd>←</kbd> Select Left | <kbd>→</kbd> Select Right |
+            <kbd>S</kbd> or <kbd>↓</kbd> Skip Unfamiliar Player</p>
+          <p class="mobile-gesture-tip">📱 <b>Swipe Left</b> for Left Player | <b>Swipe Right</b> for Right Player |
+            <b>Swipe Down</b> to Skip</p>
         </div>
 
         <div id="duelStage" class="duel-stage">
@@ -231,4 +250,5 @@
 
   <script src="app.js"></script>
 </body>
+
 </html>

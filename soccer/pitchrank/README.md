@@ -1,43 +1,68 @@
-# PitchRank FPL - Fantasy Premier League Draft Ranker
+# PitchRank FPL — Premier League Draft Tier List Generator & Head-to-Head Ranker
 
-PitchRank FPL is an interactive pairwise draft tier list generator and matchup ranker for Fantasy Premier League draft preparation.
+**PitchRank FPL** is an interactive web application designed to help Fantasy Premier League (FPL) draft managers quickly generate personalized draft rankings.
 
-## 🚀 Features
-
-- **Position-Specific Tier Lists**: Full player pools for Forwards (142), Midfielders (247), Defenders (228), and Goalkeepers (81).
-- **Binary Insertion Algorithm**: Fast head-to-head duels that minimize comparison choices (~4-5 choices per player).
-- **Skip Unfamiliar Players**: Skip any player with hotkey `S` or `↓`. Skipped players are kept in a separate board section and can be re-ranked anytime.
-- **Multi-Sheet Excel Export**: One-click **Export Excel (.xlsx)** generates a single workbook containing separate sheets for **Forwards**, **Midfielders**, **Defenders**, and **Goalkeepers**.
-- **State Persistence**: Progress automatically saves in browser `localStorage`.
+Instead of manually sorting hundreds of players on a clunky drag-and-drop board, PitchRank uses **pairwise head-to-head duels** powered by a **binary insertion search algorithm** to build precise positional rankings in minimal comparisons.
 
 ---
 
-## 🌐 Deploying to Render (Shareable Web App Link)
+## 🌟 Features & Highlights
 
-Render (https://render.com) provides free web hosting for web applications.
+### ⚡ Binary Insertion Search Algorithm
+- Reduces full list ordering from $O(N^2)$ manual comparison fatigue to **$O(N \log N)$ total decisions** ($O(\log N)$ comparisons per player).
+- Supports 4 positional pools:
+  - ⚽ **Forwards (F)**: ~142 players
+  - 🎯 **Midfielders (M)**: ~247 players
+  - 🛡️ **Defenders (D)**: ~228 players
+  - 🧤 **Goalkeepers (G)**: ~81 players
 
-### Option A: Deploy via GitHub (Recommended)
-1. Push this repository or the `soccer/pitchrank` folder to GitHub.
-2. Log in to [Render Dashboard](https://dashboard.render.com/).
-3. Click **New +** -> **Web Service**.
-4. Connect your GitHub repository.
-5. Set the following settings:
-   - **Root Directory**: `soccer/pitchrank` (or `./` if deploying from a repository created directly in `pitchrank`)
-   - **Environment**: `Python 3`
-   - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `gunicorn app:app`
-6. Click **Create Web Service**. Render will build and deploy your live URL (e.g. `https://pitchrank-fpl.onrender.com`) that you can share with friends!
+### 📱 Responsive Desktop & Single-Page Mobile UI (`100dvh`)
+- **Desktop Mode**:
+  - Side-by-side player card comparison with detailed projections and actual points.
+  - Keyboard hotkeys: `←` Select Left, `→` Select Right, `S` or `↓` Skip Player, `Ctrl+Z` Undo.
+- **Mobile / iPhone Mode (`100dvh`, Zero Vertical Scroll)**:
+  - **Single Page Viewport**: Entire matchup view fits inside `100dvh` without page scrolling.
+  - **Centered Player Typography**: Player name prominently centered with gold `ADP` badge.
+  - **3-Column Stats Footer Row**: Shows `2026 PROJ` (highlighted), `2025 ACTUAL`, and `2024 ACTUAL` points side-by-side.
+  - **Touch Swipe Gestures**: Swipe Left to select left player, Swipe Right for right player, Swipe Down to skip.
+  - **Pinned Controls & Navigation**: Pinned 1-thumb quick action buttons (`👈 Left`, `⏭️ Skip`, `Right 👉`) and bottom tab bar (`⚔️ Duels` / `📋 Board`).
 
-### Option B: Deploy via Render Blueprint (`render.yaml`)
-1. In Render, select **New +** -> **Blueprint**.
-2. Select your repository. Render will automatically read `render.yaml` and provision the web service!
+### 📊 Comprehensive Data Export
+- **Native Dependency-Free CSV Export (`.csv`)**: Export draft rankings across all position groups with zero external library requirements. Works 100% offline.
+- **Multi-Sheet Excel Export (`.xlsx`)**: Generates an Excel workbook with dedicated tabs for Forwards, Midfielders, Defenders, and Goalkeepers.
 
 ---
 
-## 💻 Running Locally
+## 📁 File Structure
 
-To run locally on your machine:
+```
+pitchrank/
+├── app.py                 # Lightweight Python HTTP web server
+├── app.js                 # Binary insertion search, state management, touch gestures & exports
+├── index.html             # HTML layout with responsive header, matchup view, board view, and bottom nav
+├── style.css              # Custom CSS design system with desktop & mobile 100dvh responsive rules
+├── generate_player_data.py# Data ETL script parsing underlying FPL player stats
+├── players_data.json      # Pre-computed positional player datasets
+├── render.yaml            # Render web service deployment configuration
+└── Procfile               # Gunicorn / Python process runner
+```
+
+---
+
+## 🚀 Running Locally
+
+Launch the app server using Python:
+
 ```bash
 python3 soccer/pitchrank/app.py
 ```
-Open [http://localhost:8000](http://localhost:8000) in your web browser.
+
+Then open **`http://localhost:8000`** in your browser.
+
+---
+
+## ☁️ Deployment
+
+The project includes `render.yaml` and `Procfile` ready for one-click deployment on Render:
+- **Build Command**: `pip install -r requirements.txt`
+- **Start Command**: `python app.py` (or `gunicorn app:app`)

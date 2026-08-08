@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const undoBtn = document.getElementById("undoBtn");
   const resetPosBtn = document.getElementById("resetPosBtn");
+  const exportCsvBtn = document.getElementById("exportCsvBtn");
   const exportExcelBtn = document.getElementById("exportExcelBtn");
   const continueRankingBtn = document.getElementById("continueRankingBtn");
 
@@ -388,10 +389,106 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Multi-Sheet Excel Workbook Export (.xlsx)
+  // Native Dependency-Free CSV Export (.csv)
+  function exportCSV() {
+    const positionConfig = [
+      { code: "F", name: "Forwards" },
+      { code: "M", name: "Midfielders" },
+      { code: "D", name: "Defenders" },
+      { code: "G", name: "Goalkeepers" },
+    ];
+
+    const headers = [
+      "Position Group",
+      "Position Rank",
+      "Status",
+      "Player Name",
+      "Team",
+      "Position",
+      "ADP",
+      "2026 Projected Pts",
+      "2025 Actual Pts",
+      "2024 Actual Pts"
+    ];
+
+    const rows = [headers.join(",")];
+
+    positionConfig.forEach(({ code, name }) => {
+      const posState = state[code];
+      let posHasData = false;
+
+      // 1. Ranked Players
+      if (posState && posState.rankedList && posState.rankedList.length > 0) {
+        posHasData = true;
+        posState.rankedList.forEach((player, idx) => {
+          rows.push([
+            `"${name}"`,
+            idx + 1,
+            "RANKED",
+            `"${(player.name || "").replace(/"/g, '""')}"`,
+            `"${player.team || ""}"`,
+            `"${player.position || code}"`,
+            player.adp ?? "",
+            player.projected_pts ?? "",
+            player.pts_2025 ?? "",
+            player.pts_2024 ?? ""
+          ].join(","));
+        });
+      }
+
+      // 2. Skipped Players
+      if (posState && posState.skippedList && posState.skippedList.length > 0) {
+        posHasData = true;
+        posState.skippedList.forEach((player) => {
+          rows.push([
+            `"${name}"`,
+            "UNRANKED",
+            "SKIPPED",
+            `"${(player.name || "").replace(/"/g, '""')}"`,
+            `"${player.team || ""}"`,
+            `"${player.position || code}"`,
+            player.adp ?? "",
+            player.projected_pts ?? "",
+            player.pts_2025 ?? "",
+            player.pts_2024 ?? ""
+          ].join(","));
+        });
+      }
+
+      // Fallback if no players processed for this position group yet
+      if (!posHasData) {
+        rows.push([
+          `"${name}"`,
+          "-",
+          "NO_DATA",
+          `"No players ranked yet for this position"`,
+          "-",
+          `"${code}"`,
+          "-",
+          "-",
+          "-",
+          "-"
+        ].join(","));
+      }
+    });
+
+    const csvContent = "\uFEFF" + rows.join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `pitchrank_fpl_draft_rankings.csv`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  }
+
+  // Multi-Sheet Excel Workbook Export (.xlsx) with CSV fallback
   function exportExcel() {
     if (typeof XLSX === "undefined") {
-      alert("SheetJS library is loading. Please try exporting again in a moment.");
+      console.warn("SheetJS library not loaded. Falling back to native CSV export.");
+      exportCSV();
       return;
     }
 
@@ -531,7 +628,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Controls
     undoBtn.addEventListener("click", undoChoice);
     resetPosBtn.addEventListener("click", resetPosition);
-    exportExcelBtn.addEventListener("click", exportExcel);
+    if (exportCsvBtn) exportCsvBtn.addEventListener("click", exportCSV);
+    if (exportExcelBtn) exportExcelBtn.addEventListener("click", exportExcel);
 
     // Touch Swipe Gestures for Mobile & iPhone
     setupTouchGestures();
@@ -666,13 +764,13 @@ document.addEventListener("DOMContentLoaded", () => {
   function saveStateToStorage() {
     try {
       localStorage.setItem("pitchrank_fpl_state", JSON.stringify(state));
-    } catch (e) {}
+    } catch (e) { }
   }
 
   function loadStateFromStorage() {
     try {
       const stored = localStorage.getItem("pitchrank_fpl_state");
       if (stored) state = JSON.parse(stored);
-    } catch (e) {}
+    } catch (e) { }
   }
 });
