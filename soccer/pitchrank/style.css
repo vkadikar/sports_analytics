@@ -760,57 +760,14 @@ kbd {
   border: 2px solid #fbbf24;
 }
 
-/* Mobile Quick Action Floating Bar */
+/* Mobile Quick Action Floating Bar — hidden on desktop */
 .mobile-action-bar {
   display: none;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px;
-  margin-top: 16px;
-  padding: 10px;
-  background: rgba(15, 23, 42, 0.85);
-  backdrop-filter: blur(16px);
-  border: 1px solid var(--border-glass);
-  border-radius: var(--radius-md);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
-.mobile-action-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 12px 10px;
-  border-radius: var(--radius-sm);
-  border: none;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  touch-action: manipulation;
-  user-select: none;
-  -webkit-user-select: none;
-  transition: transform 0.1s ease, filter 0.15s ease, box-shadow 0.15s ease;
-}
-
-.mobile-action-btn:active {
-  transform: scale(0.94);
-}
-
-.mobile-left {
-  background: linear-gradient(135deg, var(--accent-fpl), #059669);
-  color: #ffffff;
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
-}
-
-.mobile-skip {
-  background: rgba(245, 158, 11, 0.15);
-  color: var(--accent-gold);
-  border: 1px solid rgba(245, 158, 11, 0.4);
-}
-
-.mobile-right {
-  background: linear-gradient(135deg, var(--accent-blue), #2563eb);
-  color: #ffffff;
-  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+/* Mobile Bottom Nav — hidden on desktop */
+.mobile-bottom-nav {
+  display: none;
 }
 
 /* Duel Stage Touch Optimizations */
@@ -825,8 +782,12 @@ kbd {
   transition: none !important;
 }
 
-/* Media Query: iPhone & Mobile Devices (< 768px) */
+/* ============================================
+   MOBILE LAYOUT — iPhone & small screens
+   ============================================ */
 @media (max-width: 768px) {
+
+  /* --- Lock viewport to screen, no scroll --- */
   html, body {
     height: 100dvh;
     max-height: 100dvh;
@@ -837,8 +798,8 @@ kbd {
   .app-container {
     height: 100dvh;
     max-height: 100dvh;
-    padding: 8px 10px;
-    gap: 6px;
+    padding: 0;
+    gap: 0;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -852,6 +813,118 @@ kbd {
     overflow: hidden;
   }
 
+  /* --- Slim Top Header Bar --- */
+  .app-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    padding: 6px 12px;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(20px);
+    flex-shrink: 0;
+  }
+
+  .brand { gap: 6px; }
+
+  .logo-icon {
+    width: 26px;
+    height: 26px;
+    font-size: 13px;
+    border-radius: 6px;
+  }
+
+  .brand-text h1 { font-size: 15px; gap: 4px; }
+  .badge-fpl, .sub-title { display: none; }
+
+  .position-tabs {
+    padding: 2px;
+    gap: 2px;
+    background: transparent;
+    border: none;
+  }
+
+  .tab-btn {
+    padding: 5px 8px;
+    font-size: 12px;
+    border-radius: 6px;
+  }
+
+  .tab-btn .tab-text,
+  .tab-btn .count-pill {
+    display: none; /* Icon badges only: F, M, D, G */
+  }
+
+  .header-actions { display: flex; }
+
+  .secondary-btn {
+    padding: 5px 8px;
+    font-size: 11px;
+  }
+
+  .secondary-btn .btn-text {
+    display: none; /* Icon-only export on mobile */
+  }
+
+  /* --- Thin Progress Strip (replaces bloated controls-bar) --- */
+  .controls-bar {
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px;
+    background: rgba(10, 15, 26, 0.85);
+    border: none;
+    border-bottom: 1px solid var(--border-glass);
+    border-radius: 0;
+    flex-shrink: 0;
+  }
+
+  /* Hide mode toggles on mobile — moved to bottom nav */
+  .view-toggle {
+    display: none !important;
+  }
+
+  .session-progress {
+    flex: 1;
+    max-width: none;
+  }
+
+  .progress-info {
+    font-size: 10px;
+    margin-bottom: 1px;
+  }
+
+  .progress-bar-bg {
+    height: 4px;
+  }
+
+  .history-controls {
+    display: flex;
+    gap: 4px;
+  }
+
+  .ctrl-btn {
+    padding: 4px 10px;
+    font-size: 10px;
+    border-radius: 6px;
+  }
+
+  /* Hide reset button on mobile to save space */
+  .ctrl-btn.danger {
+    display: none;
+  }
+
+  /* --- Hide Desktop Duel Instruction --- */
+  .duel-instruction {
+    display: none !important;
+  }
+
+  /* --- View Panels --- */
   #matchupView:not(.active),
   #boardView:not(.active) {
     display: none !important;
@@ -861,9 +934,10 @@ kbd {
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     min-height: 0;
     overflow: hidden;
+    padding: 0;
+    gap: 0;
   }
 
   #boardView.active {
@@ -872,152 +946,51 @@ kbd {
     flex-direction: column;
     min-height: 0;
     overflow-y: auto;
-  }
-
-  /* Single Ultra-Slim Top Navbar on Mobile */
-  .app-header {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 4px;
-    padding: 6px 8px;
-    background: rgba(15, 23, 42, 0.95);
-  }
-
-  .brand {
+    -webkit-overflow-scrolling: touch;
+    padding: 8px;
     gap: 6px;
   }
 
-  .logo-icon {
-    width: 28px;
-    height: 28px;
-    font-size: 14px;
-  }
-
-  .brand-text h1 {
-    font-size: 15px;
-  }
-
-  .badge-fpl, .sub-title {
-    display: none;
-  }
-
-  .position-tabs {
-    padding: 2px;
-    gap: 3px;
-    background: transparent;
-    border: none;
-  }
-
-  .tab-btn {
-    padding: 5px 8px;
-    font-size: 12px;
-    border-radius: 8px;
-  }
-
-  .tab-btn .tab-text,
-  .tab-btn .count-pill {
-    display: none; /* Shows clean F, M, D, G icon badges only on mobile */
-  }
-
-  .header-actions {
-    display: flex;
-  }
-
-  .secondary-btn {
-    padding: 5px 8px;
-    font-size: 11px;
-  }
-
-  .secondary-btn .btn-text {
-    display: none; /* Icon-only export button on mobile */
-  }
-
-  /* Sleek Sub-Header Controls Bar on Mobile (Enables Leaderboard Mode Toggle & Undo) */
-  .controls-bar {
-    display: flex !important;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 6px;
-    padding: 4px 8px;
-    background: rgba(15, 23, 42, 0.7);
-    border: 1px solid var(--border-glass);
-    border-radius: var(--radius-sm);
-  }
-
-  .view-toggle {
-    display: flex;
-    gap: 4px;
-  }
-
-  .mode-btn {
-    padding: 4px 8px;
-    font-size: 11px;
-    border-radius: 6px;
-  }
-
-  .session-progress {
-    flex: 1;
-    max-width: 95px;
-  }
-
-  .progress-info {
-    font-size: 9px;
-    margin-bottom: 2px;
-  }
-
-  .progress-bar-bg {
-    height: 3px;
-  }
-
-  .history-controls {
-    display: flex;
-    gap: 4px;
-  }
-
-  .ctrl-btn {
-    padding: 4px 8px;
-    font-size: 10px;
-  }
-
-  .ctrl-btn.danger {
-    display: none; /* Hide reset on main mobile row to save space */
-  }
-
-  .duel-instruction {
-    display: none !important;
-  }
-
-  /* Side-by-Side Compact Player Cards (Sleek ~260px Height - Zero Empty Space!) */
+  /* === VERTICALLY STACKED PLAYER CARDS === */
   .duel-stage {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
     flex: 1;
     min-height: 0;
-    margin: auto 0;
+    padding: 6px 10px;
     position: relative;
+    overflow: hidden;
   }
 
   .player-card {
-    padding: 10px 8px;
+    flex: 1 1 0;
+    min-height: 0;
+    width: 100%;
+    max-width: none;
+    padding: 10px 14px;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    gap: 6px;
-    height: auto; /* Fit compact content naturally without vertical stretching */
+    justify-content: center;
+    gap: 4px;
     cursor: pointer;
     border-radius: var(--radius-md);
     background: var(--bg-card);
     border: 1px solid var(--border-glass);
-    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    transition: transform 0.15s ease, border-color 0.15s ease;
+    overflow: hidden;
   }
 
   .player-card:active {
-    transform: scale(0.97);
+    transform: scale(0.98);
     border-color: var(--accent-fpl);
+  }
+
+  .player-card:hover {
+    transform: none;
+    border-color: var(--border-glass);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
   }
 
   .card-header {
@@ -1027,42 +1000,55 @@ kbd {
     width: 100%;
   }
 
-  .team-tag {
+  .pos-tag {
     font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .team-tag {
+    font-size: 11px;
     font-weight: 700;
     color: var(--text-muted);
   }
 
+  .card-body {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
   .player-name {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 800;
     line-height: 1.2;
-    margin: 2px 0;
+    margin: 0;
     color: #ffffff;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+    white-space: nowrap;
     overflow: hidden;
-    text-align: left;
+    text-overflow: ellipsis;
   }
 
   .adp-pill {
     padding: 2px 6px;
     font-size: 10px;
     font-weight: 800;
-    margin: 0 0 2px 0;
-    align-self: flex-start;
-    background: rgba(245, 158, 11, 0.18);
-    border: 1px solid rgba(245, 158, 11, 0.4);
+    margin: 0;
+    flex-shrink: 0;
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.3);
     color: var(--accent-gold);
     border-radius: 6px;
   }
 
-  /* Compact Stats Grid */
+  .adp-label { font-size: 9px; }
+  .adp-val { font-size: 11px; }
+
+  /* Horizontal inline stats row */
   .stats-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
     margin-top: 2px;
     width: 100%;
   }
@@ -1070,11 +1056,17 @@ kbd {
   .stat-box {
     padding: 4px 6px;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    gap: 1px;
     background: rgba(0, 0, 0, 0.3);
-    border-radius: var(--radius-sm);
+    border-radius: 6px;
     border: 1px solid rgba(255, 255, 255, 0.04);
+  }
+
+  .stat-box.highlight {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.2);
   }
 
   .stat-lbl {
@@ -1082,97 +1074,227 @@ kbd {
     color: var(--text-muted);
     font-weight: 600;
     text-transform: uppercase;
+    letter-spacing: 0.3px;
   }
 
   .stat-num {
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 700;
   }
 
-  /* Hide inside card choice buttons on mobile */
+  /* Hide desktop select buttons */
   .choose-btn {
     display: none;
   }
 
-  /* Perfectly Centered Floating VS Badge */
+  /* --- Inline VS Divider (between stacked cards) --- */
   .vs-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 25;
-    pointer-events: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 2px 0;
+    flex-shrink: 0;
+    position: static;
+    transform: none;
+    pointer-events: auto;
   }
 
   .vs-badge {
-    width: 30px;
-    height: 30px;
-    font-size: 10px;
+    width: 28px;
+    height: 28px;
+    font-size: 9px;
     font-weight: 900;
     background: linear-gradient(135deg, #1e293b, #0f172a);
-    border: 2px solid rgba(255, 255, 255, 0.25);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.8);
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    flex-shrink: 0;
   }
 
+  /* Hide desktop skip button in VS container */
   .skip-btn {
     display: none;
   }
 
-  /* Pinned Mobile Quick Action Bar */
+  /* --- Mobile Action Bar (above bottom nav) --- */
   .mobile-action-bar {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    gap: 8px;
-    margin-top: 4px;
-    padding: 6px;
-    border-radius: var(--radius-md);
+    gap: 6px;
+    padding: 6px 10px;
+    flex-shrink: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    margin: 0;
   }
 
   .mobile-action-btn {
-    padding: 12px 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 10px 6px;
+    border-radius: var(--radius-sm);
+    border: none;
     font-size: 13px;
     font-weight: 700;
+    cursor: pointer;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
+    transition: transform 0.1s ease;
   }
 
-  /* Ranked Board Items on Mobile */
-  .ranked-item {
-    grid-template-columns: 24px 1fr auto;
-    padding: 8px 10px;
-    gap: 6px;
+  .mobile-action-btn:active {
+    transform: scale(0.94);
   }
+
+  .mobile-left {
+    background: linear-gradient(135deg, var(--accent-fpl), #059669);
+    color: #ffffff;
+    box-shadow: 0 3px 10px rgba(16, 185, 129, 0.3);
+  }
+
+  .mobile-skip {
+    background: rgba(245, 158, 11, 0.12);
+    color: var(--accent-gold);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+  }
+
+  .mobile-right {
+    background: linear-gradient(135deg, var(--accent-blue), #2563eb);
+    color: #ffffff;
+    box-shadow: 0 3px 10px rgba(59, 130, 246, 0.3);
+  }
+
+  /* --- Bottom Navigation Tab Bar --- */
+  .mobile-bottom-nav {
+    display: flex;
+    flex-shrink: 0;
+    border-top: 1px solid var(--border-glass);
+    background: rgba(10, 15, 26, 0.95);
+    backdrop-filter: blur(20px);
+    padding: 4px 16px;
+    padding-bottom: max(4px, env(safe-area-inset-bottom));
+  }
+
+  .bottom-tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 6px 0;
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    position: relative;
+  }
+
+  .bottom-tab .tab-icon {
+    font-size: 18px;
+    line-height: 1;
+  }
+
+  .bottom-tab .tab-label {
+    font-size: 10px;
+    letter-spacing: 0.3px;
+  }
+
+  .bottom-tab.active {
+    color: var(--accent-fpl);
+  }
+
+  .bottom-tab.active::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 25%;
+    right: 25%;
+    height: 2px;
+    background: var(--accent-fpl);
+    border-radius: 1px;
+  }
+
+  /* --- Board View Mobile Tweaks --- */
+  .board-header {
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    border-radius: var(--radius-md);
+  }
+
+  .board-title-group h2 { font-size: 16px; }
+  .board-title-group p { font-size: 11px; }
+
+  .board-actions {
+    width: 100%;
+  }
+
+  .board-actions .primary-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .ranked-item {
+    padding: 8px 10px;
+    gap: 8px;
+    border-radius: var(--radius-sm);
+  }
+
+  .item-left { gap: 8px; }
+  .item-rank { font-size: 14px; width: 28px; }
+  .item-name { font-size: 13px; }
+  .item-meta { font-size: 10px; }
 
   .item-stats {
     display: flex;
-    gap: 8px;
+    gap: 6px;
   }
 
-  .item-stat-pill {
-    align-items: center;
-  }
-
-  .item-stat-lbl {
-    font-size: 8px;
-  }
-
-  .item-stat-val {
-    font-size: 10px;
-  }
+  .item-stat-pill { align-items: center; }
+  .item-stat-lbl { font-size: 8px; }
+  .item-stat-val { font-size: 10px; }
 
   .reorder-btns {
     flex-direction: column;
+    gap: 2px;
+  }
+
+  .reorder-btn {
+    width: 22px;
+    height: 22px;
+    font-size: 9px;
+  }
+
+  /* Skipped section */
+  .skipped-section {
+    margin-top: 8px;
+    padding: 10px;
   }
 }
 
-/* Extra small iPhone viewports (< 380px) */
+/* Extra small iPhone viewports (<380px) */
 @media (max-width: 380px) {
   .player-name {
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .mobile-action-btn {
     padding: 8px 4px;
     font-size: 11px;
   }
-}
 
+  .stat-num {
+    font-size: 11px;
+  }
+}
 

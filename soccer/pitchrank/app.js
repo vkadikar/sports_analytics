@@ -143,6 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
       renderBoard();
     }
 
+    updateBottomNavActiveState();
     saveStateToStorage();
   }
 
@@ -534,6 +535,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Touch Swipe Gestures for Mobile & iPhone
     setupTouchGestures();
+
+    // Mobile Bottom Navigation Tabs
+    const mobileTabDuels = document.getElementById("mobileTabDuels");
+    const mobileTabBoard = document.getElementById("mobileTabBoard");
+
+    if (mobileTabDuels) {
+      mobileTabDuels.addEventListener("click", () => {
+        currentView = "matchup";
+        updateBottomNavActiveState();
+        renderCurrentPosition();
+      });
+    }
+
+    if (mobileTabBoard) {
+      mobileTabBoard.addEventListener("click", () => {
+        currentView = "board";
+        updateBottomNavActiveState();
+        renderCurrentPosition();
+      });
+    }
+  }
+
+  function updateBottomNavActiveState() {
+    const mobileTabDuels = document.getElementById("mobileTabDuels");
+    const mobileTabBoard = document.getElementById("mobileTabBoard");
+    if (mobileTabDuels && mobileTabBoard) {
+      mobileTabDuels.classList.toggle("active", currentView === "matchup");
+      mobileTabBoard.classList.toggle("active", currentView === "board");
+    }
   }
 
   function setupTouchGestures() {
