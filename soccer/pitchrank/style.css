@@ -925,7 +925,7 @@ kbd {
   }
 
   .secondary-btn {
-    padding: 6px 8px;
+    padding: 5px 8px;
     font-size: 11px;
   }
 
@@ -933,31 +933,81 @@ kbd {
     display: none; /* Icon-only export button on mobile */
   }
 
-  /* Hide double controls bar and instruction headers on mobile to eliminate top clutter */
-  .controls-bar,
+  /* Sleek Sub-Header Controls Bar on Mobile (Enables Leaderboard Mode Toggle & Undo) */
+  .controls-bar {
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    padding: 4px 8px;
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-sm);
+  }
+
+  .view-toggle {
+    display: flex;
+    gap: 4px;
+  }
+
+  .mode-btn {
+    padding: 4px 8px;
+    font-size: 11px;
+    border-radius: 6px;
+  }
+
+  .session-progress {
+    flex: 1;
+    max-width: 95px;
+  }
+
+  .progress-info {
+    font-size: 9px;
+    margin-bottom: 2px;
+  }
+
+  .progress-bar-bg {
+    height: 3px;
+  }
+
+  .history-controls {
+    display: flex;
+    gap: 4px;
+  }
+
+  .ctrl-btn {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+
+  .ctrl-btn.danger {
+    display: none; /* Hide reset on main mobile row to save space */
+  }
+
   .duel-instruction {
     display: none !important;
   }
 
-  /* Side-by-Side Perfectly Proportioned Player Cards (Zero Empty Gap!) */
+  /* Side-by-Side Compact Player Cards (Sleek ~260px Height - Zero Empty Space!) */
   .duel-stage {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 8px;
-    align-items: stretch;
+    align-items: center;
     flex: 1;
     min-height: 0;
-    max-height: 480px; /* Constrains vertical card height to perfectly fit stats & names */
-    margin: auto 0; /* Centers duel stage vertically inside the 100dvh viewport */
+    margin: auto 0;
     position: relative;
   }
 
   .player-card {
-    padding: 14px 10px;
+    padding: 10px 8px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Even, balanced spacing from top to bottom */
-    height: 100%;
+    justify-content: flex-start;
+    gap: 6px;
+    height: auto; /* Fit compact content naturally without vertical stretching */
     cursor: pointer;
     border-radius: var(--radius-md);
     background: var(--bg-card);
@@ -984,10 +1034,10 @@ kbd {
   }
 
   .player-name {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 800;
     line-height: 1.2;
-    margin: 4px 0 2px 0;
+    margin: 2px 0;
     color: #ffffff;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -997,10 +1047,10 @@ kbd {
   }
 
   .adp-pill {
-    padding: 3px 8px;
-    font-size: 11px;
+    padding: 2px 6px;
+    font-size: 10px;
     font-weight: 800;
-    margin: 0;
+    margin: 0 0 2px 0;
     align-self: flex-start;
     background: rgba(245, 158, 11, 0.18);
     border: 1px solid rgba(245, 158, 11, 0.4);
@@ -1008,17 +1058,17 @@ kbd {
     border-radius: 6px;
   }
 
-  /* Stats Grid docked neatly at the bottom of the card */
+  /* Compact Stats Grid */
   .stats-grid {
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    margin-top: 0;
+    gap: 3px;
+    margin-top: 2px;
     width: 100%;
   }
 
   .stat-box {
-    padding: 6px 8px;
+    padding: 4px 6px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1035,7 +1085,7 @@ kbd {
   }
 
   .stat-num {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 700;
   }
 
@@ -1055,9 +1105,9 @@ kbd {
   }
 
   .vs-badge {
-    width: 32px;
-    height: 32px;
-    font-size: 11px;
+    width: 30px;
+    height: 30px;
+    font-size: 10px;
     font-weight: 900;
     background: linear-gradient(135deg, #1e293b, #0f172a);
     border: 2px solid rgba(255, 255, 255, 0.25);
