@@ -16,6 +16,11 @@ Instead of manually sorting hundreds of players on a clunky drag-and-drop board,
   - 🛡️ **Defenders (D)**: ~228 players
   - 🧤 **Goalkeepers (G)**: ~81 players
 
+### 📥 Excel & CSV File Import & Resumption
+- **Upload Previously Saved File**: Upload any PitchRank Excel workbook (`.xlsx`, `.xls`) or CSV file (`.csv`).
+- **Seamless State Restoration**: Restores exact positional rankings (`RANKED` players) and skipped players (`SKIPPED`).
+- **Resumes Where You Left Off**: Rebuilds the remaining `unrankedQueue` and automatically restarts binary insertion search duels from the exact player where you left off.
+
 ### 📱 Responsive Desktop & Single-Page Mobile UI (`100dvh`)
 - **Desktop Mode**:
   - Side-by-side player card comparison with detailed projections and actual points.
@@ -38,8 +43,8 @@ Instead of manually sorting hundreds of players on a clunky drag-and-drop board,
 ```
 pitchrank/
 ├── app.py                 # Lightweight Python HTTP web server
-├── app.js                 # Binary insertion search, state management, touch gestures & exports
-├── index.html             # HTML layout with responsive header, matchup view, board view, and bottom nav
+├── app.js                 # Binary insertion search, state management, import/export parsers & gestures
+├── index.html             # HTML layout with responsive header, import/export buttons, matchup view, board view, and bottom nav
 ├── style.css              # Custom CSS design system with desktop & mobile 100dvh responsive rules
 ├── generate_player_data.py# Data ETL script parsing underlying FPL player stats
 ├── players_data.json      # Pre-computed positional player datasets

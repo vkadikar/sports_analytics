@@ -21,6 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const undoBtn = document.getElementById("undoBtn");
   const resetPosBtn = document.getElementById("resetPosBtn");
+  const importFileBtn = document.getElementById("importFileBtn");
+  const importFileInput = document.getElementById("importFileInput");
   const exportCsvBtn = document.getElementById("exportCsvBtn");
   const exportExcelBtn = document.getElementById("exportExcelBtn");
   const continueRankingBtn = document.getElementById("continueRankingBtn");
@@ -577,6 +579,139 @@ document.addEventListener("DOMContentLoaded", () => {
     XLSX.writeFile(wb, `pitchrank_fpl_draft_rankings.xlsx`);
   }
 
+  // Import Rankings from uploaded Excel (.xlsx, .xls) or CSV (.csv) file
+  function importRankingsFile(file) {
+    if (!file) return;
+
+    if (typeof XLSX === "undefined") {
+      alert("SheetJS library is not loaded. Cannot parse Excel or CSV file.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      try {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: "array" });
+
+        // Map sheet names or positional strings to position codes
+        const sheetPosMap = {
+          "forwards": "F", "forward": "F", "f": "F",
+          "midfielders": "M", "midfielder": "M", "m": "M",
+          "defenders": "D", "defender": "D", "d": "D",
+          "goalkeepers": "G", "goalkeeper": "G", "g": "G"
+        };
+
+        const importedCounts = {
+          F: { _tempRanked: [], _tempSkipped: [] },
+          M: { _tempRanked: [], _tempSkipped: [] },
+          D: { _tempRanked: [], _tempSkipped: [] },
+          G: { _tempRanked: [], _tempSkipped: [] }
+        };
+
+        // Process each worksheet in the workbook
+        workbook.SheetNames.forEach((sheetName) => {
+          const sheet = workbook.Sheets[sheetName];
+          const jsonRows = XLSX.utils.sheet_to_json(sheet);
+          if (!jsonRows || jsonRows.length === 0) return;
+
+          const normSheetName = sheetName.trim().toLowerCase();
+          const targetPosFromSheet = sheetPosMap[normSheetName] || null;
+
+          jsonRows.forEach((row) => {
+            // Find player name from common column names
+            const playerName = (row["Player Name"] || row["player_name"] || row["Name"] || row["Player"] || "").toString().trim();
+            if (!playerName || playerName.startsWith("No players ranked")) return;
+
+            // Determine position code for this row
+            const rowPos = (row["Position"] || row["position"] || row["Position Group"] || "").toString().trim().toUpperCase();
+            const posCode = targetPosFromSheet || sheetPosMap[rowPos.toLowerCase()] || (["F", "M", "D", "G"].includes(rowPos) ? rowPos : null);
+
+            if (!posCode || !rawData[posCode]) return;
+
+            // Find matching player object in rawData[posCode]
+            const matchedPlayer = rawData[posCode].find(
+              (p) => p.name.trim().toLowerCase() === playerName.toLowerCase()
+            );
+
+            if (!matchedPlayer) return;
+
+            // Determine status and rank index
+            const status = (row["Status"] || "").toString().trim().toUpperCase();
+            const posRankVal = row["Position Rank"];
+            const isRanked = status === "RANKED" || (typeof posRankVal === "number" && posRankVal > 0) || (!status && !isNaN(parseInt(posRankVal)));
+            const isSkipped = status === "SKIPPED" || posRankVal === "UNRANKED";
+
+            if (isRanked) {
+              const rankIdx = typeof posRankVal === "number" ? posRankVal : parseInt(posRankVal) || 999;
+              const playerCopy = { ...matchedPlayer, _importRank: rankIdx };
+              if (!importedCounts[posCode]._tempRanked.some((p) => p.id === playerCopy.id)) {
+                importedCounts[posCode]._tempRanked.push(playerCopy);
+              }
+            } else if (isSkipped) {
+              if (!importedCounts[posCode]._tempSkipped.some((p) => p.id === matchedPlayer.id)) {
+                importedCounts[posCode]._tempSkipped.push(matchedPlayer);
+              }
+            }
+          });
+        });
+
+        let totalImportedRanked = 0;
+        let totalImportedSkipped = 0;
+
+        // Apply imported lists to application state
+        ["F", "M", "D", "G"].forEach((pos) => {
+          const tempRanked = importedCounts[pos]._tempRanked || [];
+          const tempSkipped = importedCounts[pos]._tempSkipped || [];
+
+          if (tempRanked.length > 0 || tempSkipped.length > 0) {
+            // Sort ranked players by imported rank index
+            tempRanked.sort((a, b) => (a._importRank || 0) - (b._importRank || 0));
+            tempRanked.forEach((p) => delete p._importRank);
+
+            // Reconstruct state[pos]
+            state[pos].rankedList = tempRanked;
+            state[pos].skippedList = tempSkipped;
+
+            // Reconstruct unrankedQueue with remaining players
+            const rankedIds = new Set(tempRanked.map((p) => p.id));
+            const skippedIds = new Set(tempSkipped.map((p) => p.id));
+            state[pos].unrankedQueue = rawData[pos].filter(
+              (p) => !rankedIds.has(p.id) && !skippedIds.has(p.id)
+            );
+
+            // Reset insertion algorithm state & undo history
+            state[pos].currentInsertion = null;
+            state[pos].history = [];
+
+            // Resume ranking process from where it left off
+            advanceInsertion(pos);
+
+            totalImportedRanked += tempRanked.length;
+            totalImportedSkipped += tempSkipped.length;
+          }
+        });
+
+        // Save state to localStorage and update UI
+        saveStateToStorage();
+        renderCurrentPosition();
+
+        if (totalImportedRanked > 0 || totalImportedSkipped > 0) {
+          alert(
+            `Import Successful!\nRestored ${totalImportedRanked} ranked player(s) and ${totalImportedSkipped} skipped player(s).\nResuming draft ranking process from where you left off!`
+          );
+        } else {
+          alert("No matching player rankings found in the uploaded file.");
+        }
+      } catch (err) {
+        console.error("Failed to import file:", err);
+        alert("Error parsing file. Please ensure it is a valid PitchRank export Excel (.xlsx) or CSV (.csv) file.");
+      }
+    };
+
+    reader.readAsArrayBuffer(file);
+  }
+
   function setupEventListeners() {
     // Position tabs
     positionTabs.addEventListener("click", (e) => {
@@ -628,6 +763,15 @@ document.addEventListener("DOMContentLoaded", () => {
     // Controls
     undoBtn.addEventListener("click", undoChoice);
     resetPosBtn.addEventListener("click", resetPosition);
+    if (importFileBtn && importFileInput) {
+      importFileBtn.addEventListener("click", () => importFileInput.click());
+      importFileInput.addEventListener("change", (e) => {
+        if (e.target.files && e.target.files[0]) {
+          importRankingsFile(e.target.files[0]);
+          e.target.value = ""; // Reset input after upload
+        }
+      });
+    }
     if (exportCsvBtn) exportCsvBtn.addEventListener("click", exportCSV);
     if (exportExcelBtn) exportExcelBtn.addEventListener("click", exportExcel);
 
