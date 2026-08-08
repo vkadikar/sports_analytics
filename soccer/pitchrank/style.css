@@ -700,3 +700,328 @@ kbd {
   font-weight: 700;
   cursor: pointer;
 }
+
+/* ==========================================================================
+   Mobile & iPhone Touch Swipe UI & Responsive Enhancements
+   ========================================================================== */
+
+/* Mobile vs Desktop Hints */
+.mobile-gesture-tip {
+  display: none;
+  font-size: 12px;
+  color: var(--accent-fpl);
+  margin-top: 6px;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+/* Touch Swipe Overlay Badges */
+.swipe-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  z-index: 100;
+  padding: 14px 24px;
+  border-radius: var(--radius-md);
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: #ffffff;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  text-align: center;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.swipe-overlay.active {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.overlay-left {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.95), rgba(5, 150, 105, 0.95));
+  border: 2px solid #34d399;
+}
+
+.overlay-right {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.95), rgba(29, 78, 216, 0.95));
+  border: 2px solid #60a5fa;
+}
+
+.overlay-skip {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.95), rgba(217, 119, 6, 0.95));
+  border: 2px solid #fbbf24;
+}
+
+/* Mobile Quick Action Floating Bar */
+.mobile-action-bar {
+  display: none;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 10px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.mobile-action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 10px;
+  border-radius: var(--radius-sm);
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: transform 0.1s ease, filter 0.15s ease, box-shadow 0.15s ease;
+}
+
+.mobile-action-btn:active {
+  transform: scale(0.94);
+}
+
+.mobile-left {
+  background: linear-gradient(135deg, var(--accent-fpl), #059669);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+}
+
+.mobile-skip {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--accent-gold);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.mobile-right {
+  background: linear-gradient(135deg, var(--accent-blue), #2563eb);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+}
+
+/* Duel Stage Touch Optimizations */
+.duel-stage {
+  position: relative;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.duel-stage.swiping {
+  transition: none !important;
+}
+
+/* Media Query: iPhone & Mobile Devices (< 768px) */
+@media (max-width: 768px) {
+  .app-container {
+    padding: 10px 12px;
+    gap: 12px;
+  }
+
+  /* Header adjustments */
+  .app-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .brand {
+    justify-content: center;
+  }
+
+  .brand-text h1 {
+    font-size: 19px;
+  }
+
+  .sub-title {
+    display: none;
+  }
+
+  .position-tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+    justify-content: space-between;
+    padding: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tab-btn {
+    padding: 8px 10px;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .header-actions {
+    display: flex;
+    justify-content: center;
+  }
+
+  .secondary-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  /* Controls Bar */
+  .controls-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 10px 12px;
+  }
+
+  .view-toggle {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .mode-btn {
+    justify-content: center;
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  .session-progress {
+    width: 100%;
+  }
+
+  .history-controls {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ctrl-btn {
+    justify-content: center;
+    padding: 7px;
+    font-size: 11px;
+  }
+
+  /* Duel Instruction */
+  .duel-instruction h2 {
+    font-size: 15px;
+  }
+
+  .desktop-only-tip {
+    display: none;
+  }
+
+  .mobile-gesture-tip {
+    display: block;
+  }
+
+  /* Duel Stage Cards on Mobile */
+  .duel-stage {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .player-card {
+    padding: 14px;
+  }
+
+  .player-name {
+    font-size: 18px;
+  }
+
+  .stats-grid {
+    gap: 6px;
+  }
+
+  .stat-box {
+    padding: 6px 8px;
+  }
+
+  .stat-lbl {
+    font-size: 9px;
+  }
+
+  .stat-num {
+    font-size: 13px;
+  }
+
+  .choose-btn {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .vs-container {
+    padding: 4px 0;
+  }
+
+  .vs-badge {
+    width: 32px;
+    height: 32px;
+    font-size: 11px;
+  }
+
+  .skip-btn {
+    display: none; /* Replaced by mobile-action-bar on mobile */
+  }
+
+  /* Mobile Quick Action Bar */
+  .mobile-action-bar {
+    display: grid;
+    position: sticky;
+    bottom: 12px;
+    z-index: 90;
+  }
+
+  /* Ranked Board Items on Mobile */
+  .ranked-item {
+    grid-template-columns: 28px 1fr auto;
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  .item-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .item-stat-pill {
+    align-items: center;
+  }
+
+  .item-stat-lbl {
+    font-size: 8px;
+  }
+
+  .item-stat-val {
+    font-size: 11px;
+  }
+
+  .reorder-btns {
+    flex-direction: column;
+  }
+}
+
+/* Extra small iPhone viewports (< 400px, e.g. iPhone SE / 12 mini) */
+@media (max-width: 400px) {
+  .player-name {
+    font-size: 16px;
+  }
+
+  .mobile-action-btn {
+    padding: 10px 6px;
+    font-size: 13px;
+  }
+}
+

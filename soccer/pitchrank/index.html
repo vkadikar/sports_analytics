@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#080c14">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>PitchRank FPL | Premier League Draft Tier List & Ranker</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -84,10 +87,16 @@
       <section id="matchupView" class="view-panel active">
         <div class="duel-instruction">
           <h2>Which player do you rank higher for Draft Day?</h2>
-          <p class="hotkey-tip">Hotkeys: <kbd>←</kbd> Select Left | <kbd>→</kbd> Select Right | <kbd>S</kbd> or <kbd>↓</kbd> Skip Unfamiliar Player</p>
+          <p class="hotkey-tip desktop-only-tip">Hotkeys: <kbd>←</kbd> Select Left | <kbd>→</kbd> Select Right | <kbd>S</kbd> or <kbd>↓</kbd> Skip Unfamiliar Player</p>
+          <p class="mobile-gesture-tip">📱 <b>Swipe Left</b> for Left Player | <b>Swipe Right</b> for Right Player | <b>Swipe Down</b> to Skip</p>
         </div>
 
-        <div class="duel-stage">
+        <div id="duelStage" class="duel-stage">
+          <!-- Touch Swipe Visual Overlay Feedback -->
+          <div id="swipeOverlayLeft" class="swipe-overlay overlay-left">👈 SELECT LEFT</div>
+          <div id="swipeOverlayRight" class="swipe-overlay overlay-right">SELECT RIGHT 👉</div>
+          <div id="swipeOverlaySkip" class="swipe-overlay overlay-skip">⏭️ SKIP PLAYER</div>
+
           <!-- Left Player Card -->
           <div id="leftPlayerCard" class="player-card card-left">
             <div class="card-header">
@@ -161,6 +170,22 @@
               Select Right Player <span class="hotkey-badge">→</span>
             </button>
           </div>
+        </div>
+
+        <!-- Mobile Quick Action Floating / Bottom Controls -->
+        <div class="mobile-action-bar">
+          <button id="mobileChooseLeftBtn" class="mobile-action-btn mobile-left" aria-label="Select Left Player">
+            <span class="btn-icon">👈</span>
+            <span class="btn-text">Left</span>
+          </button>
+          <button id="mobileSkipBtn" class="mobile-action-btn mobile-skip" aria-label="Skip Player">
+            <span class="btn-icon">⏭️</span>
+            <span class="btn-text">Skip</span>
+          </button>
+          <button id="mobileChooseRightBtn" class="mobile-action-btn mobile-right" aria-label="Select Right Player">
+            <span class="btn-text">Right</span>
+            <span class="btn-icon">👉</span>
+          </button>
         </div>
       </section>
 

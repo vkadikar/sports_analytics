@@ -506,6 +506,11 @@ document.addEventListener("DOMContentLoaded", () => {
     chooseRightBtn.addEventListener("click", () => makeChoice("right"));
     skipBtn.addEventListener("click", skipPlayer);
 
+    // Mobile Action Buttons
+    document.getElementById("mobileChooseLeftBtn")?.addEventListener("click", () => makeChoice("left"));
+    document.getElementById("mobileChooseRightBtn")?.addEventListener("click", () => makeChoice("right"));
+    document.getElementById("mobileSkipBtn")?.addEventListener("click", skipPlayer);
+
     // Keyboard Hotkeys
     document.addEventListener("keydown", (e) => {
       if (currentView === "matchup") {
@@ -520,6 +525,101 @@ document.addEventListener("DOMContentLoaded", () => {
     undoBtn.addEventListener("click", undoChoice);
     resetPosBtn.addEventListener("click", resetPosition);
     exportExcelBtn.addEventListener("click", exportExcel);
+
+    // Touch Swipe Gestures for Mobile & iPhone
+    setupTouchGestures();
+  }
+
+  function setupTouchGestures() {
+    const duelStage = document.getElementById("duelStage");
+    if (!duelStage) return;
+
+    const overlayLeft = document.getElementById("swipeOverlayLeft");
+    const overlayRight = document.getElementById("swipeOverlayRight");
+    const overlaySkip = document.getElementById("swipeOverlaySkip");
+
+    let startX = 0;
+    let startY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let isDragging = false;
+
+    duelStage.addEventListener("touchstart", (e) => {
+      if (currentView !== "matchup") return;
+      if (e.target.closest("button") || e.target.closest("a")) return;
+      if (e.touches.length !== 1) return;
+
+      const touch = e.touches[0];
+      startX = touch.clientX;
+      startY = touch.clientY;
+      currentX = startX;
+      currentY = startY;
+      isDragging = true;
+      duelStage.classList.add("swiping");
+    }, { passive: true });
+
+    duelStage.addEventListener("touchmove", (e) => {
+      if (!isDragging) return;
+      const touch = e.touches[0];
+      currentX = touch.clientX;
+      currentY = touch.clientY;
+
+      const deltaX = currentX - startX;
+      const deltaY = currentY - startY;
+
+      // Card tilt & drag translation
+      const rotation = deltaX * 0.06;
+      duelStage.style.transform = `translate3d(${deltaX}px, ${deltaY}px, 0) rotate(${rotation}deg)`;
+
+      // Visual Overlay Badges
+      overlayLeft?.classList.remove("active");
+      overlayRight?.classList.remove("active");
+      overlaySkip?.classList.remove("active");
+
+      if (deltaX < -50 && Math.abs(deltaY) < Math.abs(deltaX)) {
+        overlayLeft?.classList.add("active");
+      } else if (deltaX > 50 && Math.abs(deltaY) < Math.abs(deltaX)) {
+        overlayRight?.classList.add("active");
+      } else if (deltaY > 50 && Math.abs(deltaX) < 45) {
+        overlaySkip?.classList.add("active");
+      }
+    }, { passive: true });
+
+    const resetStageTransform = () => {
+      duelStage.classList.remove("swiping");
+      duelStage.style.transform = "";
+      overlayLeft?.classList.remove("active");
+      overlayRight?.classList.remove("active");
+      overlaySkip?.classList.remove("active");
+    };
+
+    const handleTouchEnd = () => {
+      if (!isDragging) return;
+      isDragging = false;
+
+      const deltaX = currentX - startX;
+      const deltaY = currentY - startY;
+
+      if (deltaX < -65 && Math.abs(deltaY) < Math.abs(deltaX)) {
+        resetStageTransform();
+        makeChoice("left");
+      } else if (deltaX > 65 && Math.abs(deltaY) < Math.abs(deltaX)) {
+        resetStageTransform();
+        makeChoice("right");
+      } else if (deltaY > 65 && Math.abs(deltaX) < 50) {
+        resetStageTransform();
+        skipPlayer();
+      } else {
+        duelStage.style.transition = "transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275)";
+        resetStageTransform();
+        setTimeout(() => {
+          duelStage.style.transition = "";
+        }, 250);
+      }
+    };
+
+    duelStage.addEventListener("touchend", handleTouchEnd);
+    duelStage.addEventListener("touchcancel", handleTouchEnd);
   }
 
   function getPositionFullName(pos) {
