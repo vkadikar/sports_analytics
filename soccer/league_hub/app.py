@@ -50,11 +50,22 @@ LEAGUE_ID = os.getenv("FANTRAX_LEAGUE_ID", "iku2an1nmryzcfa2")
 
 # Hosted deployments pass the Fantrax login cookie (a binary pickle) base64-encoded in FANTRAX_COOKIE_B64,
 # since environment variables can't hold binary. Decode it to a temp file that the sync reads.
+# A bad value is logged rather than raised, so the site still starts and serves the committed data.js.
 if os.getenv("FANTRAX_COOKIE_B64"):
-    _cookie_file = os.path.join(tempfile.gettempdir(), "fantraxloggedin.cookie")
-    with open(_cookie_file, "wb") as f:
-        f.write(base64.b64decode(os.environ["FANTRAX_COOKIE_B64"]))
-    os.environ["FANTRAX_COOKIE_PATH"] = _cookie_file
+    _cookie_b64 = "".join(os.environ["FANTRAX_COOKIE_B64"].split())  # tolerate pasted spaces/newlines
+    try:
+        _cookie_bytes = base64.b64decode(_cookie_b64, validate=True)
+    except ValueError as e:
+        print(
+            f"ERROR: FANTRAX_COOKIE_B64 is not valid base64 ({len(_cookie_b64)} characters; a real cookie is "
+            f"about 2,000). Re-copy it with `base64 -i fantraxloggedin.cookie | pbcopy`. Fantrax syncs are "
+            f"disabled until it's fixed: {e}"
+        )
+    else:
+        _cookie_file = os.path.join(tempfile.gettempdir(), "fantraxloggedin.cookie")
+        with open(_cookie_file, "wb") as f:
+            f.write(_cookie_bytes)
+        os.environ["FANTRAX_COOKIE_PATH"] = _cookie_file
 COOKIE_PATH = os.getenv("FANTRAX_COOKIE_PATH") or os.path.join(PROJECT_ROOT, "fantraxloggedin.cookie")
 
 # How long a Fantrax sync stays fresh before the next request for data.js triggers another.
