@@ -83,16 +83,26 @@ def compute_optimal_lineup_score(
     return round(sum(top_g + top_d + top_m + top_f), 2)
 
 
-def calculate_manager_efficiency(matchup_df: pd.DataFrame) -> pd.DataFrame:
+def calculate_manager_efficiency(matchup_df: pd.DataFrame, only_completed: bool = True) -> pd.DataFrame:
     """Calculates lineup inefficiency metrics for each team across completed matchweeks.
 
     Args:
         matchup_df: DataFrame containing 'week', 'team', 'score', and 'max_points_for'.
+        only_completed: If True, filters out unplayed matchups where scores are zero.
 
     Returns:
         DataFrame summarizing average lineup inefficiency and total missed points per team.
     """
     df = matchup_df.copy()
+    if only_completed:
+        if "opponent_score" in df.columns:
+            df = df[(df["score"] > 0) | (df["opponent_score"] > 0)]
+        else:
+            df = df[df["score"] > 0]
+
+    if df.empty:
+        return pd.DataFrame(columns=["avg_inefficiency", "total_missed_points", "avg_actual_score", "avg_max_score"])
+
     df["lineup_inefficiency"] = df["max_points_for"] - df["score"]
     df["weighted_lineup_inefficiency"] = df["lineup_inefficiency"] / np.where(df["score"] == 0, 1, df["score"])
 
@@ -106,16 +116,26 @@ def calculate_manager_efficiency(matchup_df: pd.DataFrame) -> pd.DataFrame:
     return summary
 
 
-def calculate_median_standings(matchup_df: pd.DataFrame) -> pd.DataFrame:
+def calculate_median_standings(matchup_df: pd.DataFrame, only_completed: bool = True) -> pd.DataFrame:
     """Calculates alternative league standings based on performance against weekly league median score.
 
     Args:
         matchup_df: DataFrame containing 'week', 'team', 'score', and 'opponent_score'.
+        only_completed: If True, filters out unplayed matchups where scores are zero.
 
     Returns:
         DataFrame containing standings against weekly medians.
     """
     df = matchup_df.copy()
+    if only_completed:
+        if "opponent_score" in df.columns:
+            df = df[(df["score"] > 0) | (df["opponent_score"] > 0)]
+        else:
+            df = df[df["score"] > 0]
+
+    if df.empty:
+        return pd.DataFrame(columns=["wins", "draws", "losses", "points", "fpts_for", "fpts_against", "record"])
+
     weekly_medians = df.groupby("week")["score"].median()
     df["weekly_median"] = df["week"].map(weekly_medians)
 
@@ -134,6 +154,109 @@ def calculate_median_standings(matchup_df: pd.DataFrame) -> pd.DataFrame:
     standings["record"] = standings["wins"].astype(str) + "-" + standings["draws"].astype(str) + "-" + standings["losses"].astype(str)
 
     return standings.sort_values(["points", "fpts_for"], ascending=False)
+
+
+def calculate_optimal_standings(matchup_df: pd.DataFrame, only_completed: bool = True) -> pd.DataFrame:
+    """Calculates counterfactual league standings if every manager had set their optimal Starting XI each week.
+
+    Args:
+        matchup_df: DataFrame containing 'week', 'team', 'matchupId', 'max_points_for', and optionally 'score'.
+        only_completed: If True, filters out unplayed matchups where scores are zero.
+
+    Returns:
+        DataFrame containing simulated optimal standings table.
+    """
+    df = matchup_df.copy()
+    if only_completed:
+        if "opponent_score" in df.columns:
+            df = df[(df["score"] > 0) | (df["opponent_score"] > 0)]
+        elif "score" in df.columns:
+            df = df[df["score"] > 0]
+        elif "max_points_for" in df.columns:
+            df = df[df["max_points_for"] > 0]
+
+    if df.empty or "max_points_for" not in df.columns:
+        return pd.DataFrame(columns=["rank", "record", "points", "fpts_for", "fpts_against", "wins", "draws", "losses"])
+
+    if "opponent_max_points_for" not in df.columns:
+        if "matchupId" in df.columns:
+            def get_opp_max(row):
+                week = row["week"]
+                m_id = row["matchupId"]
+                team = row["team"]
+                all_match = df[(df["week"] == week) & (df["matchupId"] == m_id)]
+                opp_rows = all_match[all_match["team"] != team]
+                if not opp_rows.empty:
+                    return opp_rows.iloc[0]["max_points_for"]
+                return row.get("opponent_score", 0.0)
+
+            df["opponent_max_points_for"] = df.apply(get_opp_max, axis=1)
+        else:
+            df["opponent_max_points_for"] = df.get("opponent_score", 0.0)
+
+    df["optimal_result"] = np.where(
+        df["max_points_for"] > df["opponent_max_points_for"], "W",
+        np.where(df["max_points_for"] < df["opponent_max_points_for"], "L", "D")
+    )
+
+    standings = pd.DataFrame()
+    standings["wins"] = df.groupby("team")["optimal_result"].apply(lambda s: (s == "W").sum())
+    standings["draws"] = df.groupby("team")["optimal_result"].apply(lambda s: (s == "D").sum())
+    standings["losses"] = df.groupby("team")["optimal_result"].apply(lambda s: (s == "L").sum())
+    standings["points"] = standings["wins"] * 3 + standings["draws"]
+    standings["fpts_for"] = df.groupby("team")["max_points_for"].sum().round(2)
+    standings["fpts_against"] = df.groupby("team")["opponent_max_points_for"].sum().round(2)
+    standings["avg_fpts_for"] = df.groupby("team")["max_points_for"].mean().round(2)
+    standings["avg_fpts_against"] = df.groupby("team")["opponent_max_points_for"].mean().round(2)
+    standings["record"] = (
+        standings["wins"].astype(str)
+        + "-"
+        + standings["draws"].astype(str)
+        + "-"
+        + standings["losses"].astype(str)
+    )
+
+    standings = standings.sort_values(["points", "fpts_for"], ascending=False)
+    standings["rank"] = range(1, len(standings) + 1)
+
+    cols = ["rank", "record", "points", "fpts_for", "fpts_against", "avg_fpts_for", "avg_fpts_against", "wins", "draws", "losses"]
+    return standings[[c for c in cols if c in standings.columns]]
+
+
+def compare_standings_vs_optimal(
+    actual_standings: pd.DataFrame,
+    optimal_standings: pd.DataFrame,
+) -> pd.DataFrame:
+    """Combines actual and optimal league standings to highlight performance and luck deltas.
+
+    Args:
+        actual_standings: League table from get_league_table().
+        optimal_standings: Simulated optimal table from calculate_optimal_standings().
+
+    Returns:
+        Combined comparison DataFrame showing actual vs optimal rank, points, and score deltas.
+    """
+    act = actual_standings.copy().reset_index()
+    if "rank" not in act.columns:
+        act["actual_rank"] = range(1, len(act) + 1)
+    else:
+        act["actual_rank"] = act["rank"]
+
+    opt = optimal_standings.copy().reset_index()
+    opt["optimal_rank"] = opt["rank"]
+
+    merged = pd.merge(
+        act[["team", "actual_rank", "record", "points", "fpts_for"]],
+        opt[["team", "optimal_rank", "record", "points", "fpts_for"]],
+        on="team",
+        suffixes=("_actual", "_optimal"),
+    )
+
+    merged["rank_delta"] = merged["actual_rank"] - merged["optimal_rank"]  # Positive = Underperformed optimal rank
+    merged["pts_delta"] = merged["points_optimal"] - merged["points_actual"]
+    merged["missed_fpts"] = (merged["fpts_for_optimal"] - merged["fpts_for_actual"]).round(2)
+
+    return merged.sort_values("optimal_rank").set_index("team")
 
 
 def compute_optimal_team_lineup(

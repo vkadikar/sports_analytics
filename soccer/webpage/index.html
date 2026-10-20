@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Gentlemen’s Invitational | Fantasy Prem 2026-27</title>
+  <meta name="description" content="Official League Headquarters, Standings, Optimal Efficiency, Champions League, Lingineni Cup, Bylaws, Scoring & History for The Gentlemen's Invitational Fantasy Premier League.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Clean Top Ticker Ribbon -->
+  <div class="top-ticker">
+    <div class="ticker-item">
+      <span>⚽ <strong>Season 2026-27</strong></span>
+    </div>
+    <div class="ticker-item">
+      <span>📅 <strong>Kickoff:</strong> August 21, 2026</span>
+    </div>
+    <div class="ticker-item">
+      <span>💰 <strong>Purse:</strong> $1,400 ($100 Buy-in)</span>
+    </div>
+    <div class="ticker-item">
+      <span>🥞 <strong>Penalty:</strong> 24-Hour IHOP Pancake Gauntlet</span>
+    </div>
+    <div class="ticker-item">
+      <span class="ticker-badge">14 Managers • 6 Cities</span>
+    </div>
+  </div>
+
+  <!-- Primary Navigation Header -->
+  <header class="main-header">
+    <div class="header-container">
+      <div class="brand-group" onclick="navigateToPage('dashboard')">
+        <div class="brand-logo">GI</div>
+        <div class="brand-text">
+          <span class="brand-title">The Gentlemen’s Invitational</span>
+          <span class="brand-subtitle">Fantasy Premier League • 4th Annual Edition</span>
+        </div>
+      </div>
+      
+      <nav class="main-nav">
+        <button class="nav-link active" data-page="dashboard" onclick="navigateToPage('dashboard')">
+          <span class="nav-icon">📊</span> Dashboard
+        </button>
+        <button class="nav-link" data-page="standings" onclick="navigateToPage('standings')">
+          <span class="nav-icon">🏆</span> Standings
+        </button>
+        <button class="nav-link" data-page="matchups" onclick="navigateToPage('matchups')">
+          <span class="nav-icon">⚔️</span> Matchups
+        </button>
+        <button class="nav-link" data-page="tournaments" onclick="navigateToPage('tournaments')">
+          <span class="nav-icon">⭐</span> Tournaments
+        </button>
+        <button class="nav-link" data-page="history" onclick="navigateToPage('history')">
+          <span class="nav-icon">📜</span> History & Dossiers
+        </button>
+        <button class="nav-link" data-page="rules" onclick="navigateToPage('rules')">
+          <span class="nav-icon">⚖️</span> Rules & Bylaws
+        </button>
+      </nav>
+
+      <div class="header-status">
+        <span class="sdk-badge"><span class="status-dot"></span> Fantrax SDK Connected</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- PAGE 1: DASHBOARD / OVERVIEW -->
+    <div id="page-dashboard" class="page-view active">
+      <!-- Hero Executive Header -->
+      <section class="hero-header">
+        <div class="hero-top-bar">
+          <div class="league-edition-badge">
+            🏆 4th Annual Edition • Founded 2023
+          </div>
+          <div class="commissioner-group">
+            <span>Commissioners:</span>
+            <span class="commissioner-tag">👑 Shayan Hussain</span>
+            <span class="commissioner-tag">👑 Varun Kadikar</span>
+          </div>
+        </div>
+
+        <div class="hero-title-group">
+          <h1>The Gentlemen’s Invitational</h1>
+          <p>Official League Headquarters. Comprehensive live analytics, counterfactual optimal standings, tournament brackets, and storied history.</p>
+        </div>
+
+        <!-- 4 Pulse Metric Widgets -->
+        <div id="dashboard-pulse-grid" class="pulse-grid">
+          <!-- Injected via JavaScript -->
+        </div>
+      </section>
+
+      <!-- Dashboard Main Grid -->
+      <div class="grid-2" style="grid-template-columns: 1.3fr 1fr;">
+        <!-- Live Standings Snapshot Card -->
+        <div class="card-panel">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">🏆 Premier League Standings Snapshot</div>
+              <div class="panel-subtitle">Top 6 qualify for Champions League • 14th enters IHOP Gauntlet</div>
+            </div>
+            <button class="btn-outline-sm" onclick="navigateToPage('standings')">Full Standings →</button>
+          </div>
+          <div class="table-responsive">
+            <table class="fpl-table">
+              <thead>
+                <tr>
+                  <th>Pos</th>
+                  <th>Club & Manager</th>
+                  <th>P</th>
+                  <th>W</th>
+                  <th>D</th>
+                  <th>L</th>
+                  <th>Pts</th>
+                </tr>
+              </thead>
+              <tbody id="dashboard-standings-tbody">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Featured Gameweek Fixtures & Quick Links -->
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <div class="card-panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title" id="dashboard-matchday-title">⚽ Active Matchweek Fixtures</div>
+                <div class="panel-subtitle">Current matchweek results and fixtures</div>
+              </div>
+              <button class="btn-outline-sm" onclick="navigateToPage('matchups')">Matchup Center →</button>
+            </div>
+            <div id="dashboard-matchups-list" style="display: flex; flex-direction: column; gap: 10px;">
+              <!-- Injected via JavaScript -->
+            </div>
+          </div>
+
+          <!-- Tournaments Quick Spotlight -->
+          <div class="card-panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">🏆 Active Tournaments Spotlight</div>
+                <div class="panel-subtitle">Champions League & Lingineni Cup status</div>
+              </div>
+              <button class="btn-outline-sm" onclick="navigateToPage('tournaments')">Tournament Hub →</button>
+            </div>
+            <div class="grid-2" style="gap: 12px;">
+              <div class="spotlight-box cl-spotlight">
+                <div class="spotlight-title">⭐ Champions League</div>
+                <div class="spotlight-desc">6-Manager Round Robin • $200 Prize</div>
+                <div class="spotlight-sub">Matchdays start Gameweek 6</div>
+              </div>
+              <div class="spotlight-box cup-spotlight">
+                <div class="spotlight-title">🏆 Lingineni Cup</div>
+                <div class="spotlight-desc">14-Manager Single Elimination • $170 Prize</div>
+                <div class="spotlight-sub">Round 1 starts Gameweek 9</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- PAGE 2: STANDINGS & ANALYTICS -->
+    <div id="page-standings" class="page-view">
+      <div class="card-panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">🏆 Standings & Performance Analytics</div>
+            <div class="panel-subtitle">Official league standings, counterfactual optimal "what-if" rosters, median comparison, and manager efficiency</div>
+          </div>
+          <div style="display: flex; gap: 8px;">
+            <span class="ticker-badge" style="background: rgba(4, 245, 255, 0.1); color: var(--pl-cyan); border-color: rgba(4, 245, 255, 0.3);">⭐ CL Spots: 1st - 6th</span>
+            <span class="ticker-badge" style="background: rgba(239, 68, 68, 0.1); color: #f87171; border-color: rgba(239, 68, 68, 0.3);">🥞 IHOP Zone: 14th</span>
+          </div>
+        </div>
+
+        <!-- Sub-Nav Pills -->
+        <div class="sub-nav" id="standings-subnav">
+          <button class="sub-btn active" data-view="official" onclick="switchStandingsSubView('official')">🏆 Official Standings</button>
+          <button class="sub-btn" data-view="optimal" onclick="switchStandingsSubView('optimal')">🎯 Optimal Standings ("What-If")</button>
+          <button class="sub-btn" data-view="median" onclick="switchStandingsSubView('median')">📊 Standings vs Median</button>
+          <button class="sub-btn" data-view="efficiency" onclick="switchStandingsSubView('efficiency')">⚡ Manager Lineup Efficiency</button>
+        </div>
+
+        <!-- 1. Official Standings View -->
+        <div id="view-official" class="standings-view card-panel" style="background: transparent; border: none; padding: 0; box-shadow: none;">
+          <div class="table-responsive">
+            <table class="fpl-table" id="table-official-standings">
+              <thead>
+                <tr>
+                  <th class="sortable" data-sort="rank" data-type="num">Pos <span class="sort-indicator">▲</span></th>
+                  <th class="sortable" data-sort="team" data-type="str">Club & Manager <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="p" data-type="num">P <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="w" data-type="num">W <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="d" data-type="num">D <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="l" data-type="num">L <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="pf" data-type="num">PF <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="pa" data-type="num">PA <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="diffNum" data-type="num">Diff <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="pts" data-type="num">Pts <span class="sort-indicator">⇅</span></th>
+                  <th>Form</th>
+                  <th class="sortable" data-sort="maxPf" data-type="num">Opt PF <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="eff" data-type="num">Eff % <span class="sort-indicator">⇅</span></th>
+                </tr>
+              </thead>
+              <tbody id="official-standings-tbody">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 2. Optimal Standings View -->
+        <div id="view-optimal" class="standings-view card-panel" style="display: none; background: transparent; border: none; padding: 0; box-shadow: none;">
+          <div style="margin-bottom: 12px; font-size: 0.85rem; color: var(--text-muted);">
+            Counterfactual standings if every manager played their optimal Starting XI each matchweek. Highlights bench point loss and scheduling luck.
+          </div>
+          <div class="table-responsive">
+            <table class="fpl-table" id="table-optimal-standings">
+              <thead>
+                <tr>
+                  <th class="sortable" data-sort="rank" data-type="num">Opt Rank <span class="sort-indicator">▲</span></th>
+                  <th class="sortable" data-sort="team" data-type="str">Club & Manager <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="p" data-type="num">P <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="w" data-type="num">Opt W <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="d" data-type="num">Opt D <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="l" data-type="num">Opt L <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="optPf" data-type="num">Opt PF <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="optPa" data-type="num">Opt PA <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="benchPoints" data-type="num">Bench Lost <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="pts" data-type="num">Opt Pts <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="actualRank" data-type="num">Actual Rank <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="rankShift" data-type="num">Rank Shift <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="ptsGain" data-type="num">Pts Delta <span class="sort-indicator">⇅</span></th>
+                </tr>
+              </thead>
+              <tbody id="optimal-standings-tbody">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 3. Standings vs Median View -->
+        <div id="view-median" class="standings-view card-panel" style="display: none; background: transparent; border: none; padding: 0; box-shadow: none;">
+          <div style="margin-bottom: 12px; font-size: 0.85rem; color: var(--text-muted);">
+            Standings based on scoring against each matchweek's league median score. Removes head-to-head match scheduling luck.
+          </div>
+          <div class="table-responsive">
+            <table class="fpl-table" id="table-median-standings">
+              <thead>
+                <tr>
+                  <th class="sortable" data-sort="rank" data-type="num">Median Rank <span class="sort-indicator">▲</span></th>
+                  <th class="sortable" data-sort="team" data-type="str">Club & Manager <span class="sort-indicator">⇅</span></th>
+                  <th>Median Record</th>
+                  <th class="sortable" data-sort="pts" data-type="num">Median Pts <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="pf" data-type="num">Total PF <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="pa" data-type="num">Total PA <span class="sort-indicator">⇅</span></th>
+                  <th>Actual Record</th>
+                  <th>Schedule Impact</th>
+                </tr>
+              </thead>
+              <tbody id="median-tbody">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 4. Lineup Efficiency View -->
+        <div id="view-efficiency" class="standings-view card-panel" style="display: none; background: transparent; border: none; padding: 0; box-shadow: none;">
+          <div style="margin-bottom: 12px; font-size: 0.85rem; color: var(--text-muted);">
+            Benchmark of actual starting score vs potential optimal starting XI score for each manager across completed matchweeks.
+          </div>
+          <div class="table-responsive">
+            <table class="fpl-table" id="table-lineup-efficiency">
+              <thead>
+                <tr>
+                  <th class="sortable" data-sort="rank" data-type="num">Rank <span class="sort-indicator">▲</span></th>
+                  <th class="sortable" data-sort="manager" data-type="str">Manager & Club <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="actualAvg" data-type="num">Avg Actual Score <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="optAvg" data-type="num">Avg Optimal Score <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="missedAvg" data-type="num">Avg Bench Loss <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="missedTotal" data-type="num">Total Bench Loss <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="efficiencyPct" data-type="num">Efficiency % <span class="sort-indicator">⇅</span></th>
+                </tr>
+              </thead>
+              <tbody id="lineup-efficiency-tbody">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- PAGE 3: MATCHUPS & RIVALRIES -->
+    <div id="page-matchups" class="page-view">
+      <div class="card-panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title" id="matchup-gw-title">Gameweek Matchups & Results</div>
+            <div class="panel-subtitle">Comprehensive fixture schedule covering Premier League, Champions League, and Lingineni Cup</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <label for="gw-selector-dropdown" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Select Matchweek:</label>
+            <select id="gw-selector-dropdown" onchange="renderMatchupCenter(parseInt(this.value), APP_STATE.matchupFilter || 'all')" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-glass); color: #fff; padding: 6px 14px; border-radius: var(--radius-sm); font-family: var(--font-heading); font-weight: 700; font-size: 0.95rem;">
+              <!-- Populated via JavaScript 1-38 -->
+            </select>
+          </div>
+        </div>
+
+        <!-- Fixture Competition Filter -->
+        <div class="fixture-filter-group" id="matchup-filter-group">
+          <button class="fixture-filter-btn active" data-filter="all" onclick="filterMatchups('all')">All Fixtures</button>
+          <button class="fixture-filter-btn" data-filter="league" onclick="filterMatchups('league')">⚽ Premier League</button>
+          <button class="fixture-filter-btn" data-filter="champions_league" onclick="filterMatchups('champions_league')">⭐ Champions League (All Rounds)</button>
+          <button class="fixture-filter-btn" data-filter="lingineni_cup" onclick="filterMatchups('lingineni_cup')">🏆 Lingineni Cup (All Rounds)</button>
+        </div>
+
+        <!-- Tournament Gameweek Shortcut Bar -->
+        <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 20px; align-items: center; padding: 10px 14px; background: rgba(0,0,0,0.25); border-radius: var(--radius-sm); border: 1px solid var(--border-glass);">
+          <span style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-right: 4px;">Jump to Matchweek:</span>
+          <button class="gw-pill" onclick="jumpToGameweek(1)">GW 1</button>
+          <button class="gw-pill" onclick="jumpToGameweek(2)">GW 2</button>
+          <button class="gw-pill gw-pill-cl" onclick="jumpToGameweek(6)">⭐ GW 6 CL</button>
+          <button class="gw-pill gw-pill-cup" onclick="jumpToGameweek(9)">🏆 GW 9 Cup</button>
+          <button class="gw-pill gw-pill-cl" onclick="jumpToGameweek(11)">⭐ GW 11 CL</button>
+          <button class="gw-pill gw-pill-cup" onclick="jumpToGameweek(14)">🏆 GW 14 Cup</button>
+          <button class="gw-pill gw-pill-cl" onclick="jumpToGameweek(16)">⭐ GW 16 CL</button>
+          <button class="gw-pill gw-pill-cup" onclick="jumpToGameweek(19)">🏆 GW 19 QF</button>
+          <button class="gw-pill gw-pill-cl" onclick="jumpToGameweek(21)">⭐ GW 21 CL</button>
+          <button class="gw-pill gw-pill-cup" onclick="jumpToGameweek(24)">🏆 GW 24 SF1</button>
+          <button class="gw-pill gw-pill-cl" onclick="jumpToGameweek(26)">⭐ GW 26 CL</button>
+          <button class="gw-pill gw-pill-cup" onclick="jumpToGameweek(29)">🏆 GW 29 SF2</button>
+          <button class="gw-pill gw-pill-cl" onclick="jumpToGameweek(31)">⭐ GW 31 SF1</button>
+          <button class="gw-pill gw-pill-cl" onclick="jumpToGameweek(33)">⭐ GW 33 SF2</button>
+          <button class="gw-pill gw-pill-cup" onclick="jumpToGameweek(34)">🏆 GW 34 Final</button>
+          <button class="gw-pill gw-pill-cl" onclick="jumpToGameweek(36)">⭐ GW 36 Final</button>
+        </div>
+
+        <div id="matchups-grid" class="grid-2">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+
+      <!-- 14x14 H2H Matrix -->
+      <div class="card-panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">⚔️ 14×14 Head-to-Head Series Matrix</div>
+            <div class="panel-subtitle">Click any cell to view all-time head-to-head rivalry records between managers</div>
+          </div>
+        </div>
+        <div id="h2h-matrix-container" class="h2h-matrix-container">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+    </div>
+
+
+    <!-- PAGE 4: TOURNAMENTS HUB -->
+    <div id="page-tournaments" class="page-view">
+      <div class="card-panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">🏆 Tournament Center</div>
+            <div class="panel-subtitle">Champions League Group & Knockouts • Lingineni Cup Single-Elimination Bracket</div>
+          </div>
+        </div>
+
+        <!-- Tournament Sub Nav -->
+        <div class="sub-nav">
+          <button class="sub-btn active" data-view="cl" onclick="switchTournamentSubView('cl')">⭐ Champions League</button>
+          <button class="sub-btn" data-view="cup" onclick="switchTournamentSubView('cup')">🏆 Lingineni Cup</button>
+        </div>
+
+        <!-- Champions League View -->
+        <div id="tourney-view-cl">
+          <div class="grid-2">
+            <div>
+              <h3 style="font-family: var(--font-heading); font-size: 1.1rem; color: var(--pl-cyan); margin-bottom: 12px;">Group Stage Table</h3>
+              <div class="table-responsive">
+                <table class="fpl-table">
+                  <thead>
+                    <tr>
+                      <th>Pos</th>
+                      <th>Competitor</th>
+                      <th>W</th>
+                      <th>D</th>
+                      <th>L</th>
+                      <th>PF</th>
+                      <th>PA</th>
+                      <th>Pts</th>
+                    </tr>
+                  </thead>
+                  <tbody id="cl-group-tbody">
+                    <!-- Injected via JavaScript -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div>
+              <h3 style="font-family: var(--font-heading); font-size: 1.1rem; color: var(--pl-cyan); margin-bottom: 12px;">6 Qualified Competitors</h3>
+              <div id="cl-qualifiers-list" style="display: flex; flex-direction: column; gap: 10px;">
+                <!-- Injected via JavaScript -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lingineni Cup View -->
+        <div id="tourney-view-cup" style="display: none;">
+          <div style="margin-bottom: 16px; padding: 14px; background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: var(--radius-md);">
+            <h4 style="font-family: var(--font-heading); color: #fbbf24; margin-bottom: 4px;">🏆 Lingineni Cup Format</h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">
+              14-manager single elimination knockout tournament. Bottom 4 contest Round 1 (GW 9), Top 4 receive Byes to Quarter-Finals (GW 19). Semi-Finals are 2-Legged (GW 24 & 29). Grand Final on GW 34 ($170 Champion prize).
+            </p>
+          </div>
+          <div id="cup-rounds-tree" class="grid-2">
+            <!-- Injected via JavaScript -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- PAGE 5: HISTORY & MANAGERS -->
+    <div id="page-history" class="page-view">
+      <div class="card-panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">📜 League History & Manager Dossiers</div>
+            <div class="panel-subtitle">Hall of Fame champions, career money standings, and manager records</div>
+          </div>
+        </div>
+
+        <!-- Sub Nav -->
+        <div class="sub-nav">
+          <button class="sub-btn active" data-view="dossiers" onclick="switchHistorySubView('dossiers')">👔 Manager Dossiers</button>
+          <button class="sub-btn" data-view="hall-of-fame" onclick="switchHistorySubView('hall-of-fame')">🏆 Hall of Fame</button>
+          <button class="sub-btn" data-view="prize-money" onclick="switchHistorySubView('prize-money')">💰 Career Prize Money</button>
+        </div>
+
+        <!-- Manager Dossiers Grid -->
+        <div id="history-view-dossiers">
+          <div id="managers-grid" class="grid-3">
+            <!-- Injected via JavaScript -->
+          </div>
+        </div>
+
+        <!-- Hall of Fame -->
+        <div id="history-view-hall-of-fame" style="display: none;">
+          <h3 style="font-family: var(--font-heading); font-size: 1.2rem; color: #fbbf24; margin-bottom: 16px;">🏆 League Champions & Honor Roll</h3>
+          <div id="hall-of-fame-grid" class="grid-3">
+            <!-- Injected via JavaScript -->
+          </div>
+        </div>
+
+        <!-- Career Prize Money -->
+        <div id="history-view-prize-money" style="display: none;">
+          <h3 style="font-family: var(--font-heading); font-size: 1.2rem; color: var(--pl-green); margin-bottom: 16px;">💰 All-Time Career Prize Money Leaderboard</h3>
+          <div class="table-responsive">
+            <table class="fpl-table" id="table-career-prizes">
+              <thead>
+                <tr>
+                  <th class="sortable" data-sort="rank" data-type="num">Rank <span class="sort-indicator">▲</span></th>
+                  <th class="sortable" data-sort="name" data-type="str">Manager <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="team" data-type="str">Club <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="careerMoney" data-type="num">Career Money Won <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="careerPts" data-type="num">Career Points <span class="sort-indicator">⇅</span></th>
+                  <th class="sortable" data-sort="ppg" data-type="num">Points Per Game <span class="sort-indicator">⇅</span></th>
+                </tr>
+              </thead>
+              <tbody id="career-prizes-tbody">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- PAGE 6: RULES & BYLAWS -->
+    <div id="page-rules" class="page-view">
+      <div class="card-panel">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">⚖️ League Constitution, Rules & IHOP Penalty</div>
+            <div class="panel-subtitle">Prize distribution, 24h IHOP pancake challenge calculator, scoring matrix, and governance</div>
+          </div>
+        </div>
+
+        <!-- Sub Nav -->
+        <div class="sub-nav">
+          <button class="sub-btn active" data-view="prizes" onclick="switchRulesSubView('prizes')">💰 Prize Purse ($1,400)</button>
+          <button class="sub-btn" data-view="ihop" onclick="switchRulesSubView('ihop')">🥞 IHOP Challenge Calculator</button>
+          <button class="sub-btn" data-view="scoring" onclick="switchRulesSubView('scoring')">📊 Positional Scoring Matrix</button>
+          <button class="sub-btn" data-view="bylaws" onclick="switchRulesSubView('bylaws')">⚖️ Official Governance Bylaws</button>
+        </div>
+
+        <!-- 1. Prize Purse -->
+        <div id="rules-view-prizes">
+          <h3 style="font-family: var(--font-heading); font-size: 1.2rem; color: var(--pl-green); margin-bottom: 16px;">💰 2026-27 Season Prize Purse Breakdown</h3>
+          <div id="prize-pool-cards" class="grid-3">
+            <!-- Injected via JavaScript -->
+          </div>
+        </div>
+
+        <!-- 2. IHOP Gauntlet & Interactive Calculator -->
+        <div id="rules-view-ihop" style="display: none;">
+          <div class="shame-card">
+            <div class="shame-title">🥞 The 24-Hour IHOP Pancake Challenge Rules</div>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 12px;">
+              The 14th place last-place finisher must spend 24 continuous hours inside an IHOP restaurant. Every pancake eaten reduces the time sentence by 1 hour.
+            </p>
+            <div class="ihop-calc-grid" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; margin-top: 16px; background: rgba(0,0,0,0.3); padding: 18px; border-radius: var(--radius-md);">
+              <div>
+                <label style="font-weight: 700; font-size: 0.9rem; color: var(--text-highlight);">Pancakes Eaten: <span id="pancake-count-val" style="color: var(--pl-green); font-size: 1.2rem; font-weight: 800;">12</span></label>
+                <input type="range" id="pancake-range-slider" min="0" max="24" value="12" oninput="updateIhopCalculator(this.value)" style="width: 100%; margin: 12px 0;">
+              </div>
+              <div style="text-align: center; display: flex; flex-direction: column; justify-content: center; background: rgba(255,255,255,0.04); padding: 12px; border-radius: var(--radius-sm);">
+                <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase;">Remaining Sentence</div>
+                <div id="ihop-hours-remaining" style="font-family: var(--font-heading); font-size: 1.8rem; font-weight: 900; color: #f87171;">12 Hours</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Positional Scoring Matrix -->
+        <div id="rules-view-scoring" style="display: none;">
+          <div class="panel-header">
+            <div>
+              <h3 style="font-family: var(--font-heading); font-size: 1.1rem; color: var(--pl-green);">📊 Official Fantrax Positional Scoring Matrix</h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">Points allocated per stat action based on player position</p>
+            </div>
+            <select id="scoring-pos-select" onchange="renderScoringMatrix(this.value)" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border-glass); color: #fff; padding: 6px 14px; border-radius: var(--radius-sm); font-weight: 700;">
+              <option value="D">Defenders (DEF)</option>
+              <option value="M">Midfielders (MID)</option>
+              <option value="F">Forwards (FWD)</option>
+              <option value="G">Goalkeepers (GK)</option>
+            </select>
+          </div>
+          <div class="table-responsive">
+            <table class="fpl-table">
+              <thead>
+                <tr>
+                  <th>Stat Action</th>
+                  <th>Code</th>
+                  <th>Points Value</th>
+                  <th>Category</th>
+                </tr>
+              </thead>
+              <tbody id="scoring-matrix-tbody">
+                <!-- Injected via JavaScript -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 4. Governance Bylaws -->
+        <div id="rules-view-bylaws" style="display: none;">
+          <h3 style="font-family: var(--font-heading); font-size: 1.2rem; color: var(--text-main); margin-bottom: 16px;">⚖️ Official League Governance & Bylaws</h3>
+          <div id="bylaws-accordion" style="display: flex; flex-direction: column; gap: 10px;">
+            <!-- Injected via JavaScript -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div><strong>The Gentlemen’s Invitational</strong> • Fantasy Premier League 2026–27 Official Headquarters</div>
+      <div style="margin-top: 4px; font-size: 0.8rem; color: var(--text-dim);">
+        Powered by Fantrax SDK • Commissioners Shayan Hussain & Varun Kadikar
+      </div>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -3,6 +3,7 @@ Main user-facing Fantrax API Client wrapper (FantraxClient).
 """
 
 import os
+from datetime import date, datetime
 from typing import Any, Dict, List, Optional, Union
 import pandas as pd
 import numpy as np
@@ -24,6 +25,8 @@ from .analytics import (
     compute_optimal_lineup_score,
     calculate_manager_efficiency,
     calculate_median_standings,
+    calculate_optimal_standings,
+    compare_standings_vs_optimal,
     evaluate_waiver_candidates,
 )
 
@@ -110,17 +113,28 @@ class FantraxClient:
             raise ValueError(f"No response returned for method {method_name}")
         return responses[0].get("data", {})
 
-    def get_matchups(self, through_week: Optional[int] = None, as_dataframe: bool = True) -> Union[pd.DataFrame, List[WeeklyMatchup]]:
+    def get_matchups(
+        self,
+        through_week: Optional[int] = None,
+        only_completed: bool = False,
+        optimal: bool = False,
+        as_dataframe: bool = True
+    ) -> Union[pd.DataFrame, List[WeeklyMatchup]]:
         """Fetches head-to-head weekly match schedule and scores.
 
         Args:
             through_week: Optional maximum matchweek integer to filter.
+            only_completed: If True, only returns matchups with non-zero scores.
+            optimal: If True, fetches optimal lineup scores for each matchup.
             as_dataframe: If True, returns pandas DataFrame; if False, returns list of WeeklyMatchup objects.
 
         Returns:
             DataFrame or list of WeeklyMatchup instances.
         """
-        data = self._legacy_request("getStandings", view="SCHEDULE")
+        request_params = {"view": "SCHEDULE"}
+        if optimal:
+            request_params["optimal"] = True
+        data = self._legacy_request("getStandings", **request_params)
         
         # Check scoringSystem.tableList first if non-empty, then fall back to top-level tableList
         table_list = data.get("scoringSystem", {}).get("tableList")
@@ -147,6 +161,9 @@ class FantraxClient:
                 away_team = str(cells[2].get("content", ""))
                 away_team_id = str(cells[2].get("teamId", "")).split("_")[0]
                 away_score = float(cells[3].get("content", 0.0))
+
+                if only_completed and home_score == 0.0 and away_score == 0.0:
+                    continue
 
                 matchup = WeeklyMatchup(
                     week=week_num,
@@ -192,6 +209,32 @@ class FantraxClient:
                 np.where(df["score"] < df["opponent_score"], "L", "D")
             )
         return df
+
+    def get_gameweek_dates(self) -> Dict[int, Dict[str, date]]:
+        """Fetches the calendar date range of every scoring period (matchweek).
+
+        Fantrax labels each schedule table with a sub-caption such as
+        "(Fri Oct 16, 2026 - Thu Oct 22, 2026)"; both ends are inclusive.
+
+        Returns:
+            Mapping of week number to {"start": date, "end": date}. Weeks whose
+            caption cannot be parsed are omitted.
+        """
+        data = self._legacy_request("getStandings", view="SCHEDULE")
+        table_list = data.get("scoringSystem", {}).get("tableList") or data.get("tableList", [])
+
+        dates: Dict[int, Dict[str, date]] = {}
+        for week_idx, week_data in enumerate(table_list):
+            caption = str(week_data.get("subCaption", "")).strip("() ")
+            parts = [p.strip() for p in caption.split(" - ")]
+            if len(parts) != 2:
+                continue
+            try:
+                start, end = (datetime.strptime(p, "%a %b %d, %Y").date() for p in parts)
+            except ValueError:
+                continue
+            dates[week_idx + 1] = {"start": start, "end": end}
+        return dates
 
     def get_league_table(self, through_week: Optional[int] = None) -> pd.DataFrame:
         """Calculates current league standings table (Wins, Draws, Losses, Points, FPts For/Against).
@@ -242,6 +285,8 @@ class FantraxClient:
         params = {"teamId": team_id, "timeStartType": "FROM_SEASON_START"}
         if period is not None:
             params["period"] = period
+            # Without BY_PERIOD, Fantrax reports season-to-date points rather than this period's.
+            params["timeframeTypeCode"] = "BY_PERIOD"
 
         data = self._legacy_request("getTeamRosterInfo", **params)
         tables = data.get("tables", [])
@@ -314,6 +359,100 @@ class FantraxClient:
             reserves=reserves,
             injured_reserve=injured_reserve,
         )
+
+    # Fantrax lineup slot ids (row "posId") to position codes.
+    SLOT_POSITIONS = {"704": "G", "703": "D", "702": "M", "701": "F"}
+    _STATUS_NAMES = {"1": "starter", "2": "bench", "3": "injured_reserve"}
+
+    def _roster_players(self, team_id: str, period: Optional[int], stats_type: str, timeframe: str) -> List[Dict[str, Any]]:
+        """Players on a team's roster with one stats view's fantasy points, games played and minutes.
+
+        stats_type "1" scores each player at their own position; "2" scores them in the lineup slot they
+        filled for this fantasy team and only while active, which is what counts toward matchups.
+        """
+        params = {"teamId": team_id, "statsType": stats_type, "timeframeTypeCode": timeframe}
+        if period is not None:
+            params["period"] = period
+        data = self._legacy_request("getTeamRosterInfo", **params)
+
+        players = []
+        for table in data.get("tables", []):
+            header = [str(h.get("shortName", "")) for h in table.get("header", {}).get("cells", [])]
+            col = {name: i for i, name in enumerate(header)}
+            for row in table.get("rows", []):
+                scorer = row.get("scorer") or {}
+                if not scorer.get("name"):
+                    continue  # empty lineup slot or a totals row
+                cells = row.get("cells", [])
+
+                def cell(name: str) -> str:
+                    i = col.get(name)
+                    return str(cells[i].get("content", "")) if i is not None and i < len(cells) else ""
+
+                def number(name: str) -> float:
+                    try:
+                        return float(cell(name))
+                    except ValueError:
+                        return 0.0
+
+                players.append({
+                    "id": scorer.get("scorerId", ""),
+                    "name": scorer["name"],
+                    "positions": scorer.get("posShortNames", ""),
+                    "slot": self.SLOT_POSITIONS.get(str(row.get("posId")), ""),
+                    "club": scorer.get("teamShortName", ""),
+                    "status": self._STATUS_NAMES.get(str(row.get("statusId")), "other"),
+                    "game": " ".join(cell("Opp").replace("<br/>", " ").split()),
+                    "points": number("FPts"),
+                    "games_played": int(number("GP")),
+                    "minutes": int(number("Min")),
+                })
+        return players
+
+    def get_lineup(self, team_id: str, period: int) -> Dict[str, Any]:
+        """A team's starting lineup and bench for one scoring period, with that period's fantasy points.
+
+        Starters' points are what counted toward the matchup, so they sum to the team's score. Bench and
+        injured-reserve points are what those players scored at their own position (not counted).
+
+        Returns:
+            {"team_id", "period", "total", "starters", "bench", "injured_reserve"}; each player is a dict
+            with id, name, positions, slot, club, game, points, games_played, minutes.
+        """
+        counted = {p["id"]: p for p in self._roster_players(team_id, period, "2", "BY_PERIOD")}
+        actual = self._roster_players(team_id, period, "1", "BY_PERIOD")
+
+        order = {"G": 0, "D": 1, "M": 2, "F": 3}
+        starters, bench, injured = [], [], []
+        for player in actual:
+            if player["status"] == "starter":
+                player = {**player, "points": counted.get(player["id"], player)["points"]}
+                starters.append(player)
+            elif player["status"] == "injured_reserve":
+                injured.append(player)
+            else:
+                bench.append(player)
+        starters.sort(key=lambda p: order.get(p["slot"], 9))
+        bench.sort(key=lambda p: order.get(p["positions"][:1], 9))
+
+        return {
+            "team_id": team_id,
+            "period": period,
+            "total": round(sum(p["points"] for p in starters), 2),
+            "starters": starters,
+            "bench": bench,
+            "injured_reserve": injured,
+        }
+
+    def get_squad(self, team_id: str) -> List[Dict[str, Any]]:
+        """A team's current players with their season-to-date fantasy points (scored at their own position).
+
+        Each player dict also carries "status" ("starter", "bench" or "injured_reserve") for the current lineup.
+        """
+        order = {"starter": 0, "bench": 1, "injured_reserve": 2}
+        positions = {"G": 0, "D": 1, "M": 2, "F": 3}
+        squad = self._roster_players(team_id, None, "1", "YEAR_TO_DATE")
+        return sorted(squad, key=lambda p: (order.get(p["status"], 9), positions.get((p["slot"] or p["positions"])[:1], 9)))
 
     def get_all_players(self, as_dataframe: bool = True) -> Union[pd.DataFrame, List[PlayerSummary]]:
         """Fetches all players in the league database across all paginated result pages.
@@ -526,6 +665,102 @@ class FantraxClient:
         result["week"] = period
         return result
 
+    def get_league_manager_efficiency(self, through_week: Optional[int] = None) -> pd.DataFrame:
+        """Calculates actual manager lineup efficiency and missed points for all teams across completed matchweeks.
+
+        Fetches weekly matchups with actual scores and optimal scores,
+        and aggregates actual scores vs optimal potential scores.
+
+        Args:
+            through_week: Optional maximum matchweek integer to evaluate.
+
+        Returns:
+            DataFrame summarizing average inefficiency, total missed points, avg actual score, and avg max score per team.
+        """
+        matchups = self.get_matchups(through_week=through_week, only_completed=True, as_dataframe=True)
+        if matchups.empty:
+            return pd.DataFrame(columns=["avg_inefficiency", "total_missed_points", "avg_actual_score", "avg_max_score"])
+
+        opt_matchups = self.get_matchups(through_week=through_week, only_completed=True, optimal=True, as_dataframe=True)
+        if not opt_matchups.empty:
+            merged = pd.merge(
+                matchups,
+                opt_matchups[["week", "team", "score"]].rename(columns={"score": "max_points_for"}),
+                on=["week", "team"],
+                how="left"
+            )
+            merged["max_points_for"] = merged["max_points_for"].fillna(merged["score"])
+        else:
+            merged = matchups.copy()
+            merged["max_points_for"] = merged["score"]
+
+        return calculate_manager_efficiency(merged, only_completed=True)
+
+    def get_optimal_standings(self, through_week: Optional[int] = None) -> pd.DataFrame:
+        """Simulates league standings if every manager played their optimal lineup each matchweek.
+
+        Fetches official optimal standings table from Fantrax (or computes from optimal schedule).
+
+        Args:
+            through_week: Optional maximum matchweek integer to evaluate.
+
+        Returns:
+            DataFrame containing simulated optimal standings table.
+        """
+        if through_week is None:
+            data = self._legacy_request("getStandings", view="STANDINGS", optimal=True)
+            table_list = data.get("tableList", [])
+            if table_list:
+                t0 = table_list[0]
+                rows = []
+                for r in t0.get("rows", []):
+                    fixed = r.get("fixedCells", [])
+                    cells = r.get("cells", [])
+                    if len(fixed) >= 2 and len(cells) >= 9:
+                        try:
+                            rank = int(fixed[0].get("content", 0))
+                        except Exception:
+                            rank = 0
+                        team = str(fixed[1].get("content", ""))
+                        try:
+                            wins = int(cells[0].get("content", 0))
+                            draws = int(cells[1].get("content", 0))
+                            losses = int(cells[2].get("content", 0))
+                            points = int(cells[3].get("content", 0))
+                            bench_lost = float(cells[5].get("content", 0.0))
+                            efficiency = str(cells[6].get("content", "100%"))
+                            fpts_for = float(cells[7].get("content", 0.0))
+                            fpts_against = float(cells[8].get("content", 0.0))
+                            streak = str(cells[9].get("content", "")) if len(cells) > 9 else ""
+                        except Exception:
+                            continue
+
+                        rows.append({
+                            "rank": rank,
+                            "team": team,
+                            "record": f"{wins}-{draws}-{losses}",
+                            "points": points,
+                            "fpts_for": fpts_for,
+                            "fpts_against": fpts_against,
+                            "bench_lost": bench_lost,
+                            "efficiency": efficiency,
+                            "streak": streak,
+                            "wins": wins,
+                            "draws": draws,
+                            "losses": losses,
+                        })
+
+                if rows:
+                    df = pd.DataFrame(rows).set_index("team")
+                    return df
+
+        opt_matchups = self.get_matchups(through_week=through_week, only_completed=True, optimal=True, as_dataframe=True)
+        if opt_matchups.empty:
+            return pd.DataFrame()
+
+        opt_matchups["max_points_for"] = opt_matchups["score"]
+        return calculate_optimal_standings(opt_matchups, only_completed=True)
+
     def get_draft_rankings(
         self,
         season_or_projection: str = "PROJECTION_0_926_SEASON",
@@ -598,7 +833,32 @@ class FantraxClient:
             }
             parsed_players.append(player_row)
 
+        if not parsed_players:
+            # Fallback for active season when pre-draft ranking endpoint returns empty
+            all_df = self.get_all_players(as_dataframe=True)
+            if not all_df.empty:
+                for idx, r in enumerate(all_df.to_dict(orient="records"), start=1):
+                    parsed_players.append({
+                        "rank": idx,
+                        "player_id": str(r.get("scorerId", "")),
+                        "name": str(r.get("name", "")),
+                        "short_name": str(r.get("shortName", "")),
+                        "team": str(r.get("teamShortName", "")),
+                        "team_name": str(r.get("teamName", "")),
+                        "position": str(r.get("posShortNames", "")),
+                        "adp": float(idx),
+                        "total_pts": float(r.get("fpts", 0.0) or 0.0),
+                        "projected_pts": float(r.get("fpts", 0.0) or 0.0),
+                        "pts_per_game": float(r.get("fpts_per_game", 0.0) or 0.0),
+                        "percent_drafted": 100.0,
+                    })
+
         if as_dataframe:
+            if not parsed_players:
+                return pd.DataFrame(columns=[
+                    "rank", "player_id", "name", "short_name", "team", "team_name",
+                    "position", "adp", "total_pts", "projected_pts", "pts_per_game", "percent_drafted"
+                ])
             df = pd.DataFrame(parsed_players)
             if sort_by_adp and not df.empty:
                 df = df.sort_values(by="adp", na_position="last").reset_index(drop=True)

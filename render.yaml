@@ -1,0 +1,19 @@
+# Render blueprint for the League Hub (soccer/league_hub). Setup notes: soccer/league_hub/README.md
+services:
+  - type: web
+    name: gentlemens-league-hub
+    runtime: python
+    plan: free
+    branch: master
+    buildCommand: pip install -r soccer/league_hub/requirements.txt
+    startCommand: gunicorn --chdir soccer/league_hub app:app --bind 0.0.0.0:$PORT --workers 1 --threads 4 --timeout 120
+    healthCheckPath: /api/health
+    envVars:
+      - key: FANTRAX_COOKIE_B64
+        sync: false # secret: Render asks for the value when the blueprint is applied
+      - key: FANTRAX_LEAGUE_ID
+        value: iku2an1nmryzcfa2
+      - key: DATA_SYNC_TTL_MINUTES
+        value: "15"
+      - key: PYTHON_VERSION
+        value: "3.14.3"

@@ -20,6 +20,8 @@ from fantrax_wrapper import (
     compute_optimal_lineup_score,
     calculate_manager_efficiency,
     calculate_median_standings,
+    calculate_optimal_standings,
+    compare_standings_vs_optimal,
     evaluate_waiver_candidates,
     normalize_per_90_stats,
     compute_positional_opponent_averages,
@@ -89,16 +91,46 @@ class TestAnalytics(unittest.TestCase):
         score = compute_optimal_lineup_score(g_scores, d_scores, m_scores, f_scores)
         self.assertGreater(score, 100.0)
 
+    def test_calculate_manager_efficiency(self):
+        df = pd.DataFrame([
+            {"week": 1, "team": "Team A", "score": 80.0, "opponent_score": 70.0, "max_points_for": 95.0},
+            {"week": 1, "team": "Team B", "score": 70.0, "opponent_score": 80.0, "max_points_for": 85.0},
+            {"week": 2, "team": "Team A", "score": 0.0, "opponent_score": 0.0, "max_points_for": 15.0},
+            {"week": 2, "team": "Team B", "score": 0.0, "opponent_score": 0.0, "max_points_for": 15.0},
+        ])
+        efficiency = calculate_manager_efficiency(df, only_completed=True)
+        self.assertEqual(len(efficiency), 2)
+        # Should only evaluate Week 1 (15 missed points), ignoring unplayed Week 2
+        self.assertEqual(efficiency.loc["Team A", "total_missed_points"], 15.0)
+        self.assertEqual(efficiency.loc["Team A", "avg_actual_score"], 80.0)
+
     def test_calculate_median_standings(self):
         df = pd.DataFrame([
             {"week": 1, "team": "Team A", "score": 45.0, "opponent_score": 30.0},
             {"week": 1, "team": "Team B", "score": 30.0, "opponent_score": 45.0},
             {"week": 1, "team": "Team C", "score": 60.0, "opponent_score": 20.0},
             {"week": 1, "team": "Team D", "score": 20.0, "opponent_score": 60.0},
+            {"week": 2, "team": "Team A", "score": 0.0, "opponent_score": 0.0},
+            {"week": 2, "team": "Team B", "score": 0.0, "opponent_score": 0.0},
         ])
-        standings = calculate_median_standings(df)
+        standings = calculate_median_standings(df, only_completed=True)
         self.assertIn("wins", standings.columns)
         self.assertEqual(len(standings), 4)
+        # Verify unplayed week did not add draws
+        self.assertEqual(standings["draws"].sum(), 0)
+
+    def test_calculate_optimal_standings(self):
+        df = pd.DataFrame([
+            {"week": 1, "matchupId": 0, "team": "Team A", "score": 80.0, "opponent_score": 70.0, "max_points_for": 85.0},
+            {"week": 1, "matchupId": 0, "team": "Team B", "score": 70.0, "opponent_score": 80.0, "max_points_for": 90.0},
+            {"week": 1, "matchupId": 1, "team": "Team C", "score": 60.0, "opponent_score": 50.0, "max_points_for": 65.0},
+            {"week": 1, "matchupId": 1, "team": "Team D", "score": 50.0, "opponent_score": 60.0, "max_points_for": 55.0},
+        ])
+        # Team B actually lost (70 vs 80), but optimally won (90 vs 85)
+        opt_standings = calculate_optimal_standings(df)
+        self.assertEqual(len(opt_standings), 4)
+        self.assertEqual(opt_standings.loc["Team B", "wins"], 1)
+        self.assertEqual(opt_standings.loc["Team A", "losses"], 1)
 
     def test_evaluate_waiver_candidates(self):
         df_stats = pd.DataFrame([
@@ -192,6 +224,61 @@ class TestFantraxClient(unittest.TestCase):
         self.assertEqual(ranks_df.iloc[0]["position"], "M")
         self.assertEqual(ranks_df.iloc[0]["adp"], 1.5)
         self.assertEqual(ranks_df.iloc[0]["projected_pts"], 250.0)
+
+    @patch("fantrax_wrapper.client.FantraxRPCClient.send_rpc_request")
+    def test_get_gameweek_dates_mock(self, mock_rpc):
+        mock_rpc.return_value = {
+            "responses": [
+                {
+                    "data": {
+                        "tableList": [
+                            {"caption": "Gameweek 1", "subCaption": "(Fri Aug 21, 2026 - Thu Aug 27, 2026)", "rows": []},
+                            {"caption": "Gameweek 2", "subCaption": "", "rows": []},
+                            {"caption": "Gameweek 3", "subCaption": "(Fri May 28, 2027 - Sun May 30, 2027)", "rows": []},
+                        ]
+                    }
+                }
+            ]
+        }
+
+        client = FantraxClient(league_id="test_league", cookie_path=None)
+        dates = client.get_gameweek_dates()
+
+        self.assertEqual(sorted(dates), [1, 3])
+        self.assertEqual(dates[1]["start"], datetime(2026, 8, 21).date())
+        self.assertEqual(dates[1]["end"], datetime(2026, 8, 27).date())
+        self.assertEqual(dates[3]["end"], datetime(2027, 5, 30).date())
+
+    @patch("fantrax_wrapper.client.FantraxRPCClient.send_rpc_request")
+    def test_get_lineup_mock(self, mock_rpc):
+        def roster(points):
+            header = {"cells": [{"shortName": n} for n in ("Opp", "FPts", "FP/G", "GP", "Min")]}
+            def row(sid, name, pos, status, slot, pts):
+                return {"statusId": status, "posId": slot,
+                        "scorer": {"scorerId": sid, "name": name, "posShortNames": pos, "teamShortName": "ARS"},
+                        "cells": [{"content": "ARS 1<br/>@NOT 0 F"}, {"content": pts}, {"content": ""}, {"content": "1"}, {"content": "90"}]}
+            rows = [
+                row("p1", "Keeper", "G", "1", "704", points[0]),
+                row("p2", "Defender", "D,F", "1", "703", points[1]),
+                row("p3", "Benched", "M", "2", "702", points[2]),
+                {"statusId": "1", "posId": "701", "scorer": {}, "cells": []},  # empty slot
+                {"statusId": "y", "scorer": {}, "cells": [{"content": ""}, {"content": "99"}]},  # totals row
+            ]
+            return {"responses": [{"data": {"tables": [{"header": header, "rows": rows}]}}]}
+
+        # First call: "Fantasy Team" view (what counted); second: each player's own points.
+        mock_rpc.side_effect = [roster(["6", "-3.5", "0"]), roster(["6", "5", "8"])]
+
+        client = FantraxClient(league_id="test_league", cookie_path=None)
+        lineup = client.get_lineup("team1", 7)
+
+        self.assertEqual([p["name"] for p in lineup["starters"]], ["Keeper", "Defender"])
+        self.assertEqual(lineup["starters"][1]["points"], -3.5)
+        self.assertEqual(lineup["starters"][1]["slot"], "D")
+        self.assertEqual(lineup["total"], 2.5)
+        self.assertEqual(lineup["bench"][0]["points"], 8.0)
+        self.assertEqual(lineup["starters"][0]["game"], "ARS 1 @NOT 0 F")
+        self.assertEqual(lineup["starters"][0]["minutes"], 90)
 
 
 if __name__ == "__main__":
