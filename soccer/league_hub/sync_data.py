@@ -1151,18 +1151,14 @@ const LEAGUE_DATA = {{
 }};
 """
 
-    out_file_1 = os.path.join(BASE_DIR, "data.js")
-    out_file_2 = os.path.join(PROJECT_ROOT, "soccer", "webpage", "data.js")
+    # Write to a temp file and swap it in, so the server never serves a half-written data.js.
+    out_file = os.path.join(BASE_DIR, "data.js")
+    tmp_file = f"{out_file}.{os.getpid()}.tmp"
+    with open(tmp_file, "w") as f:
+        f.write(js_content)
+    os.replace(tmp_file, out_file)
 
-    for out_file in (out_file_1, out_file_2):
-        if not os.path.isdir(os.path.dirname(out_file)):
-            continue
-        tmp_file = f"{out_file}.{os.getpid()}.tmp"
-        with open(tmp_file, "w") as f:
-            f.write(js_content)
-        os.replace(tmp_file, out_file)
-
-    print(f"Successfully synchronized real league data to {out_file_1} and {out_file_2}!")
+    print(f"Successfully synchronized real league data to {out_file}!")
     return {"next_boundary": next_boundary, "completed_gws": completed_gws}
 
 

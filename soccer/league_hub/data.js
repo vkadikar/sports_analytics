@@ -595,7 +595,7 @@ const LEAGUE_DATA = {
             "lastKickoff": "2027-05-30T11:00:00-04:00"
       }
 },
-    syncedAt: "2026-10-20T11:16:07-04:00",
+    syncedAt: "2026-10-20T11:59:33-04:00",
     standings: [
       {
             "rank": 1,

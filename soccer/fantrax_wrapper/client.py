@@ -421,6 +421,8 @@ class FantraxClient:
         """
         counted = {p["id"]: p for p in self._roster_players(team_id, period, "2", "BY_PERIOD")}
         actual = self._roster_players(team_id, period, "1", "BY_PERIOD")
+        if not actual:
+            raise RuntimeError(f"Fantrax returned no roster for team {team_id}. The login cookie has probably expired.")
 
         order = {"G": 0, "D": 1, "M": 2, "F": 3}
         starters, bench, injured = [], [], []
@@ -452,6 +454,8 @@ class FantraxClient:
         order = {"starter": 0, "bench": 1, "injured_reserve": 2}
         positions = {"G": 0, "D": 1, "M": 2, "F": 3}
         squad = self._roster_players(team_id, None, "1", "YEAR_TO_DATE")
+        if not squad:
+            raise RuntimeError(f"Fantrax returned no roster for team {team_id}. The login cookie has probably expired.")
         return sorted(squad, key=lambda p: (order.get(p["status"], 9), positions.get((p["slot"] or p["positions"])[:1], 9)))
 
     def get_all_players(self, as_dataframe: bool = True) -> Union[pd.DataFrame, List[PlayerSummary]]:
