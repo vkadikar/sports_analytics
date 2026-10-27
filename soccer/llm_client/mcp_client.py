@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import os
 import sys
 import threading
 from contextlib import AsyncExitStack
@@ -48,6 +49,9 @@ class FantraxMCPClient:
             command=sys.executable,
             args=["-m", "fantrax_mcp.server"],
             cwd=str(SOCCER_DIR),
+            # The SDK only passes a few safe vars (HOME, PATH, ...) to the subprocess. Forward the
+            # Fantrax config too, or on Render the server never sees the decoded cookie's path.
+            env={k: v for k, v in os.environ.items() if k in ("FANTRAX_COOKIE_PATH", "FANTRAX_LEAGUE_ID")},
         )
         read, write = await self._exit_stack.enter_async_context(stdio_client(server_params))
         session = await self._exit_stack.enter_async_context(ClientSession(read, write))
