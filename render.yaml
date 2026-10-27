@@ -13,6 +13,8 @@ services:
         sync: false # secret: Render asks for the value when the blueprint is applied
       - key: FANTRAX_LEAGUE_ID
         value: iku2an1nmryzcfa2
+      - key: GEMINI_API_KEY
+        sync: false # secret: powers Commish Bot; app still runs without it, chat just errors
       - key: DATA_SYNC_TTL_MINUTES
         value: "15"
       - key: PYTHON_VERSION

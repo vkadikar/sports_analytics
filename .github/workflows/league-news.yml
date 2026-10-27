@@ -1,0 +1,56 @@
+# Commish Bot's weekly News posts for the League Hub (soccer/league_hub/news.py).
+# Runs daily; news.py only writes what's missing (a recap once a gameweek officially ends, and a
+# preview of the next one before it kicks off), so most runs just sync and exit. New posts are
+# committed to master, which redeploys the site on Render.
+name: League news
+
+on:
+  schedule:
+    # 12:30 UTC = 8:30 AM ET in summer, 7:30 AM in winter: before the home page's 9 AM ET switch
+    # to the next gameweek, so the new recap and preview are live when it happens.
+    - cron: "30 12 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: league-news
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+          cache: pip
+          cache-dependency-path: soccer/league_hub/requirements.txt
+
+      - run: pip install -r soccer/league_hub/requirements.txt
+
+      - name: Write missing recaps and previews
+        env:
+          FANTRAX_COOKIE_B64: ${{ secrets.FANTRAX_COOKIE_B64 }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python soccer/league_hub/news.py
+
+      # Runs even if one post failed, so the others still get published.
+      - name: Commit new posts
+        if: ${{ !cancelled() }}
+        run: |
+          git add soccer/league_hub/news
+          if git diff --cached --quiet; then
+            echo "No new posts."
+            exit 0
+          fi
+          # Ship the freshly synced data.js too, so the site's fallback dataset matches the posts.
+          git add soccer/league_hub/data.js
+          git config user.name "Commish Bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "news: publish Commish Bot posts"
+          git pull --rebase
+          git push

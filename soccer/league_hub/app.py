@@ -12,7 +12,7 @@ import threading
 import time
 from datetime import datetime, timezone
 from typing import Dict, Any
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, Response, jsonify, request, send_from_directory, stream_with_context
 import pandas as pd
 
 # Ensure project root is in sys.path
@@ -42,6 +42,18 @@ try:
 except ImportError as e:
     print(f"Warning: fantrax_wrapper not directly imported: {e}")
     FANTRAX_SDK_AVAILABLE = False
+
+# Import Commish Bot (Gemini-backed chat orchestrator). Constructing it just reads the
+# system prompt markdown, so this succeeds even without a Gemini key configured yet;
+# that only surfaces when a chat request actually tries to call the model.
+try:
+    from llm_client import CommishBotAgent
+    _commish_bot = CommishBotAgent()
+    COMMISH_BOT_AVAILABLE = True
+except Exception as e:
+    print(f"Warning: Commish Bot unavailable: {e}")
+    COMMISH_BOT_AVAILABLE = False
+    _commish_bot = None
 
 app = Flask(__name__, static_folder=BASE_DIR, static_url_path="")
 scoring_engine = FantasyScoringEngine() if FANTRAX_SDK_AVAILABLE else None
@@ -336,6 +348,59 @@ def optimal_lineup():
             "F_count": len(f_scores)
         }
     })
+
+
+@app.route("/api/news", methods=["GET"])
+def get_news():
+    """Commish Bot's cached recaps and previews (news/*.md, written by news.py), newest first."""
+    import news
+    response = jsonify({"posts": news.list_posts()})
+    response.headers["Cache-Control"] = "no-cache"
+    return response
+
+
+@app.route("/api/commish-bot/chat", methods=["POST"])
+def commish_bot_chat():
+    """Runs one Commish Bot turn, streaming its events (thought and reply fragments, tool calls
+    and results) as newline-delimited JSON so the chat widget can render them as they happen.
+    A failure mid-stream arrives as a final {"type": "error"} line."""
+    if not COMMISH_BOT_AVAILABLE:
+        return jsonify({"error": "Commish Bot isn't available on this server right now."}), 500
+
+    payload = request.get_json(silent=True) or {}
+    message = (payload.get("message") or "").strip()
+    if not message:
+        return jsonify({"error": "message is required"}), 400
+    if len(message) > 2000:
+        return jsonify({"error": "That message is too long."}), 400
+
+    # Trust only role/text out of each history turn, and cap how much we replay.
+    raw_history = payload.get("history") or []
+    history = [
+        {"role": "assistant" if h.get("role") == "assistant" else "user", "text": str(h.get("text", ""))[:2000]}
+        for h in raw_history[-20:]
+        if isinstance(h, dict) and h.get("text")
+    ]
+
+    # Who the chatter picked in the widget. Text only, capped, and not a login: anyone can pick anyone.
+    raw_manager = payload.get("manager") if isinstance(payload.get("manager"), dict) else {}
+    manager = {k: str(raw_manager.get(k) or "").strip()[:80] for k in ("name", "team", "teamId")}
+    if not manager["name"] or not manager["team"]:
+        return jsonify({"error": "Pick which manager you are first."}), 400
+
+    def events():
+        try:
+            for event in _commish_bot.stream(message, history=history, manager=manager):
+                yield json.dumps(event, default=str) + "\n"
+        except Exception as e:
+            yield json.dumps({"type": "error", "error": f"Commish Bot couldn't respond: {e}"}) + "\n"
+
+    return Response(
+        stream_with_context(events()),
+        mimetype="application/x-ndjson",
+        # Stop proxies (Render's included) from buffering the stream into one late chunk.
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
 
 
 if __name__ == "__main__":

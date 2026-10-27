@@ -3,6 +3,7 @@ Main user-facing Fantrax API Client wrapper (FantraxClient).
 """
 
 import os
+import re
 from datetime import date, datetime
 from typing import Any, Dict, List, Optional, Union
 import pandas as pd
@@ -524,6 +525,113 @@ class FantraxClient:
         if not as_dataframe:
             return players
         return pd.DataFrame(rows_data)
+
+    # getPlayerStats position filters. Only these return the per-stat columns; "ALL" returns fantasy points alone.
+    _STATS_GROUPS = {"G": "POS_704", "D": "POS_703", "M": "POS_702", "F": "POS_701"}
+    _OUTFIELD_GROUP = "SOCCER_NON_GOALIE"
+    # Stat column short names that differ from FantasyScoringEngine's keys.
+    _STAT_ALIASES = {"GA": "GAO"}
+
+    def get_player_stats(
+        self,
+        position: Optional[str] = None,
+        search: Optional[str] = None,
+        available_only: bool = False,
+        sort_by: str = "SCORE",
+        start_date: Optional[date] = None,
+        end_date: Optional[date] = None,
+        limit: int = 50,
+    ) -> List[Dict[str, Any]]:
+        """Players from the league's player pool with fantasy points and their full stat line.
+
+        Args:
+            position: "G", "D", "M" or "F". Omit for every position (outfielders and goalkeepers are
+                separate Fantrax views, so this makes two requests).
+            search: Only players whose name contains this text.
+            available_only: Only players not on any fantasy team (free agents and players on waivers).
+            sort_by: "SCORE" (fantasy points) or "FPTS_PER_GAME".
+            start_date, end_date: Count only games in this inclusive date range. Omit for season to date.
+            limit: At most this many players per position view, best first.
+
+        Returns:
+            Player dicts with id, name, positions, scored_as (the position whose scoring rules apply),
+            club, owner_team_id (None if unowned), availability ("rostered", "free_agent" or
+            "waivers (<day>)"), next_game, points, points_per_game, games_played, minutes, roster_pct
+            (share of Fantrax leagues rostering them), roster_pct_change (its recent change), and stats ({stat key: count}, keyed like FantasyScoringEngine's rules).
+        """
+        groups = [self._STATS_GROUPS[position.upper()]] if position else [self._OUTFIELD_GROUP, self._STATS_GROUPS["G"]]
+        params: Dict[str, Any] = {
+            "statusOrTeamFilter": "ALL_AVAILABLE" if available_only else "ALL",
+            "sortType": sort_by,
+            "searchName": search,
+            "maxResultsPerPage": min(limit, 50),
+        }
+        if start_date:
+            params.update(timeframeTypeCode="BY_DATE", startDate=start_date.isoformat(),
+                          endDate=(end_date or start_date).isoformat())
+
+        players: List[Dict[str, Any]] = []
+        for group in groups:
+            found: List[Dict[str, Any]] = []
+            page, pages = 1, 1
+            while page <= pages and len(found) < limit:
+                data = self._legacy_request("getPlayerStats", positionOrGroup=group, pageNumber=page, **params)
+                pages = data.get("paginatedResultSet", {}).get("totalNumPages", 1)
+                header = [str(h.get("shortName", "")) for h in data.get("tableHeader", {}).get("cells", [])]
+                found += [self._player_stats_row(header, row) for row in data.get("statsTable", [])]
+                page += 1
+            players += found[:limit]
+
+        key = "points_per_game" if sort_by == "FPTS_PER_GAME" else "points"
+        return sorted(players, key=lambda p: p[key] or 0, reverse=True)
+
+    def _player_stats_row(self, header: List[str], row: Dict[str, Any]) -> Dict[str, Any]:
+        """One getPlayerStats row -> player dict. Columns are read by header name because the set of
+        columns changes with the timeframe (a date range drops FP/G, for instance)."""
+        scorer = row.get("scorer", {})
+        cells = row.get("cells", [])
+        col = {name: cells[i] for i, name in enumerate(header) if i < len(cells)}
+
+        def number(name: str) -> float:
+            try:
+                return float(str(col.get(name, {}).get("content", "")).rstrip("%"))
+            except ValueError:
+                return 0.0
+
+        status = col.get("Sta", {})
+        content = str(status.get("content", ""))
+        if status.get("teamId"):
+            availability = "rostered"
+        elif content == "FA":
+            availability = "free_agent"
+        else:
+            day = re.search(r"\((\w+)\)", content)
+            availability = f"waivers ({day.group(1)})" if day else "waivers"
+
+        stat_names = header[header.index("Min") + 1:] if "Min" in header else []
+        stats = {}
+        for name in stat_names:
+            value = number(name)
+            stats[self._STAT_ALIASES.get(name.upper(), name.upper())] = int(value) if value.is_integer() else value
+
+        points, games = number("FPts"), int(number("GP"))
+        return {
+            "id": str(scorer.get("scorerId", "")),
+            "name": str(scorer.get("name", "")),
+            "positions": str(scorer.get("posShortNames", "")),
+            "scored_as": self.SLOT_POSITIONS.get(str(scorer.get("defaultPosId")), ""),
+            "club": str(scorer.get("teamShortName", "")),
+            "owner_team_id": status.get("teamId"),
+            "availability": availability,
+            "next_game": " ".join(str(col.get("Opp", {}).get("content", "")).replace("<br/>", " ").split()),
+            "points": points,
+            "points_per_game": round(points / games, 2) if games else None,
+            "games_played": games,
+            "minutes": int(number("Min")),
+            "roster_pct": number("Ros"),
+            "roster_pct_change": number("+/-"),
+            "stats": stats,
+        }
 
     def get_player_game_log(self, player_id: str, year: int = 2025) -> pd.DataFrame:
         """Fetches detailed game log statistics for a player in a given season.

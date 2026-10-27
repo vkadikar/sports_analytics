@@ -217,7 +217,8 @@ def main():
     """Sync Fantrax data into data.js.
 
     Returns {"next_boundary": the next gameweek start/official end (data is stale from then on),
-             "completed_gws": gameweeks that are officially over}.
+             "completed_gws": gameweeks that are officially over,
+             "gameweek_dates": {gw: {"start", "end", "switch", "lastKickoff"}} as ISO strings, as in data.js}.
     """
     league_id = os.getenv("FANTRAX_LEAGUE_ID", "iku2an1nmryzcfa2")
     cookie_path = os.getenv("FANTRAX_COOKIE_PATH") or os.path.join(PROJECT_ROOT, "fantraxloggedin.cookie")
@@ -1159,7 +1160,7 @@ const LEAGUE_DATA = {{
     os.replace(tmp_file, out_file)
 
     print(f"Successfully synchronized real league data to {out_file}!")
-    return {"next_boundary": next_boundary, "completed_gws": completed_gws}
+    return {"next_boundary": next_boundary, "completed_gws": completed_gws, "gameweek_dates": gameweek_dates}
 
 
 if __name__ == "__main__":

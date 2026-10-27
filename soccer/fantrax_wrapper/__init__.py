@@ -7,7 +7,7 @@ A clean, modular, fully typed Python wrapper for fetching and analyzing Fantrax 
 from .client import FantraxClient
 from .session import FantraxSessionManager
 from .rpc import FantraxRPCClient
-from .scoring import FantasyScoringEngine
+from .scoring import FantasyScoringEngine, STAT_NAMES
 from .utils import add_season_year, parse_opponent, load_env_file
 from .models import (
     LeagueInfo,
@@ -41,6 +41,7 @@ __all__ = [
     "FantraxSessionManager",
     "FantraxRPCClient",
     "FantasyScoringEngine",
+    "STAT_NAMES",
     "add_season_year",
     "parse_opponent",
     "load_env_file",

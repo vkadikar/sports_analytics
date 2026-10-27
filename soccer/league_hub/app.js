@@ -9,6 +9,7 @@ const TOTAL_GW = 38;
 
 const PAGES = [
   { id: "home", label: "Home" },
+  { id: "news", label: "News" },
   { id: "table", label: "Table" },
   { id: "matches", label: "Matches" },
   { id: "cups", label: "Cups" },
@@ -340,6 +341,8 @@ RENDERERS.home = () => {
     <div class="card stat-tile"><span class="stat-label">Best lineup efficiency</span><span class="stat-value num">${fmt(topEff.eff, 1)}%</span><span class="stat-foot">${esc(topEff.team)}</span></div>
   </div>
 
+  ${homeNews()}
+
   <div class="grid grid-2">
     <div class="card">
       ${cardHead("Table snapshot", `After gameweek ${lastCompleted}`, `<button class="link-btn" data-go="table">Full table ${ICON.arrow}</button>`)}
@@ -403,6 +406,82 @@ function zoneClass(rank) {
 function zoneLegend() {
   return `<div class="table-legend"><span><i style="background:var(--cl)"></i>Champions League places (1st–5th)</span><span><i style="background:var(--bad)"></i>IHOP penalty (last)</span></div>`;
 }
+
+/* ==========================================================================
+   NEWS
+   ========================================================================== */
+
+// Commish Bot's recaps and previews: written once by news.py, cached as news/*.md, served by /api/news.
+const NEWS = { status: "loading", posts: [] };
+const NEWS_API_HELP = "Commish Bot's posts come from the hub server, so they only load when the site runs on app.py (locally or on Render).";
+const newsKind = p => p.kind === "preview" ? "Preview" : "Recap";
+
+fetchJson("/api/news")
+  .then(r => { NEWS.posts = r.posts || []; NEWS.status = "ok"; })
+  .catch(() => { NEWS.status = "error"; })
+  .finally(() => { if (state.page === "home" || state.page === "news") rerender(); });
+
+// The latest recap, and the preview of the gameweek after it once that's been written.
+function newsTeaser(post, kind, gw) {
+  const label = kind === "preview" ? `Gameweek ${gw} preview` : `Gameweek ${gw} recap`;
+  if (NEWS.status === "loading") return `<div class="card">${cardHead(label, "Commish Bot")}<div class="card-pad">${skeletonRows(5)}</div></div>`;
+  if (!post) {
+    const when = kind === "preview" ? "before the gameweek kicks off" : "the morning after the gameweek ends";
+    return `<div class="card">${cardHead(label, "Commish Bot")}<div class="card-pad"><div class="empty">Commish Bot files this ${when}.</div></div></div>`;
+  }
+  return `<article class="card news-teaser">
+    ${cardHead(label, `Commish Bot · ${fmtDate(post.published)}`, `<button class="link-btn" data-go="news" data-sub="${esc(post.slug)}">Read in full ${ICON.arrow}</button>`)}
+    <div class="news-teaser-body" data-go="news" data-sub="${esc(post.slug)}">
+      <div class="news-teaser-title display">${esc(post.title)}</div>
+      <div class="prose news-clamp">${commishMarkdown(post.body)}</div>
+    </div>
+  </article>`;
+}
+
+function homeNews() {
+  if (NEWS.status === "error") return "";
+  const recap = NEWS.posts.find(p => p.kind === "recap");
+  const recapGw = recap ? recap.gameweek : lastCompleted;
+  const preview = NEWS.posts.find(p => p.kind === "preview" && p.gameweek > recapGw);
+  const previewGw = preview ? preview.gameweek : recapGw + 1;
+  const cards = [recapGw >= 1 && newsTeaser(recap, "recap", recapGw), previewGw <= TOTAL_GW && newsTeaser(preview, "preview", previewGw)].filter(Boolean);
+  return cards.length ? `<div class="grid grid-2 news-home">${cards.join("")}</div>` : "";
+}
+
+RENDERERS.news = () => {
+  const head = pageHead("news", "Commish Bot", "League news", "Recaps the morning after every gameweek and a preview before the next one, straight from the league's resident pub bore.");
+  if (NEWS.status === "loading") return head + `<div class="card card-pad">${skeletonRows(10)}</div>`;
+  if (NEWS.status === "error") return head + `<div class="empty">${esc(NEWS_API_HELP)}</div>`;
+  if (!NEWS.posts.length) return head + `<div class="empty">Commish Bot hasn't filed anything yet. The first recap lands the morning after gameweek 1.</div>`;
+
+  const post = NEWS.posts.find(p => p.slug === state.sub.news) || NEWS.posts[0];
+  const i = NEWS.posts.indexOf(post);
+  const newer = NEWS.posts[i - 1], older = NEWS.posts[i + 1];
+  const pager = (p, dir) => p
+    ? `<button class="news-pager ${dir}" data-go="news" data-sub="${esc(p.slug)}"><span class="dim">${dir === "older" ? ICON.left + " Older" : "Newer " + ICON.right}</span><strong>GW ${p.gameweek} ${newsKind(p).toLowerCase()}: ${esc(p.title)}</strong></button>`
+    : `<span></span>`;
+
+  return head + `<div class="news-layout">
+    <article class="card news-article" aria-labelledby="news-title">
+      <header class="news-article-head">
+        <div class="eyebrow">Gameweek ${post.gameweek} · ${newsKind(post)}</div>
+        <h2 class="news-title display" id="news-title">${esc(post.title)}</h2>
+        <div class="news-byline">By Commish Bot · ${fmtDate(post.published)}</div>
+      </header>
+      <div class="prose">${commishMarkdown(post.body)}</div>
+      <nav class="news-pagers" aria-label="More posts">${pager(older, "older")}${pager(newer, "newer")}</nav>
+    </article>
+    <aside class="card news-list" aria-label="All posts">
+      ${cardHead("All posts", `${NEWS.posts.length} from Commish Bot`)}
+      <div class="news-list-items">${NEWS.posts.map(p => `
+        <button class="news-item" data-go="news" data-sub="${esc(p.slug)}" ${p === post ? 'aria-current="true"' : ""}>
+          <span class="news-item-meta"><span class="chip ${p.kind === "preview" ? "cl" : "accent"}">${newsKind(p)}</span>GW ${p.gameweek} · ${fmtDate(p.published)}</span>
+          <span class="news-item-title">${esc(p.title)}</span>
+        </button>`).join("")}
+      </div>
+    </aside>
+  </div>`;
+};
 
 /* ==========================================================================
    TABLE
@@ -1298,6 +1377,356 @@ $("#theme-toggle").addEventListener("click", () => {
   document.documentElement.dataset.theme = next;
   try { localStorage.setItem("gi-theme", next); } catch (e) {}
   paintThemeIcon();
+});
+
+/* ==========================================================================
+   Commish Bot — floating chat with the orchestrator at /api/commish-bot/chat
+   ========================================================================== */
+const TOOL_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.77z"/></svg>`;
+
+const SKILL_ICON = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`;
+
+let commishHistory = [];
+let commishBusy = false;
+// The manager the chatter says they are. Sent with every message so the bot knows who it's
+// talking to; the chat stays locked until one is picked.
+let commishManager = null;
+
+// Bot output is markdown. marked and DOMPurify load from a CDN; if they didn't, show plain text.
+function commishMarkdown(text) {
+  if (window.marked && window.DOMPurify) return DOMPurify.sanitize(marked.parse(text, { gfm: true, breaks: true }));
+  return esc(text).replace(/\n/g, "<br>");
+}
+
+// Runs a DOM update, keeping the chat pinned to the bottom if it was already there.
+function commishKeepScrolled(update) {
+  const body = $("#commish-body");
+  const wasAtBottom = body.scrollHeight - body.scrollTop - body.clientHeight < 40;
+  update();
+  if (wasAtBottom) body.scrollTop = body.scrollHeight;
+}
+// Adds an element to the chat, above the typing dots while they're showing, and returns it.
+function commishAppend(html) {
+  const tpl = document.createElement("template");
+  tpl.innerHTML = html.trim();
+  const el = tpl.content.firstElementChild;
+  commishKeepScrolled(() => $("#commish-body").insertBefore(el, $("#commish-typing")));
+  return el;
+}
+const commishAddMessage = (role, text) => commishAppend(
+  role === "bot" ? `<div class="commish-msg bot commish-md">${commishMarkdown(text)}</div>` : `<div class="commish-msg ${role}">${esc(text)}</div>`
+);
+// "get_team_results" -> "team results", so chips read "Checking team results…" / "Got team results".
+const prettyTool = name => name.replace(/^get_/, "").replace(/_/g, " ");
+const commishAddTool = name => commishAppend(`<div class="commish-tool">${TOOL_ICON}<span></span></div>`);
+// One chip can stand for several back-to-back calls to the same tool: "Checking squad ×3…".
+function commishUpdateChip(chip) {
+  const count = chip.calls > 1 ? ` ×${chip.calls}` : "";
+  const finished = chip.done === chip.calls;
+  chip.el.classList.toggle("done", finished);
+  $("span", chip.el).textContent = finished ? `Got ${prettyTool(chip.name)}${count}` : `Checking ${prettyTool(chip.name)}${count}…`;
+}
+const commishAddSkill = skill => commishAppend(
+  `<div class="commish-tool commish-skill">${SKILL_ICON}Using the ${esc(prettyTool(skill || "unknown"))} playbook</div>`
+);
+const commishShowTyping = () => commishAppend(`<div class="commish-typing" id="commish-typing"><span></span><span></span><span></span></div>`);
+const commishHideTyping = () => $("#commish-typing")?.remove();
+function commishSetBusy(busy) {
+  commishBusy = busy;
+  const locked = busy || !commishManager;
+  $("#commish-send").disabled = locked;
+  $("#commish-input").disabled = locked;
+  $("#commish-who").disabled = busy;
+}
+
+/* ---------- Who's chatting ----------
+   The greeting is canned rather than generated: it's built from the manager's standings row,
+   so the same manager and table always get the same words. Which opener and sign-off a manager
+   gets is fixed by a hash of their id, so different managers hear different lines. */
+const COMMISH_OPENERS = [
+  first => `Oi oi, ${first}! Look what the bleedin' cat dragged in.`,
+  first => `Well, well, well. If it ain't ${first}, the so-called gaffer.`,
+  first => `${first}! Pull up a stool, me old china. First round's on you, mind.`,
+  first => `Blimey, ${first}'s turned up. Someone hide the good crisps.`,
+  first => `'Ere, ${first}. Didn't think you'd 'ave the bottle to show your face in 'ere.`,
+  first => `Evenin', ${first}. Wipe your feet, you muppet, this is a respectable boozer.`,
+  first => `Bloody 'ell, it's ${first}. Thought you'd emigrated, the way you've been managin'.`,
+];
+const COMMISH_SIGNOFFS = [
+  "So what d'you want? Table, trades, waivers, or just a proper slaggin'?",
+  "Go on then, spit it out. I ain't got all night.",
+  "Ask away. I'll bring the numbers, you bring the excuses.",
+  "What's it gonna be, transfer advice or a shoulder to cry on?",
+  "Right, what's the question? And make it a good 'un.",
+];
+const commishHash = text => [...text].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7);
+// One line per situation. Each list has several variants; a manager always gets the same one.
+const COMMISH_LINES = {
+  noGames: [t => `No games played yet, so ${t} ain't 'ad the chance to embarrass you. Give it time.`],
+  top: [
+    (t, s) => `${t} top o' the pile on ${s.pts} points. Don't get comfy, son, the whole pub wants you knocked off your perch.`,
+    (t, s) => `${t} sittin' pretty at the top on ${s.pts} points. Smug git. Enjoy the view while it lasts.`,
+  ],
+  chasing: [
+    (t, s) => `${t} sittin' ${ordinal(s.rank)} on ${s.pts} points. Close enough to smell the title, nowhere near close enough to touch it.`,
+    (t, s) => `${t} up in ${ordinal(s.rank)}. Top four, la-di-da. Bottle it from 'ere and you'll never 'ear the end of it.`,
+    (t, s) => `${t} in ${ordinal(s.rank)}, ${s.pts} points. Knockin' on the door, but someone keeps lockin' it, innit.`,
+  ],
+  mid: [
+    (t, s) => `${t} in ${ordinal(s.rank)}. Mid-table mush. Not good enough to brag, not bad enough to get laughed at. Yet.`,
+    (t, s) => `${t} loiterin' in ${ordinal(s.rank)}, like a bloke who can't decide whether to go 'ome or 'ave another.`,
+    (t, s) => `${t} in ${ordinal(s.rank)}. Proper Tuesday-night-at-Stoke energy. Nobody's scared of you.`,
+    (t, s) => `${t} stuck in ${ordinal(s.rank)}. Neither 'ere nor there, like a warm pint of bitter.`,
+  ],
+  low: [
+    (t, s) => `${t} down in ${ordinal(s.rank)}. Bit whiffy down there, innit?`,
+    (t, s) => `${t} scrappin' about in ${ordinal(s.rank)}. One bad week off the bottom an' you know it.`,
+    (t, s) => `${t} in ${ordinal(s.rank)}. I've seen better squads on a Sunday mornin' 'ungover on Hackney Marshes.`,
+  ],
+  bottom: [
+    t => `${t} rock bottom. Dead last. Start practisin' your pancake technique, 'cause that IHOP's got your name on it.`,
+    t => `${t} propping up the 'ole league. Twenty-four hours in an IHOP, son. Better get a taste for syrup.`,
+  ],
+  unbeaten: [s => `Ain't lost a game all season. Jammy so-and-so. Your luck's gonna run out an' I'll be there to watch.`],
+  winStreak: [
+    n => `${n} wins on the bounce an' all. Enjoy it, it won't last.`,
+    n => `Won ${n} on the spin. Don't let it go to your 'ead, there's a lot of season left.`,
+  ],
+  loseStreak: [
+    n => `Lost ${n} on the spin, mind. Absolute shambles.`,
+    n => `${n} defeats in a row. Even the pub quiz team's 'avin' a better run than you.`,
+  ],
+  wonLast: [
+    () => "Nicked a win last time out, so you'll be insufferable about that, I s'pose.",
+    () => "Won last week, did ya? Even a stopped clock's right twice a day.",
+  ],
+  lostLast: [
+    () => "Got done last week an' all. Unlucky. Well, not really.",
+    () => "Lost last time out an' all. Shockin'. Truly. Nobody saw it comin'.",
+  ],
+  // By how many points the team has left on its bench, compared with the rest of the league.
+  benchWorst: [
+    s => `An' you've left ${fmtPts(s.benchPts)} points rottin' on your bench, one of the worst in the league. My nan picks a better XI.`,
+    s => `${fmtPts(s.benchPts)} points sat on your bench doin' nothin'. ${s.eff}% efficiency. Are you pickin' your team with a dartboard?`,
+  ],
+  benchBest: [
+    s => `Fair play, you pick a proper lineup: ${s.eff}% efficiency, one of the best in 'ere. Don't let it go to your 'ead.`,
+    s => `Gotta 'and it to you, only ${fmtPts(s.benchPts)} points left on the bench. Shame the rest of your game don't match.`,
+  ],
+  benchMid: [
+    s => `${fmtPts(s.benchPts)} points left on the pine so far. Not a disaster, not exactly genius neither.`,
+    s => `${s.eff}% lineup efficiency. Middlin'. Like most things about you.`,
+  ],
+};
+
+function commishGreeting(m) {
+  const first = m.name.split(" ")[0];
+  const h = commishHash(m.id);
+  // A different slice of the hash for each line, so two managers who share one line don't share them all.
+  const pick = (list, salt) => {
+    let x = Math.imul(h ^ Math.imul(salt + 1, 0x9e3779b1), 0x85ebca6b);
+    x ^= x >>> 13;
+    return list[(x >>> 0) % list.length];
+  };
+  const s = standingById[m.id];
+  let team = `**${m.teamName}**`;
+  const lines = [pick(COMMISH_OPENERS, 0)(first)];
+
+  if (!s || !s.p) {
+    lines.push(pick(COMMISH_LINES.noGames, 3)(team));
+  } else {
+    const last = CS.standings.length;
+    team += ` (${s.w}-${s.d}-${s.l})`;
+    const bucket = s.rank === 1 ? "top" : s.rank <= 4 ? "chasing" : s.rank <= last - 4 ? "mid" : s.rank < last ? "low" : "bottom";
+    lines.push(pick(COMMISH_LINES[bucket], 3)(team, s));
+
+    // Current streak: the run of identical results at the end of the form guide (oldest first).
+    const form = s.form || [];
+    const latest = form[form.length - 1];
+    let streak = 0;
+    for (let i = form.length - 1; i >= 0 && form[i] === latest; i--) streak++;
+    if (!s.l && !s.d) lines.push(pick(COMMISH_LINES.unbeaten, 6)(s));
+    else if (latest === "W" && streak >= 3) lines.push(pick(COMMISH_LINES.winStreak, 6)(streak));
+    else if (latest === "L" && streak >= 3) lines.push(pick(COMMISH_LINES.loseStreak, 6)(streak));
+    else if (latest === "W") lines.push(pick(COMMISH_LINES.wonLast, 6)());
+    else if (latest === "L") lines.push(pick(COMMISH_LINES.lostLast, 6)());
+
+    if (s.benchPts != null) {
+      const benchRank = CS.standings.filter(o => (o.benchPts ?? 0) > s.benchPts).length + 1;
+      const kind = benchRank <= 4 ? "benchWorst" : benchRank > last - 3 ? "benchBest" : "benchMid";
+      lines.push(pick(COMMISH_LINES[kind], 9)(s));
+    }
+  }
+  lines.push(pick(COMMISH_SIGNOFFS, 12));
+  return lines.join(" ");
+}
+
+function commishShowPicker() {
+  const prompt = commishAddMessage("bot", "Oi! Before you start runnin' your mouth, who the bloody 'ell are you? Pick your team.");
+  const picks = [...Object.values(managerById)].sort((a, b) => a.teamName.localeCompare(b.teamName))
+    .map(m => `<button type="button" class="commish-pick" data-pick="${m.id}">${crest(m, "sm")}<span><b>${esc(m.teamName)}</b><small>${esc(m.name)}</small></span></button>`)
+    .join("");
+  commishAppend(`<div class="commish-picker" id="commish-picker">${picks}</div>`);
+  // Keep the question in view rather than scrolling to the bottom of the team list.
+  $("#commish-body").scrollTop = prompt.offsetTop - 14;
+}
+
+function commishSetManager(id) {
+  const m = managerById[id];
+  if (!m || commishBusy || m.id === commishManager?.id) return;
+  const switching = Boolean(commishManager);
+  commishManager = m;
+  $("#commish-who").value = m.id;
+  $("#commish-picker")?.remove();
+  commishAddMessage("user", switching ? `Actually, I'm ${m.name} (${m.teamName}).` : `I'm ${m.name} (${m.teamName}).`);
+  // Greetings aren't added to the history sent to the model, so its replies don't echo the canned lines.
+  commishAddMessage("bot", (switching ? "Changed your name tag, 'ave ya? Fine. " : "") + commishGreeting(m));
+  $("#commish-input").placeholder = "Ask about the league…";
+  commishSetBusy(false);
+  $("#commish-input").focus();
+}
+
+// Renders one streamed turn. Thought and message events arrive as fragments: consecutive ones
+// of the same type extend the current block, and anything else starts a new one.
+function commishTurnRenderer() {
+  let block = null;
+  let reply = "";
+  let lastChip = null;
+  const pendingTools = [];
+  return {
+    get reply() { return reply; },
+    handle(event) {
+      if (event.type === "thought" || event.type === "message") {
+        if (block?.type !== event.type) {
+          const cls = event.type === "thought" ? "commish-thought" : "commish-msg bot";
+          block = { type: event.type, text: "", el: commishAppend(`<div class="${cls} commish-md"></div>`) };
+          if (event.type === "message" && reply) reply += "\n\n";
+        }
+        block.text += event.text;
+        if (event.type === "message") reply += event.text;
+        commishKeepScrolled(() => { block.el.innerHTML = commishMarkdown(block.text); });
+        return;
+      }
+      block = null;
+      if (event.type === "error") commishAddMessage("error", event.error);
+      else if (event.name === "load_skill") { if (event.type === "tool_call") commishAddSkill(event.args?.name); }
+      else if (event.type === "tool_call") {
+        // Reuse the previous chip if it's for the same tool and nothing has been shown since.
+        const body = $("#commish-body");
+        const newest = $("#commish-typing")?.previousElementSibling ?? body.lastElementChild;
+        if (lastChip?.name === event.name && lastChip.el === newest) lastChip.calls += 1;
+        else lastChip = { name: event.name, calls: 1, done: 0, el: commishAddTool(event.name) };
+        pendingTools.push(lastChip);
+        commishUpdateChip(lastChip);
+      } else if (event.type === "tool_result") {
+        const i = pendingTools.findIndex(chip => chip.name === event.name);
+        if (i >= 0) {
+          const chip = pendingTools.splice(i, 1)[0];
+          chip.done += 1;
+          commishUpdateChip(chip);
+        }
+      }
+    },
+  };
+}
+
+async function commishSend(message) {
+  commishAddMessage("user", message);
+  const historySoFar = commishHistory.slice();
+  commishHistory.push({ role: "user", text: message });
+  commishSetBusy(true);
+  commishShowTyping();
+  const turn = commishTurnRenderer();
+  let failed = false;
+  try {
+    const res = await fetch("/api/commish-bot/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message,
+        history: historySoFar,
+        manager: { id: commishManager.id, name: commishManager.name, team: commishManager.teamName, teamId: commishManager.teamId },
+      }),
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error || "Something went wrong talking to Commish Bot.");
+    }
+    // The response is newline-delimited JSON, one event per line, arriving as the bot works.
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let buffered = "";
+    const handleLines = text => text.split("\n").filter(l => l.trim()).forEach(line => {
+      const event = JSON.parse(line);
+      if (event.type === "error") failed = true;
+      turn.handle(event);
+    });
+    for (;;) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buffered += decoder.decode(value, { stream: true });
+      const end = buffered.lastIndexOf("\n");
+      if (end >= 0) { handleLines(buffered.slice(0, end)); buffered = buffered.slice(end + 1); }
+    }
+    handleLines(buffered + decoder.decode());
+    if (!turn.reply && !failed) throw new Error("Commish Bot didn't send a reply. Try asking again.");
+  } catch (e) {
+    commishAddMessage("error", e instanceof TypeError ? "Couldn't reach Commish Bot. Check your connection and try again." : e.message);
+  } finally {
+    commishHideTyping();
+    if (turn.reply) commishHistory.push({ role: "assistant", text: turn.reply });
+    commishSetBusy(false);
+    $("#commish-input").focus();
+  }
+}
+
+function openCommish() {
+  $("#commish-fab").classList.add("open");
+  $("#commish-fab").setAttribute("aria-expanded", "true");
+  $("#commish-panel").classList.add("open");
+  if (!commishManager && !$("#commish-picker")) commishShowPicker();
+  (commishManager ? $("#commish-input") : $(".commish-pick"))?.focus();
+}
+function setCommishFullScreen(full) {
+  $("#commish-panel").classList.toggle("full", full);
+  $("#commish-expand").setAttribute("aria-pressed", String(full));
+  $("#commish-expand").setAttribute("aria-label", full ? "Exit full screen" : "Full screen");
+  document.body.style.overflow = full ? "hidden" : "";
+}
+function closeCommish() {
+  setCommishFullScreen(false);
+  $("#commish-fab").classList.remove("open");
+  $("#commish-fab").setAttribute("aria-expanded", "false");
+  $("#commish-panel").classList.remove("open");
+}
+$("#commish-fab").addEventListener("click", () => {
+  $("#commish-panel").classList.contains("open") ? closeCommish() : openCommish();
+});
+$("#commish-close").addEventListener("click", closeCommish);
+$("#commish-who").insertAdjacentHTML("beforeend", [...Object.values(managerById)]
+  .sort((a, b) => a.teamName.localeCompare(b.teamName))
+  .map(m => `<option value="${m.id}">${esc(m.teamName)} (${esc(m.name.split(" ")[0])})</option>`).join(""));
+$("#commish-who").addEventListener("change", e => commishSetManager(e.target.value));
+$("#commish-body").addEventListener("click", e => {
+  const pick = e.target.closest(".commish-pick");
+  if (pick) commishSetManager(pick.dataset.pick);
+});
+$("#commish-expand").addEventListener("click", () => {
+  setCommishFullScreen(!$("#commish-panel").classList.contains("full"));
+  $("#commish-input").focus();
+});
+// Escape leaves full screen first, rather than closing the chat outright.
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && $("#commish-panel").classList.contains("full")) setCommishFullScreen(false);
+});
+$("#commish-form").addEventListener("submit", e => {
+  e.preventDefault();
+  if (commishBusy || !commishManager) return;
+  const input = $("#commish-input");
+  const message = input.value.trim();
+  if (!message) return;
+  input.value = "";
+  commishSend(message);
 });
 
 /* ---------- Boot ---------- */

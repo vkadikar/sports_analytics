@@ -38,6 +38,7 @@
 
   <main>
     <section class="page" id="page-home" aria-labelledby="t-home"></section>
+    <section class="page" id="page-news" aria-labelledby="t-news"></section>
     <section class="page" id="page-table" aria-labelledby="t-table"></section>
     <section class="page" id="page-matches" aria-labelledby="t-matches"></section>
     <section class="page" id="page-cups" aria-labelledby="t-cups"></section>
@@ -74,6 +75,50 @@
 
   <div class="tooltip" id="tooltip" role="tooltip"></div>
 
+  <!-- Commish Bot -->
+  <button class="commish-fab" id="commish-fab" aria-label="Chat with Commish Bot" aria-expanded="false">
+    <span class="commish-fab-icon">
+      <svg class="i-bot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5V3"/><circle cx="12" cy="2.2" r="1.2" fill="currentColor" stroke="none"/><rect x="4" y="5" width="16" height="13" rx="4"/><path d="M2 10v3M22 10v3"/><circle cx="9" cy="10.5" r="1.4" fill="currentColor" stroke="none"/><circle cx="15" cy="10.5" r="1.4" fill="currentColor" stroke="none"/><path d="M8.5 14.2c2 1.6 5 1.6 7 0"/><path d="M9 21h6"/></svg>
+      <svg class="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </span>
+    <span class="commish-fab-label">Commish Bot</span>
+  </button>
+
+  <div class="commish-panel" id="commish-panel" role="dialog" aria-modal="false" aria-label="Commish Bot chat">
+    <div class="commish-head">
+      <span class="commish-avatar" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5V3"/><circle cx="12" cy="2.2" r="1.2" fill="currentColor" stroke="none"/><rect x="4" y="5" width="16" height="13" rx="4"/><path d="M2 10v3M22 10v3"/><circle cx="9" cy="10.5" r="1.4" fill="currentColor" stroke="none"/><circle cx="15" cy="10.5" r="1.4" fill="currentColor" stroke="none"/><path d="M8.5 14.2c2 1.6 5 1.6 7 0"/><path d="M9 21h6"/></svg>
+      </span>
+      <div class="commish-head-text">
+        <div class="ttl">Commish Bot</div>
+        <label class="sub commish-who-label"><span class="dot"></span><span class="sr-only">You are</span>
+          <select id="commish-who" aria-label="Which manager are you?">
+            <option value="" disabled selected>Who are you?</option>
+          </select>
+        </label>
+      </div>
+      <div class="commish-actions">
+        <button class="icon-btn" id="commish-expand" aria-label="Full screen" aria-pressed="false">
+          <svg class="i-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          <svg class="i-collapse" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"/></svg>
+        </button>
+        <button class="icon-btn" id="commish-close" aria-label="Close chat">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="commish-body" id="commish-body"></div>
+    <form class="commish-foot" id="commish-form">
+      <input id="commish-input" type="text" placeholder="Pick your team first" autocomplete="off" aria-label="Message Commish Bot" disabled>
+      <button type="submit" id="commish-send" aria-label="Send">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </form>
+  </div>
+
+  <!-- Markdown rendering for Commish Bot replies; output is sanitized with DOMPurify -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.6/purify.min.js"></script>
   <script src="data.js"></script>
   <script src="app.js"></script>
 </body>

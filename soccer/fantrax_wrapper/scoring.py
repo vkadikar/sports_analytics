@@ -91,6 +91,33 @@ DEFAULT_SCORING_RULES_FORWARD = {
 }
 
 
+STAT_NAMES = {
+    "G": "Goals",
+    "AT": "Assists (official + fantasy)",
+    "KP": "Key passes (passes leading to a shot)",
+    "SOT": "Shots on target",
+    "PKD": "Penalty kicks drawn",
+    "PKM": "Penalty kicks missed",
+    "ACNC": "Accurate crosses (not corners)",
+    "COS": "Successful dribbles",
+    "TKW": "Tackles won",
+    "INT": "Interceptions",
+    "BS": "Blocked shots",
+    "CLR": "Effective clearances",
+    "AER": "Aerials won",
+    "DIS": "Dispossessed",
+    "CS": "Clean sheets (on the pitch)",
+    "GAO": "Goals conceded (on the pitch)",
+    "SV": "Saves",
+    "PKS": "Penalty kick saves",
+    "HCS": "High claims",
+    "SM": "Smothers",
+    "YC": "Yellow cards",
+    "RC": "Red cards",
+    "OG": "Own goals",
+}
+
+
 class FantasyScoringEngine:
     """Engine for calculating raw FPts and adjusted fantasy points (aFPts) from box score stats."""
 
