@@ -1,7 +1,7 @@
 # Commish Bot's weekly News posts for the League Hub (soccer/league_hub/news.py).
 # Runs daily; news.py only writes what's missing (a recap once a gameweek officially ends, and a
 # preview of the next one before it kicks off), so most runs just sync and exit. New posts are
-# committed to master, which redeploys the site on Render.
+# committed to master, which redeploys the site on Render and Vercel.
 name: League news
 
 on:

@@ -17,7 +17,11 @@ import threading
 from pathlib import Path
 from typing import Any, Callable, Dict, Iterable
 
+import numpy
+
 HARNESS = Path(__file__).resolve().parent / "sandbox_harness.py"
+# Where numpy and pandas are installed. Vercel keeps them outside the interpreter's own path.
+PACKAGES_DIR = Path(numpy.__file__).resolve().parent.parent
 WALL_SECONDS = 90
 # No secrets reach the child. One BLAS thread keeps numpy's startup memory small.
 CHILD_ENV = {"PATH": "/usr/bin:/bin", "OPENBLAS_NUM_THREADS": "1", "OMP_NUM_THREADS": "1", "MKL_NUM_THREADS": "1"}
@@ -34,7 +38,7 @@ def run_script(code: str, call_tool: Callable[[str, Dict[str, Any]], Any], allow
     allowed = set(allowed_tools)
     with tempfile.TemporaryDirectory(prefix="commish-py-") as workdir:
         proc = subprocess.Popen(
-            [sys.executable, "-I", "-B", str(HARNESS)],
+            [sys.executable, "-I", "-B", str(HARNESS), str(PACKAGES_DIR)],
             stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
             text=True, cwd=workdir, env=CHILD_ENV,
         )

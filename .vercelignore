@@ -1,0 +1,11 @@
+# Secrets: Vercel gets the Fantrax cookie via FANTRAX_COOKIE_B64
+*.cookie
+.env
+soccer/config/.env
+
+# Not used by the League Hub
+soccer/examples
+soccer/pitchrank
+soccer/research
+soccer/tests
+*.ipynb

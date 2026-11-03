@@ -82,7 +82,7 @@ so backfilled recaps read as if written that week.
 
 **Automation.** The GitHub Action `.github/workflows/league-news.yml` runs `news.py` every morning at
 12:30 UTC, before the home page's 9 AM ET switch, and commits new posts (plus the fresh `data.js`) to
-`master`, which redeploys Render. Most mornings there's nothing to write and it exits after the sync. It
+`master`, which redeploys Render and Vercel. Most mornings there's nothing to write and it exits after the sync. It
 needs two repository secrets (**Settings → Secrets and variables → Actions**):
 
 | Secret | Value |
@@ -190,3 +190,39 @@ Click **Create Web Service**. When the deploy finishes:
   `git ls-files | grep -E "cookie|\.env"` (it should print nothing). Copies pushed before they were ignored
   are still in git history, so if the repo has ever been public, log out of Fantrax everywhere to invalidate
   the old cookie.
+
+## Deploying to Vercel
+
+The same app also runs on Vercel, alongside Render. `pyproject.toml` at the repo root sets the Python version,
+the packages and the Flask entrypoint; `vercel.json` limits deploys to `master`. Add new packages to both
+`pyproject.toml` and `requirements.txt`.
+
+In the Vercel dashboard: **Add New → Project**, import the repository, and set:
+
+| Setting | Value |
+|---|---|
+| Framework Preset | `Flask` (usually detected) |
+| Root Directory | *(leave empty: the repo root)* |
+| Build and install commands | *(leave as the defaults)* |
+
+Add these under **Environment Variables**, then deploy. Set them for **Production**:
+
+| Key | Value | Required |
+|---|---|---|
+| `FANTRAX_COOKIE_B64` | The base64 string from "Encode your Fantrax cookie" above | **Yes** |
+| `GEMINI_API_KEY` | Same key as on Render | Yes, for Commish Bot |
+| `FANTRAX_LEAGUE_ID` | `iku2an1nmryzcfa2` | Optional (this is the default) |
+| `DATA_SYNC_TTL_MINUTES` | `15` | Optional |
+
+Check it the same way as on Render (`/api/health`, then the footer's "Updated …" time), and send Commish Bot a
+question, since its tools run as separate processes.
+
+### Things to know on Vercel
+
+- **Each instance syncs on its own.** Instances start and stop with traffic, so a page load on a new instance
+  runs a fresh sync, and busy periods can mean more Fantrax calls than on Render's single worker.
+- **The disk is read-only except the temp dir**, so synced data goes to a temp copy of `data.js` that lasts as
+  long as the instance. Until an instance's first sync finishes, or if it fails, the committed copy is served.
+- **Requests stop at the function time limit** (300 seconds on Hobby), including Commish Bot's streamed replies.
+- **Cookie updates go in three places now:** Render, Vercel and the GitHub Action secret. Vercel only applies a
+  changed environment variable on the next deploy, so redeploy after updating it.

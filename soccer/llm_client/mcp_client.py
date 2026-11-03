@@ -21,6 +21,7 @@ from contextlib import AsyncExitStack
 from pathlib import Path
 from typing import Any, Dict, List
 
+import mcp
 from mcp import ClientSession, types
 from mcp.client.stdio import StdioServerParameters, stdio_client
 
@@ -51,7 +52,11 @@ class FantraxMCPClient:
             cwd=str(SOCCER_DIR),
             # The SDK only passes a few safe vars (HOME, PATH, ...) to the subprocess. Forward the
             # Fantrax config too, or on Render the server never sees the decoded cookie's path.
-            env={k: v for k, v in os.environ.items() if k in ("FANTRAX_COOKIE_PATH", "FANTRAX_LEAGUE_ID")},
+            # PYTHONPATH is for Vercel, which installs packages outside the interpreter's own path.
+            env={
+                **{k: v for k, v in os.environ.items() if k in ("FANTRAX_COOKIE_PATH", "FANTRAX_LEAGUE_ID")},
+                "PYTHONPATH": str(Path(mcp.__file__).resolve().parent.parent),
+            },
         )
         read, write = await self._exit_stack.enter_async_context(stdio_client(server_params))
         session = await self._exit_stack.enter_async_context(ClientSession(read, write))

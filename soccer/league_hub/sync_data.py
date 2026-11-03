@@ -7,6 +7,7 @@ standings against median, and unified 38-gameweek tournament matchups.
 import os
 import sys
 import json
+import tempfile
 from datetime import datetime, time, timedelta
 from zoneinfo import ZoneInfo
 import pandas as pd
@@ -219,7 +220,8 @@ def main():
     Returns {"next_boundary": the next gameweek start/official end (data is stale from then on),
              "completed_gws": gameweeks that are officially over,
              "gameweek_dates": {gw: {"start", "end", "switch", "lastKickoff"}} as ISO strings, as in data.js,
-             "gameweek_matchups": {gw: [fixture, ...]}, every fixture including cup ties, as in data.js}.
+             "gameweek_matchups": {gw: [fixture, ...]}, every fixture including cup ties, as in data.js,
+             "data_file": the path data.js was written to}.
     """
     league_id = os.getenv("FANTRAX_LEAGUE_ID", "iku2an1nmryzcfa2")
     cookie_path = os.getenv("FANTRAX_COOKIE_PATH") or os.path.join(PROJECT_ROOT, "fantraxloggedin.cookie")
@@ -1154,14 +1156,15 @@ const LEAGUE_DATA = {{
 """
 
     # Write to a temp file and swap it in, so the server never serves a half-written data.js.
-    out_file = os.path.join(BASE_DIR, "data.js")
+    # Vercel's filesystem is read-only outside the temp dir (and VERCEL is set on every deployment there).
+    out_file = os.path.join(tempfile.gettempdir() if os.getenv("VERCEL") else BASE_DIR, "data.js")
     tmp_file = f"{out_file}.{os.getpid()}.tmp"
     with open(tmp_file, "w") as f:
         f.write(js_content)
     os.replace(tmp_file, out_file)
 
     print(f"Successfully synchronized real league data to {out_file}!")
-    return {"next_boundary": next_boundary, "completed_gws": completed_gws, "gameweek_dates": gameweek_dates, "gameweek_matchups": gameweek_matchups}
+    return {"next_boundary": next_boundary, "completed_gws": completed_gws, "gameweek_dates": gameweek_dates, "gameweek_matchups": gameweek_matchups, "data_file": out_file}
 
 
 if __name__ == "__main__":

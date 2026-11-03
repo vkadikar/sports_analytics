@@ -88,6 +88,8 @@ _last_sync = float("-inf")
 _next_boundary = None
 # Gameweeks officially over as of the last sync; their lineups can no longer change.
 _completed_gws = set()
+# The data.js to serve: the committed copy until a sync writes a newer one.
+_data_file = os.path.join(BASE_DIR, "data.js")
 
 # Lineups and squads fetched from Fantrax on demand: {key: (expires_at_monotonic, value)}.
 LINEUP_TTL_FINAL_SECONDS = 24 * 60 * 60
@@ -125,7 +127,7 @@ def index():
 def serve_data():
     """Serve the league dataset, re-syncing from Fantrax first when it is stale."""
     refresh_data_if_stale()
-    response = send_from_directory(BASE_DIR, "data.js")
+    response = send_from_directory(os.path.dirname(_data_file), "data.js")
     response.headers["Cache-Control"] = "no-cache"
     return response
 
@@ -137,7 +139,7 @@ def refresh_data_if_stale() -> None:
     Each worker process syncs on its first request and then at most once per TTL. If a sync
     is already running, or Fantrax fails, the existing data.js is served unchanged.
     """
-    global _last_sync, _next_boundary, _completed_gws
+    global _last_sync, _next_boundary, _completed_gws, _data_file
 
     def is_stale() -> bool:
         if time.monotonic() - _last_sync >= SYNC_TTL_SECONDS:
@@ -155,6 +157,7 @@ def refresh_data_if_stale() -> None:
         result = sync_data.main()
         _next_boundary = result["next_boundary"]
         _completed_gws = set(result["completed_gws"])
+        _data_file = result["data_file"]
     except Exception as e:
         print(f"Warning: data sync failed, serving existing data.js: {e}")
     finally:

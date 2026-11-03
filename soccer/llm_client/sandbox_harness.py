@@ -1,5 +1,6 @@
 """
-Child-process side of run_python (see sandbox.py). Runs as `python -I -B sandbox_harness.py`.
+Child-process side of run_python (see sandbox.py). Runs as
+`python -I -B sandbox_harness.py <packages dir>`.
 
 Protocol over stdin/stdout, one JSON object per line:
     parent -> child   {"code": str}                     the script to run
@@ -39,6 +40,9 @@ import itertools
 import math
 import random
 import statistics
+
+# -I ignores PYTHONPATH, so the parent names where numpy and pandas are installed.
+sys.path.append(sys.argv[1])
 
 import numpy
 import pandas
