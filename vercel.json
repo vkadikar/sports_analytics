@@ -5,5 +5,18 @@
       "**": false,
       "master": true
     }
-  }
+  },
+  "services": {
+    "gentlemens-league-hub": {
+      "root": ".",
+      "framework": "flask",
+      "entrypoint": "soccer.league_hub.app:app"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": { "service": "gentlemens-league-hub" }
+    }
+  ]
 }

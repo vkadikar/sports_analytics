@@ -193,15 +193,15 @@ Click **Create Web Service**. When the deploy finishes:
 
 ## Deploying to Vercel
 
-The same app also runs on Vercel, alongside Render. `pyproject.toml` at the repo root sets the Python version,
-the packages and the Flask entrypoint; `vercel.json` limits deploys to `master`. Add new packages to both
-`pyproject.toml` and `requirements.txt`.
+The same app also runs on Vercel, alongside Render, as the `gentlemens-league-hub` service defined in
+`vercel.json`, which also limits deploys to `master`. It installs from `requirements.txt` and takes its Python
+version from `.python-version`, both in this folder.
 
 In the Vercel dashboard: **Add New → Project**, import the repository, and set:
 
 | Setting | Value |
 |---|---|
-| Framework Preset | `Flask` (usually detected) |
+| Framework Preset | `Services` |
 | Root Directory | *(leave empty: the repo root)* |
 | Build and install commands | *(leave as the defaults)* |
 

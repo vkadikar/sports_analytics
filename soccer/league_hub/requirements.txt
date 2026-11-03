@@ -1,5 +1,4 @@
-# Runtime dependencies for the League Hub web server (used by the Render build).
-# Vercel installs from pyproject.toml at the repo root instead; keep the two in sync.
+# Runtime dependencies for the League Hub web server (used by the Render and Vercel builds).
 flask>=3.0.0
 gunicorn>=22.0.0
 pandas>=2.0.0
