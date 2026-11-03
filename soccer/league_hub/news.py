@@ -60,7 +60,31 @@ PUBLISHING_NOTE = (
 )
 
 
-def recap_prompt(gw: int) -> str:
+def cup_section(fixtures: List[Dict[str, Any]], final: bool) -> str:
+    """Prompt text for a gameweek's Lingineni Cup ties. The Fantrax tools only know the head-to-head
+    scores, not which fixtures are cup ties, so this comes from the synced data.js fixtures."""
+    ties = [m for m in fixtures if m.get("competition") == "lingineni_cup"]
+    if not ties:
+        return ""
+    lines = []
+    for m in ties:
+        score = f" {m['homeScore']:g} - {m['awayScore']:g}" if final else " vs"
+        lines.append(f"- {m['tournamentStage']}: {m['homeTeam']} ({m['home']}){score} {m['awayTeam']} ({m['away']})")
+    if final:
+        return (
+            "\n\nThis gameweek also carried Lingineni Cup ties, which are single elimination (the higher "
+            "score goes through) and are played in the same gameweek's matchups. Give them their own "
+            "`## Lingineni Cup` section right after the results, covering who went through and who went "
+            "out, with the key players, and don't speculate about who they meet next:\n" + "\n".join(lines)
+        )
+    return (
+        "\n\nThis gameweek also carries Lingineni Cup ties, which are single elimination (the higher "
+        "score goes through). Give them their own `## Lingineni Cup` section right after the match of "
+        "the week, with a pick for each and what's at stake for the loser:\n" + "\n".join(lines)
+    )
+
+
+def recap_prompt(gw: int, fixtures: List[Dict[str, Any]]) -> str:
     return (
         f"Write the weekly recap for gameweek {gw}, using the `gameweek_recap` skill.\n\n"
         f"Write it as if it's the morning after gameweek {gw} finished. The tools may return data "
@@ -68,14 +92,14 @@ def recap_prompt(gw: int) -> str:
         f"and work out form and season averages from get_weekly_scores rows up to week {gw} only "
         f"(get_form_table covers the whole season so far, so only use it if {gw} is the latest "
         f"played week). For \"Looking ahead\", use get_matchups({gw + 1}) for the fixtures and don't "
-        f"mention how they turned out.\n\n" + PUBLISHING_NOTE
+        f"mention how they turned out." + cup_section(fixtures, final=True) + "\n\n" + PUBLISHING_NOTE
     )
 
 
-def preview_prompt(gw: int) -> str:
+def preview_prompt(gw: int, fixtures: List[Dict[str, Any]]) -> str:
     return (
         f"Write the preview of gameweek {gw}, using the `gameweek_preview` skill. "
-        f"Gameweek {gw - 1} is the latest finished week.\n\n" + PUBLISHING_NOTE
+        f"Gameweek {gw - 1} is the latest finished week." + cup_section(fixtures, final=False) + "\n\n" + PUBLISHING_NOTE
     )
 
 
@@ -123,9 +147,10 @@ def _split_title(text: str) -> tuple[str, str]:
     return "", text
 
 
-def generate_post(agent, gw: int, kind: str) -> Path:
+def generate_post(agent, gw: int, kind: str, matchups: Dict[Any, List[Dict[str, Any]]]) -> Path:
     """Has Commish Bot write one post and saves it. Raises rather than saving a reply that looks broken."""
-    prompt = recap_prompt(gw) if kind == "recap" else preview_prompt(gw)
+    fixtures = matchups.get(gw) or matchups.get(str(gw)) or []
+    prompt = recap_prompt(gw, fixtures) if kind == "recap" else preview_prompt(gw, fixtures)
     text = _final_text(agent.run(prompt))
     title, body = _split_title(text)
     if len(body) < MIN_BODY_CHARS:
@@ -197,7 +222,7 @@ def main(argv: Optional[List[str]] = None) -> int:
     for gw, kind in todo:
         try:
             print(f"Writing GW {gw} {kind}...", flush=True)
-            print(f"  saved {generate_post(agent, gw, kind).relative_to(BASE_DIR)}")
+            print(f"  saved {generate_post(agent, gw, kind, sync["gameweek_matchups"]).relative_to(BASE_DIR)}")
         except Exception as e:
             failures += 1
             print(f"  FAILED: {e}")
