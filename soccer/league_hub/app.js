@@ -965,7 +965,7 @@ function playerRow(p, { bench = false, star = false, showSeason = false } = {}) 
   return `<div class="lu-row ${bench ? "bench" : ""}">
     <span class="pos-tag" title="${esc(POS_NAMES[pos] || pos)}">${esc(pos)}</span>
     <span style="min-width:0"><span class="nm" style="display:block">${esc(p.name)}${star ? `<span class="star" title="Top scorer in this matchup">★</span>` : ""}</span><span class="meta" style="display:block">${esc(meta)}</span></span>
-    <span class="pts ${p.points < 0 ? "neg" : ""}">${fmtPts(p.points)}</span>
+    <span class="pts-cell"><span class="pts ${p.points < 0 ? "neg" : ""}">${fmtPts(p.points)}</span>${p.predicted == null ? "" : `<span class="pred" title="What the model predicted before this gameweek">Pred ${fmt(p.predicted, 1)}</span>`}</span>
   </div>`;
 }
 

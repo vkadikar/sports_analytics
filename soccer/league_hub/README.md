@@ -12,6 +12,7 @@ Champions League and Lingineni Cup, manager profiles, league history, and rules.
 | `sync_data.py` | Pulls live data from Fantrax (plus Premier League kickoff times) and writes `data.js`. |
 | `app.py` | Flask server. Serves the site and re-syncs `data.js` from Fantrax when it's stale. |
 | `news.py`, `news/` | Commish Bot's weekly recaps and previews, written once and cached as markdown (see "News"). |
+| `predictions/` | The fantasy points model's prediction for each gameweek, written once by `soccer/fpts_model/train.py`. Shown under each player's score in the match lineups. |
 
 ### Gameweek timing
 

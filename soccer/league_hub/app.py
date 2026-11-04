@@ -37,6 +37,7 @@ try:
         calculate_median_standings,
         calculate_optimal_standings,
         compare_standings_vs_optimal,
+        with_predictions,
     )
     FANTRAX_SDK_AVAILABLE = True
 except ImportError as e:
@@ -266,7 +267,10 @@ def get_lineups(week: int):
     ttl = LINEUP_TTL_FINAL_SECONDS if week in _completed_gws else LINEUP_TTL_LIVE_SECONDS
     try:
         client = get_client()
-        lineups = {t: cached(("lineup", week, t), ttl, lambda t=t: client.get_lineup(t, week)) for t in team_ids}
+        lineups = {
+            t: with_predictions(cached(("lineup", week, t), ttl, lambda t=t: client.get_lineup(t, week)), week)
+            for t in team_ids
+        }
         return jsonify({"week": week, "final": week in _completed_gws, "lineups": lineups})
     except Exception as e:
         return jsonify({"error": str(e)}), 502

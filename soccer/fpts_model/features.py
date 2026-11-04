@@ -1,12 +1,13 @@
 """
 Feature engineering for the fantasy points model.
 
-Turns one season of player game logs into one row per player per gameweek. Every
-feature describes what was known before kickoff, so upcoming fixtures can be scored.
+Turns one season of player game logs into one row per player per game. Features are
+point in time: a row in gameweek N depends only on games played before gameweek N, so
+results from a week, or any later one, can never reach that week's features.
 """
 
-from statistics import mode
-from typing import List
+from datetime import date
+from typing import Dict, List, Optional
 
 import numpy as np
 import pandas as pd
@@ -31,17 +32,25 @@ CONTEXT_FEATURES = [
 ]
 
 
-def clean_game_logs(game_logs: pd.DataFrame) -> pd.DataFrame:
-    """Normalizes raw Fantrax game logs and assigns each game a matchweek.
+def gameweek_of(day: date, gw_dates: Dict[int, Dict[str, date]]) -> Optional[int]:
+    """The Fantrax gameweek whose date range contains a day, or None."""
+    for week, dates in gw_dates.items():
+        if dates["start"] <= day <= dates["end"]:
+            return week
+    return None
+
+
+def clean_game_logs(game_logs: pd.DataFrame, gw_dates: Dict[int, Dict[str, date]]) -> pd.DataFrame:
+    """Normalizes raw Fantrax game logs and assigns each game its Fantrax gameweek.
 
     Args:
         game_logs: One row per player game from a single season, with columns player_id,
-            position, Date, Team, Opp ('@' prefix for away), Score ('W 4-0'), Min, GA and
-            the box score stats. To predict a gameweek, include a row for each player's
-            fixture in it, with Score 'L 0-0' and the stats left blank.
+            position, Date, Team, Opp ('@' prefix for away), Score ('W 4-0'), Min and the box
+            score stats. Fixtures to predict have a blank Score and stats.
+        gw_dates: Fantrax gameweek date ranges, from FantraxClient.get_gameweek_dates.
 
     Returns:
-        DataFrame with lowercase columns, numeric stats, and matchweek, is_away and minutes columns.
+        DataFrame with lowercase columns, numeric stats, and matchweek, played, is_away and minutes columns.
     """
     df = game_logs.copy()
     df.columns = [col.lower() for col in df.columns]
@@ -50,18 +59,23 @@ def clean_game_logs(game_logs: pd.DataFrame) -> pd.DataFrame:
         raise ValueError("game_logs must cover a single season")
 
     df["date"] = pd.to_datetime(df["date"])
-    df["matchweek"] = df.groupby("team")["date"].rank(method="dense").astype(int)
+    df["matchweek"] = df["date"].map(lambda day: gameweek_of(day.date(), gw_dates))
+    if df["matchweek"].isna().any():
+        raise ValueError(f"Games outside every gameweek: {sorted(df.loc[df['matchweek'].isna(), 'date'].unique())}")
+    df["matchweek"] = df["matchweek"].astype(int)
+
+    df["played"] = df["score"].notna()
     df["is_away"] = df["opp"].str.startswith("@").astype(int)
     df["opp"] = df["opp"].str.replace("@", "")
 
     # Goalkeeper logs report goals conceded as GA, outfield logs as GAO
+    numeric = TARGET_STATS + ["ga", "min"]
+    df = df.reindex(columns=df.columns.union(numeric, sort=False))
     df["gao"] = df["gao"].fillna(df["ga"])
-
-    numeric = TARGET_STATS + ["min"]
     df[numeric] = df[numeric].apply(pd.to_numeric, errors="coerce").fillna(0)
     df["minutes"] = df["min"].astype(int)
 
-    return df.sort_values(["matchweek", "player_id"], ascending=[True, False]).reset_index(drop=True)
+    return df.sort_values(["matchweek", "date", "player_id"], ascending=[True, True, False]).reset_index(drop=True)
 
 
 def _add_rolling_stats(df: pd.DataFrame) -> pd.DataFrame:
@@ -80,81 +94,82 @@ def _add_rolling_stats(df: pd.DataFrame) -> pd.DataFrame:
         rates[f"{stat}_per_min_season"] = per_min_season
         rates[f"{stat}_per_90_gameweek"] = per_min_gameweek * 90
         rates[f"{stat}_per_90_season"] = per_min_season * 90
+    rates = pd.DataFrame(rates)
 
-    return pd.concat([df, pd.DataFrame(rates)], axis=1)
+    # A second unplayed fixture would otherwise treat the first one as a 0-minute game
+    unplayed = df.loc[~df["played"], "player_id"]
+    repeats = unplayed[unplayed.duplicated()].index
+    blanked = rates.copy()
+    blanked.loc[repeats] = np.nan
+    rates.loc[repeats] = blanked.groupby(players).ffill().loc[repeats]
+
+    return pd.concat([df, rates], axis=1)
 
 
 def _add_positional_averages(df: pd.DataFrame) -> pd.DataFrame:
-    """Adds the trimmed mean per-90 rates of each position facing each opponent."""
-    def trimmed_mean(s: pd.Series) -> float:
-        return s[s.between(s.quantile(0.05), s.quantile(0.95))].mean()
-
+    """Adds the trimmed mean per-90 rates of each position facing each opponent in earlier gameweeks."""
     per90_cols = [col for col in df.columns if "per_90" in col]
-    averages = (
-        df.groupby(["opp", "position"])[per90_cols]
-        .apply(lambda group: group.apply(trimmed_mean))
-        .reset_index()
-        .rename(columns={col: f"positional_avg_{col}" for col in per90_cols})
-    )
-    return df.merge(averages, on=["opp", "position"])
+
+    rows = []
+    for (opp, position), group in df.groupby(["opp", "position"]):
+        for week in group["matchweek"].unique():
+            earlier = group.loc[group["matchweek"] < week, per90_cols]
+            trimmed = earlier.where(earlier.ge(earlier.quantile(0.05)) & earlier.le(earlier.quantile(0.95)))
+            rows.append({"opp": opp, "position": position, "matchweek": week, **trimmed.mean().to_dict()})
+
+    averages = pd.DataFrame(rows).rename(columns={col: f"positional_avg_{col}" for col in per90_cols})
+    return df.merge(averages, on=["opp", "position", "matchweek"])
+
+
+def _league_standings(df: pd.DataFrame) -> pd.DataFrame:
+    """Each club's league position going into each gameweek, from results in earlier gameweeks."""
+    games = df[df["played"]].drop_duplicates(["team", "date"])
+    goals = games["score"].str.extract(r"(\d+)-(\d+)").astype(int)
+    results = pd.DataFrame({
+        "team": games["team"],
+        "matchweek": games["matchweek"],
+        "table_points": games["score"].str[0].map({"W": 3, "T": 1}).fillna(0),
+        "goals_for": goals[0],
+        "goals_against": goals[1],
+    })
+
+    rows = []
+    for week in df["matchweek"].unique():
+        earlier = results[results["matchweek"] < week]
+        table = earlier.groupby("team")[["table_points", "goals_for", "goals_against"]].sum()
+        table = table.reindex(df["team"].unique(), fill_value=0).rename_axis("team").reset_index()
+        table["goal_differential"] = table["goals_for"] - table["goals_against"]
+        table = table.sort_values(
+            ["table_points", "goal_differential", "goals_for", "goals_against", "team"],
+            ascending=[False, False, False, True, True],
+        )
+        rows.append(pd.DataFrame({"team": table["team"], "matchweek": week, "team_week_standing": range(1, len(table) + 1)}))
+    return pd.concat(rows, ignore_index=True)
 
 
 def _add_league_standings(df: pd.DataFrame) -> pd.DataFrame:
-    """Adds each team's and opponent's league position going into the matchweek."""
-    last_score = df.groupby("player_id")["score"].shift(1).fillna("L 0-0")
-    result = last_score.str[0]
-    goals = last_score.str.extract(r"(\d+)-(\d+)").astype(int)
-
-    table = df[["player_id", "matchweek", "team"]].assign(
-        result_points=np.where(result == "W", 3, np.where(result == "T", 1, 0)),
-        goals_for=goals[0],
-        goals_against=goals[1],
-    )
-    # Players missing from a team's previous game carry older results, so take the majority
-    weekly_points = (
-        table.groupby(["team", "matchweek"])["result_points"]
-        .agg(lambda points: mode(list(points)))
-        .groupby("team")
-        .cumsum()
-        .rename("table_points")
-        .reset_index()
-    )
-    table = table.merge(weekly_points, on=["team", "matchweek"])
-    table["total_goals_for"] = table.groupby("player_id")["goals_for"].cumsum()
-    table["total_goals_against"] = table.groupby("player_id")["goals_against"].cumsum()
-    table["goal_differential"] = table["total_goals_for"] - table["total_goals_against"]
-
-    standings = (
-        table.groupby(["matchweek", "team"], as_index=False)
-        .first()
-        .sort_values(
-            ["matchweek", "table_points", "goal_differential", "total_goals_for", "total_goals_against"],
-            ascending=[True, False, False, False, True],
-        )
-    )
-    standings["team_week_standing"] = standings.groupby("matchweek").cumcount().add(1)
-    standings = standings[["matchweek", "team", "team_week_standing"]]
-
-    df = df.merge(standings, on=["matchweek", "team"])
+    """Adds each team's and opponent's league position going into the gameweek."""
+    standings = _league_standings(df)
     opponents = standings.rename(columns={"team": "opp", "team_week_standing": "team_week_standing_opp"})
-    return df.merge(opponents, on=["matchweek", "opp"])
+    return df.merge(standings, on=["matchweek", "team"]).merge(opponents, on=["matchweek", "opp"])
 
 
-def build_features(game_logs: pd.DataFrame) -> pd.DataFrame:
+def build_features(game_logs: pd.DataFrame, gw_dates: Dict[int, Dict[str, date]]) -> pd.DataFrame:
     """Builds the model's feature table from raw game logs.
 
     Args:
         game_logs: Raw game logs, as described in clean_game_logs.
+        gw_dates: Fantrax gameweek date ranges.
 
     Returns:
-        DataFrame with one row per player per matchweek and the features in feature_columns.
+        DataFrame with one row per player game and the features in feature_columns.
     """
-    df = clean_game_logs(game_logs)
+    df = clean_game_logs(game_logs, gw_dates)
     df = _add_rolling_stats(df)
     df = _add_positional_averages(df)
     df = _add_league_standings(df)
 
-    # A player's first game and games after a DNP have undefined rates
+    # A player's first game, games after a DNP and first meetings with an opponent have undefined rates
     rate_cols = [col for col in df.columns if "per_min" in col or "per_90" in col]
     df[rate_cols] = df[rate_cols].fillna(0)
     return df

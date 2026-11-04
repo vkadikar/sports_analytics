@@ -28,8 +28,11 @@ from fantrax_wrapper import (
     STAT_NAMES,
     FantraxClient,
     FantasyScoringEngine,
+    available_prediction_weeks,
     calculate_median_standings,
     compute_optimal_lineup_score,
+    load_week_predictions,
+    with_predictions,
 )
 
 LEAGUE_ID = os.getenv("FANTRAX_LEAGUE_ID", "iku2an1nmryzcfa2")
@@ -583,6 +586,50 @@ def get_player_stats(
                 p["fantasy_team"] = owners.get(p.pop("owner_team_id"))
                 results[p["id"]] = p
         return {"from_week": from_week, "to_week": to_week, "players": list(results.values()), "not_found": not_found}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@mcp.tool()
+def get_predictions(week: Optional[int] = None, player: Optional[str] = None, team: Optional[str] = None) -> Dict[str, Any]:
+    """The fantasy points model's prediction for a gameweek, made before that gameweek using only
+    earlier games, so past weeks show what it really would have said. Pass player for that player's
+    predicted points and stat line, or team for a fantasy team's lineup with predicted and actual
+    points per player. With neither, returns the week's 20 highest predictions. Predictions assume
+    the player features: the model doesn't know about injuries, suspensions, or rotation.
+
+    Args:
+        week: Gameweek number (2-38). Omit for the latest week with predictions.
+        player: Player name, full or partial, e.g. "Saka".
+        team: Fantasy team name, full or partial, or team ID.
+    """
+    try:
+        available = available_prediction_weeks()
+        week = week if week is not None else (available[-1] if available else None)
+        data = load_week_predictions(week) if week is not None else None
+        if data is None:
+            return {"error": f"No predictions for gameweek {week}. Gameweek 1 never has them. Available: {available}"}
+        players = [{"id": player_id, **entry} for player_id, entry in data["players"].items()]
+        result = {"week": week, "trained_through_week": data["trained_through_week"]}
+
+        if team:
+            client = _client()
+            ids = _team_ids(client)
+            name = _resolve_team(ids, team)
+            lineup = with_predictions(client.get_lineup(ids[name], week), week)
+            keep = ("name", "slot", "positions", "club", "game", "points", "minutes", "predicted")
+            return {
+                **result,
+                "team": name,
+                "predicted_total": round(sum(p["predicted"] or 0 for p in lineup["starters"]), 2),
+                "actual_total": lineup["total"],
+                "starters": [{k: p[k] for k in keep} for p in lineup["starters"]],
+                "bench": [{k: p[k] for k in keep} for p in lineup["bench"]],
+            }
+        if player:
+            query = _fold(player.strip())
+            return {**result, "players": [p for p in players if query in _fold(p["name"])]}
+        return {**result, "top_predicted": sorted(players, key=lambda p: p["fpts"], reverse=True)[:20]}
     except Exception as e:
         return {"error": str(e)}
 

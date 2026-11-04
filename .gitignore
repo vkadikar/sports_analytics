@@ -7,6 +7,9 @@ __pycache__/
 .env
 soccer/config/.env
 
+# Weekly model files are too big for GitHub; rebuild with `python3 -m fpts_model.train --rebuild-models`
+soccer/fpts_model/models/
+
 # Vercel CLI project link and build output
 .vercel/
 

@@ -32,6 +32,7 @@ Welcome to the **Sports Analytics Suite** repository. This document provides a c
     │   ├── app.js                 # Binary insertion search engine & state manager
     │   ├── players_data.json      # Positional dataset (Forwards, Mids, Defs, GKs)
     │   └── render.yaml            # Render deployment configuration
+    ├── fpts_model/                # Weekly fantasy points model; predictions go to league_hub/predictions/
     ├── examples/                  # Python scripts & Jupyter notebooks demonstrating wrapper usage
     ├── research/                  # Data science & statistical analysis scripts
     └── tests/                     # Pytest suite for fantrax_wrapper

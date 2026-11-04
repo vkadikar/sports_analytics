@@ -1,0 +1,52 @@
+# The weekly fantasy points model (soccer/fpts_model). Runs daily; train.py only does work once a
+# gameweek has finished, when it trains the next gameweek's model on everything played so far and
+# writes that gameweek's predictions. Game logs and predictions are committed to master, which
+# redeploys the site on Render and Vercel so the League Hub and Commish Bot pick them up. The model
+# file is too big for GitHub and is discarded with the runner; see train.py --rebuild-models.
+name: Fantasy points model
+
+on:
+  schedule:
+    # 11:00 UTC: early enough that new predictions land before league-news.yml writes the preview.
+    - cron: "0 11 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fpts-model
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+          cache: pip
+          cache-dependency-path: soccer/fpts_model/requirements.txt
+
+      - run: pip install -r soccer/fpts_model/requirements.txt
+
+      - name: Train whatever is due
+        working-directory: soccer
+        env:
+          FANTRAX_COOKIE_B64: ${{ secrets.FANTRAX_COOKIE_B64 }}
+        run: python -m fpts_model.train
+
+      - name: Commit new game logs and predictions
+        run: |
+          git add soccer/fpts_model/game_logs soccer/league_hub/predictions
+          if git diff --cached --quiet; then
+            echo "Nothing new."
+            exit 0
+          fi
+          git config user.name "Commish Bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "model: publish next gameweek's predictions"
+          git pull --rebase
+          git push

@@ -582,7 +582,9 @@ tr.zone-champ .pos::before { background: var(--accent); }
 .lu-row:hover { background: var(--surface-2); }
 .lu-row .nm { font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .lu-row .meta { font-size: 12px; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.lu-row .pts { font-weight: 800; font-size: 15px; font-variant-numeric: tabular-nums; text-align: right; min-width: 44px; }
+.lu-row .pts-cell { display: block; text-align: right; min-width: 44px; }
+.lu-row .pts { display: block; font-weight: 800; font-size: 15px; font-variant-numeric: tabular-nums; text-align: right; }
+.lu-row .pred { display: block; font-size: 11px; font-weight: 500; color: var(--text-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .lu-row .pts.neg { color: var(--bad-text); }
 .lu-row.bench .nm, .lu-row.bench .pts { color: var(--text-2); font-weight: 500; }
 .lu-row .star { color: var(--cup); margin-left: 4px; }
