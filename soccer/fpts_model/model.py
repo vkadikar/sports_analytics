@@ -9,6 +9,9 @@ minutes. Games are weighted by minutes played, which stops short cameos dominati
 Clean sheets are the exception. They only count from CLEAN_SHEET_MINUTES on, so that forest predicts
 the chance of one per game, from games that reached that mark.
 
+Players with no minutes yet have nothing for the forests to go on, so they get what their position has
+actually produced against that opponent this season.
+
 Saved models are plain JSON and predict exactly what the fitted forests do.
 """
 
@@ -26,6 +29,9 @@ from .features import CATEGORICAL_FEATURES, TARGET_STATS, feature_columns
 N_ESTIMATORS = 300
 RANDOM_STATE = 42
 CLEAN_SHEET_STAT = "cs"
+# Below this a position's record against an opponent is too thin, so its record against everyone is used
+MIN_OPPONENT_MINUTES = 180
+BASIS_PLAYER, BASIS_OPPONENT, BASIS_POSITION = "player", "position_vs_opponent", "position"
 
 
 class JsonForest:
@@ -129,16 +135,39 @@ class FptsModel:
             raise ValueError(f"No fixtures for matchweek {self.week} in features")
 
         encoded = self._encode(features[in_week])
-        predictions = features.loc[in_week, ["player_id", "team", "position"]].reset_index(drop=True)
+        predictions = features.loc[in_week, ["player_id", "team", "position", "opp"]].reset_index(drop=True)
         predictions["fixtures"] = [
             f"@{opp}" if away else opp for opp, away in zip(features.loc[in_week, "opp"], features.loc[in_week, "is_away"])
         ]
         for stat, forest in self.forests.items():
             predictions[stat] = forest.predict(encoded[feature_columns(stat)])
+        predictions["basis"] = BASIS_PLAYER
+        history = features[features["played"] & (features["matchweek"] < self.week) & (features["minutes"] > 0)]
+        predictions = self._use_position_rates_without_history(predictions, set(history["player_id"]), history)
 
         return predictions.groupby(["player_id", "team", "position"], as_index=False).agg(
-            {"fixtures": list, **{stat: "mean" for stat in self.forests}}
+            {"fixtures": list, "basis": "first", **{stat: "mean" for stat in self.forests}}
         )
+
+    def _use_position_rates_without_history(self, predictions: pd.DataFrame, known: set, record: pd.DataFrame) -> pd.DataFrame:
+        """Replaces the forests' numbers for players outside known, who have no minutes this season, with
+        their position's record in the given games."""
+        stats = [stat for stat in self.forests if stat != CLEAN_SHEET_STAT]
+        predictions = predictions.copy()
+        unknown = predictions[~predictions["player_id"].isin(known)]
+        for (position, opp), rows in unknown.groupby(["position", "opp"]):
+            games = record[record["position"] == position]
+            against = games[games["opp"] == opp]
+            basis = BASIS_OPPONENT if against["minutes"].sum() >= MIN_OPPONENT_MINUTES else BASIS_POSITION
+            sample = against if basis == BASIS_OPPONENT else games
+            if sample.empty:
+                continue
+            predictions.loc[rows.index, stats] = (sample[stats].sum() / sample["minutes"].sum()).to_numpy()
+            full_games = sample[sample["minutes"] >= CLEAN_SHEET_MINUTES]
+            if CLEAN_SHEET_STAT in self.forests and not full_games.empty:
+                predictions.loc[rows.index, CLEAN_SHEET_STAT] = full_games[CLEAN_SHEET_STAT].mean()
+            predictions.loc[rows.index, "basis"] = basis
+        return predictions
 
     def save(self, path: Union[str, Path], metadata: Dict[str, Any]) -> None:
         """Writes the model as JSON, with every tree of every forest."""

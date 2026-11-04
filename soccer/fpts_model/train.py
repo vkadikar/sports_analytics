@@ -120,6 +120,7 @@ def prediction_entries(predictions: pd.DataFrame, pool: pd.DataFrame) -> Dict[st
             "position": row["position"],
             "positions": player["positions"],
             "fixtures": row["fixtures"],
+            "basis": row["basis"],
             "scoring": scoring,
             "clean_sheet_chance": round(clean_sheet_chance, 3),
             "per_minute": {stat: round(rate, 5) for stat, rate in rates.items() if round(rate, 5)},

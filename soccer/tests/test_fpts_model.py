@@ -217,6 +217,34 @@ class TestModel(unittest.TestCase):
         self.assertTrue((call["y"] == 1).all())
         self.assertEqual(len(call["y"]), (logs["Min"].astype(int) >= 60).sum())
 
+    def test_player_without_minutes_gets_their_positions_record_against_the_opponent(self):
+        logs = make_game_logs()
+        logs["KP"], logs["CS"] = "0", "0"
+        # Midfielders have 9 key passes per game against BBB, and clean sheets in half of those games
+        against_bbb = (logs["Opp"].str.replace("@", "") == "BBB") & (logs["position"] == "M")
+        logs.loc[against_bbb, "KP"] = "9"
+        logs.loc[logs.index[against_bbb][::2], "CS"] = "1"
+        rows = train_module.fixture_rows(logs, make_pool(), make_fixtures(), UPCOMING_WEEK)
+        self.assertEqual(rows.loc[rows["player_id"] == "NEW", "Opp"].item(), "BBB")
+        features = build_features(pd.concat([logs, rows], ignore_index=True), GW_DATES)
+        predictions = FptsModel.train(features, UPCOMING_WEEK, n_estimators=3).predict(features).set_index("player_id")
+
+        self.assertEqual(predictions.loc["NEW", "basis"], "position_vs_opponent")
+        self.assertAlmostEqual(predictions.loc["NEW", "kp"], 0.1)
+        self.assertAlmostEqual(predictions.loc["NEW", "cs"], logs.loc[against_bbb, "CS"].astype(int).mean())
+        self.assertEqual(predictions.loc["AAAM", "basis"], "player")
+
+    def test_thin_opponent_record_falls_back_to_the_position_overall(self):
+        logs = make_game_logs()
+        logs["KP"] = "9"
+        logs.loc[logs["Opp"].str.replace("@", "") == "BBB", "Min"] = "1"  # under the minimum minutes
+        rows = train_module.fixture_rows(logs, make_pool(), make_fixtures(), UPCOMING_WEEK)
+        features = build_features(pd.concat([logs, rows], ignore_index=True), GW_DATES)
+        predictions = FptsModel.train(features, UPCOMING_WEEK, n_estimators=3).predict(features).set_index("player_id")
+        self.assertEqual(predictions.loc["NEW", "basis"], "position")
+        history = features[features["played"] & (features["position"] == "M")]
+        self.assertAlmostEqual(predictions.loc["NEW", "kp"], history["kp"].sum() / history["minutes"].sum())
+
     def test_short_appearances_do_not_inflate_a_predicted_rate(self):
         """One big cameo among 90-minute games barely moves the rate, because it carries little weight."""
         logs = make_game_logs()
@@ -407,7 +435,7 @@ class TestWeeklyTraining(unittest.TestCase):
     def test_entries_score_rates_and_clean_sheets_by_position(self):
         rates = {stat: 0.0 for stat in TARGET_STATS}
         rates.update(g=0.01, cs=0.5)
-        predictions = pd.DataFrame([{"player_id": "NEW", "team": "AAA", "position": "M", "fixtures": ["BBB"], **rates}])
+        predictions = pd.DataFrame([{"player_id": "NEW", "team": "AAA", "position": "M", "fixtures": ["BBB"], "basis": "player", **rates}])
         entry = train_module.prediction_entries(predictions, make_pool())["NEW"]
         rules = FantasyScoringEngine().rules
         self.assertEqual(entry["scoring"]["M"], {"per_min": round(rules["M"]["G"] * 0.01, 5), "clean_sheet": rules["M"]["CS"] * 0.5})
@@ -425,16 +453,16 @@ class TestWeeklyTraining(unittest.TestCase):
     def test_lineups_get_predictions_at_their_slot(self):
         scoring = {"M": {"per_min": 0.1, "clean_sheet": 1.0}, "F": {"per_min": 0.2, "clean_sheet": 0}}
         predictions_module.predictions_path(4).write_text(json.dumps({"season": 2026, "players": {
-            "a": {"position": "M", "fixtures": ["X"], "scoring": {"M": scoring["M"]}},
-            "b": {"position": "M", "fixtures": ["X", "Y"], "scoring": scoring},
+            "a": {"position": "M", "fixtures": ["X"], "basis": "player", "scoring": {"M": scoring["M"]}},
+            "b": {"position": "M", "fixtures": ["X", "Y"], "basis": "position_vs_opponent", "scoring": scoring},
         }}))
         lineup = {
             "starters": [{"id": "a", "slot": "M"}, {"id": "b", "slot": "F"}, {"id": "c", "slot": "M"}],
             "bench": [{"id": "b", "slot": ""}], "injured_reserve": [],
         }
         result = with_predictions(lineup, 4)
-        self.assertEqual(result["starters"][0]["prediction"], {"per_min": 0.1, "clean_sheet": 1.0, "games": 1})
-        self.assertEqual(result["starters"][1]["prediction"], {"per_min": 0.2, "clean_sheet": 0, "games": 2})
+        self.assertEqual(result["starters"][0]["prediction"], {"per_min": 0.1, "clean_sheet": 1.0, "games": 1, "basis": "player"})
+        self.assertEqual(result["starters"][1]["prediction"], {"per_min": 0.2, "clean_sheet": 0, "games": 2, "basis": "position_vs_opponent"})
         self.assertIsNone(result["starters"][2]["prediction"])
         self.assertEqual(result["bench"][0]["prediction"]["per_min"], 0.1)
         self.assertNotIn("prediction", lineup["starters"][0])
@@ -442,9 +470,9 @@ class TestWeeklyTraining(unittest.TestCase):
 
     def test_errors_use_actual_minutes_and_skip_players_who_did_not_play(self):
         predictions_module.predictions_path(2).write_text(json.dumps({"season": 2026, "players": {
-            "a": {"position": "D", "fixtures": ["X"], "scoring": {"D": {"per_min": 0.1, "clean_sheet": 3.0}}},
-            "b": {"position": "D", "fixtures": ["X"], "scoring": {"D": {"per_min": 0.1, "clean_sheet": 3.0}}},
-            "new": {"position": "D", "fixtures": ["X"], "scoring": {"D": {"per_min": 0.1, "clean_sheet": 3.0}}},
+            "a": {"position": "D", "fixtures": ["X"], "basis": "player", "scoring": {"D": {"per_min": 0.1, "clean_sheet": 3.0}}},
+            "b": {"position": "D", "fixtures": ["X"], "basis": "player", "scoring": {"D": {"per_min": 0.1, "clean_sheet": 3.0}}},
+            "new": {"position": "D", "fixtures": ["X"], "basis": "position_vs_opponent", "scoring": {"D": {"per_min": 0.1, "clean_sheet": 3.0}}},
         }}))
         games = pd.DataFrame([
             {"player_id": "a", "week": 1, "position": "D", "Min": 90, "actual": 9.0},
@@ -453,7 +481,10 @@ class TestWeeklyTraining(unittest.TestCase):
             {"player_id": "b", "week": 2, "position": "D", "Min": 0, "actual": 0.0},
             {"player_id": "new", "week": 2, "position": "D", "Min": 90, "actual": 5.0},
         ])
-        errors = evaluate_module.prediction_errors(games, [2])
+        all_errors = evaluate_module.prediction_errors(games, [2])
+        self.assertEqual(len(all_errors), 2)  # "b" didn't play
+        self.assertEqual(all_errors.loc[~all_errors["has_history"], "model"].item(), 12.0)  # "new": 90 minutes
+        errors = all_errors[all_errors["has_history"]]
         self.assertEqual(len(errors), 1)
         self.assertEqual(errors["model"].item(), 3.0)  # 30 minutes: no clean sheet
         self.assertEqual(errors["baseline"].item(), 3.0)

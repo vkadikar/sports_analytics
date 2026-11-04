@@ -37,9 +37,10 @@ def load_week_predictions(week: int) -> Optional[Dict[str, Any]]:
 
 
 def player_prediction(entry: Dict[str, Any], slot: str = "") -> Dict[str, Any]:
-    """A player's {"per_min", "clean_sheet", "games"} when scored at a lineup slot, or their usual position."""
+    """A player's {"per_min", "clean_sheet", "games", "basis"} when scored at a lineup slot, or their usual
+    position. basis is "player", or for someone with no minutes yet, "position_vs_opponent" or "position"."""
     scoring = entry["scoring"].get(slot) or entry["scoring"][entry["position"]]
-    return {**scoring, "games": len(entry["fixtures"])}
+    return {**scoring, "games": len(entry["fixtures"]), "basis": entry["basis"]}
 
 
 def points_at_minutes(prediction: Dict[str, Any], minutes_per_game: float) -> float:

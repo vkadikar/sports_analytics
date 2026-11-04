@@ -604,6 +604,7 @@ def _prediction_summary(entry: Dict[str, Any], player_id: str, minutes: float) -
         "club": entry["club"],
         "position": entry["position"],
         "fixtures": entry["fixtures"],
+        "basis": entry["basis"],
         "predicted_at_minutes": minutes,
         "predicted_points": points_at_minutes(player_prediction(entry), minutes),
         "predicted_stats": {stat: round(rate * minutes * games, 2) for stat, rate in entry["per_minute"].items()},

@@ -27,6 +27,10 @@ description: What the model predicted or predicts for a player or fantasy team i
 4. Answer with the predicted number and its minutes first, then what drives it, then the actual result
    if the week has been played.
 
+`basis` says what a number rests on. `player` is their own form. A player with no minutes this season
+gets `position_vs_opponent` (what that position has produced against this opponent) or `position` (against
+everyone, when that record is too thin). Say so when it applies: it describes the matchup, not the player.
+
 Clean sheet points only count from 60 minutes, so the number jumps at that point for defenders and
 goalkeepers. The model knows nothing about injuries, suspensions, or rotation. Never present a
 prediction as a result. Predictions are made once before the week and never change.

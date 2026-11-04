@@ -977,7 +977,7 @@ function predictionControl(p, gw, final) {
   const key = `${gw}:${p.id}`;
   const picked = predMinutesPicked.get(key);
   const minutes = picked ?? predDefaultMinutes(p, final);
-  return `<button type="button" class="pred ${picked != null ? "adjusted" : ""}" data-pred="${esc(key)}" data-per-min="${pr.per_min}" data-clean-sheet="${pr.clean_sheet}" data-games="${pr.games}" data-default="${predDefaultMinutes(p, final)}" aria-expanded="false" title="Predicted points at these minutes. Click to change the minutes.">${predLabel(pr, minutes)}</button>`;
+  return `<button type="button" class="pred ${picked != null ? "adjusted" : ""}" data-pred="${esc(key)}" data-per-min="${pr.per_min}" data-clean-sheet="${pr.clean_sheet}" data-games="${pr.games}" data-default="${predDefaultMinutes(p, final)}" aria-expanded="false" title="${pr.basis === "player" ? "Predicted points at these minutes." : "No minutes this season, so this is how the position has done" + (pr.basis === "position_vs_opponent" ? " against this opponent." : " overall.")} Click to change the minutes.">${predLabel(pr, minutes)}</button>`;
 }
 function predictionPicker(p, gw, final) {
   const key = `${gw}:${p.id}`;
