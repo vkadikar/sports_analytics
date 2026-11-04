@@ -628,7 +628,7 @@ def get_predictions(
     predictions at 90 minutes.
 
     Args:
-        week: Gameweek number (2-38). Omit for the latest week with predictions.
+        week: Gameweek number (1-38). Omit for the latest week with predictions.
         player: Player name, full or partial, e.g. "Saka".
         team: Fantasy team name, full or partial, or team ID.
         minutes: What-if minutes per game for every player, overriding the default.
@@ -638,7 +638,7 @@ def get_predictions(
         week = week if week is not None else (available[-1] if available else None)
         data = load_week_predictions(week) if week is not None else None
         if data is None:
-            return {"error": f"No predictions for gameweek {week}. Gameweek 1 never has them. Available: {available}"}
+            return {"error": f"No predictions for gameweek {week}. Available: {available}"}
         result = {"week": week, "trained_through_week": data["trained_through_week"]}
 
         if team:

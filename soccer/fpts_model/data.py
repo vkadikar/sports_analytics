@@ -163,6 +163,8 @@ def load_game_logs(
             print(f"Fetched GW {week} stat lines", flush=True)
             time.sleep(PAUSE_BETWEEN_WEEKS_SECONDS)
         logs.append(pd.read_csv(path, keep_default_na=True, dtype={"player_id": str}, parse_dates=["Date"]))
+    if not logs:  # training gameweek 1, with nothing played yet
+        return pd.DataFrame({"player_id": pd.Series(dtype=str), "Team": pd.Series(dtype=str), "Date": pd.Series(dtype="datetime64[ns]")})
     return pd.concat(logs, ignore_index=True)
 
 

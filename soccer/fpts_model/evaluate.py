@@ -81,7 +81,10 @@ def main() -> int:
     all_errors = prediction_errors(games, weeks)
     errors = all_errors[all_errors["has_history"]]
     print("All games with a baseline\n", summarize(errors).to_string())
-    debuts = all_errors[~all_errors["has_history"]]
+    opener = all_errors[all_errors["week"] == 1]
+    if not opener.empty:
+        print(f"\nGameweek 1: {len(opener)} games, average error {(opener['model'] - opener['actual']).abs().mean():.3f}, correlation {opener['model'].corr(opener['actual']):.3f}, bias {(opener['model'] - opener['actual']).mean():+.3f}")
+    debuts = all_errors[~all_errors["has_history"] & (all_errors["week"] > 1)]
     print(f"\nPlayers without an earlier game: {len(debuts)} games, average error {(debuts['model'] - debuts['actual']).abs().mean():.3f}, bias {(debuts['model'] - debuts['actual']).mean():+.3f}")
     print("\nBy gameweek\n", errors.groupby("week")[errors.columns.tolist()].apply(summarize).to_string())
     print("\nBy position\n", errors.groupby("position")[errors.columns.tolist()].apply(summarize).to_string())

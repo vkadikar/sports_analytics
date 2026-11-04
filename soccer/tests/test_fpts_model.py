@@ -479,18 +479,19 @@ class TestWeeklyTraining(unittest.TestCase):
     def write_predictions(self, week: int, season: int = 2026) -> None:
         predictions_module.predictions_path(week).write_text(json.dumps({"season": season, "players": {}}))
 
-    def test_week_one_is_never_due(self):
-        now = datetime.combine(GW_DATES[1]["start"], datetime.min.time(), LEAGUE_TZ)
-        self.assertEqual(train_module.weeks_due(GW_DATES, make_fixtures(), now), [])
+    def test_week_one_is_due_as_soon_as_the_season_appears(self):
+        now = datetime.combine(GW_DATES[1]["start"] - timedelta(days=30), datetime.min.time(), LEAGUE_TZ)
+        self.assertEqual(train_module.weeks_due(GW_DATES, make_fixtures(), now), [1])
 
     def test_next_week_is_due_once_the_previous_one_finishes(self):
         last_kickoff = make_fixtures().query("week == 2")["kickoff"].max()
         before = last_kickoff + timedelta(hours=7)
         after = last_kickoff + timedelta(hours=9)
-        self.assertEqual(train_module.weeks_due(GW_DATES, make_fixtures(), before), [2])
-        self.assertEqual(train_module.weeks_due(GW_DATES, make_fixtures(), after), [2, 3])
+        self.assertEqual(train_module.weeks_due(GW_DATES, make_fixtures(), before), [1, 2])
+        self.assertEqual(train_module.weeks_due(GW_DATES, make_fixtures(), after), [1, 2, 3])
 
     def test_existing_weeks_are_not_redone(self):
+        self.write_predictions(1)
         self.write_predictions(2)
         last_kickoff = make_fixtures().query("week == 2")["kickoff"].max()
         self.assertEqual(train_module.weeks_due(GW_DATES, make_fixtures(), last_kickoff + timedelta(hours=9)), [3])
@@ -509,6 +510,29 @@ class TestWeeklyTraining(unittest.TestCase):
     def test_a_missing_last_season_stops_training(self):
         with self.assertRaisesRegex(RuntimeError, "HISTORICAL_LEAGUES"):
             train_module.past_season_features(2030)
+
+    def test_week_one_trains_on_past_seasons_and_uses_last_seasons_position_record(self):
+        past_dates = {
+            week: {key: value - timedelta(days=364) for key, value in dates.items()} for week, dates in GW_DATES.items()
+        }
+        last_year = make_game_logs().assign(Date=lambda frame: frame["Date"] - pd.Timedelta(days=364), KP="0")
+        faced_bbb = (last_year["Opp"].str.replace("@", "") == "BBB") & (last_year["position"] == "M")
+        last_year.loc[faced_bbb, "KP"] = "9"
+        past = build_features(last_year, past_dates)
+        with tempfile.TemporaryDirectory() as tmp, patch.object(data_module, "GAME_LOGS_DIR", Path(tmp)):
+            no_games = data_module.load_game_logs(None, 2026, [], GW_DATES, make_fixtures())
+
+        train_module.train_week(1, no_games, make_pool(), make_fixtures(), GW_DATES, 2026, past, n_estimators=2)
+
+        document = predictions_module.load_week_predictions(1)
+        self.assertEqual(document["trained_through_week"], 0)
+        self.assertEqual(document["games_this_season"], 0)
+        self.assertEqual(document["training_games"], len(past))
+        self.assertEqual(set(document["players"]), set(make_pool()["player_id"]))
+        # GW1 pairs AAA with BBB, so AAA's midfielder faces BBB; CCC's faces DDD, and DDD's has no KP
+        self.assertEqual(document["players"]["AAAM"]["basis"], "position_vs_opponent")
+        self.assertAlmostEqual(document["players"]["AAAM"]["per_minute"]["kp"], 0.1)
+        self.assertNotIn("kp", document["players"]["CCCM"]["per_minute"])
 
     def test_missing_history_stops_training(self):
         with patch.object(train_module, "load_history", return_value=(pd.DataFrame(), {})):

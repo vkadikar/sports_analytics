@@ -9,7 +9,8 @@ For gameweek N this writes:
     league_hub/predictions/gw<NN>.json   its prediction for every player with a fixture in gameweek N
 
 Both are written once, as soon as gameweek N-1 has finished, and never change after that. Delete a
-gameweek's predictions file to have it rebuilt. Gameweek 1 has neither, since nothing came before it.
+gameweek's predictions file to have it rebuilt. Gameweek 1 is due as soon as the season appears, and
+trains on past seasons alone.
 
 Run it from the soccer directory:
 
@@ -66,7 +67,10 @@ def weeks_due(gw_dates: Dict[int, Dict[str, date]], fixtures: pd.DataFrame, now:
     existing = set(available_prediction_weeks())
     due = []
     for week in sorted(gw_dates):
-        if week == 1 or week in existing:
+        if week in existing:
+            continue
+        if week == min(gw_dates):
+            due.append(week)
             continue
         previous = fixtures.loc[fixtures["week"] == week - 1, "kickoff"]
         if previous.empty:

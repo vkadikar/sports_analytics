@@ -6,8 +6,7 @@ description: What the model predicted or predicts for a player or fantasy team i
 
 1. Work out the gameweek. Use the one the user named. For "this week" or "next week" use
    `get_predictions` without a week, which returns the latest week the model has predicted, and
-   check its `week` is the one they mean. Gameweek 1 has no predictions, because there was no
-   earlier data to train on.
+   check its `week` is the one they mean.
 2. Call `get_predictions`:
    - **A player**: pass `player`. If several players match, use the one that fits the user's
      wording, or list them and ask. `predicted_stats` says where the points are expected to come from.
@@ -30,6 +29,7 @@ description: What the model predicted or predicts for a player or fantasy team i
 `basis` says what a number rests on. `player` is their own form. A player with no minutes this season
 gets `position_vs_opponent` (what that position has produced against this opponent) or `position` (against
 everyone, when that record is too thin). Say so when it applies: it describes the matchup, not the player.
+In gameweek 1 nobody has minutes yet, so every player gets this, from last season's record.
 
 Clean sheet points only count from 60 minutes, so the number jumps at that point for defenders and
 goalkeepers. The model knows nothing about injuries, suspensions, or rotation. Never present a

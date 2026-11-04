@@ -66,6 +66,8 @@ def clean_game_logs(game_logs: pd.DataFrame, gw_dates: Dict[int, Dict[str, date]
         raise ValueError(f"Games outside every gameweek: {sorted(df.loc[df['matchweek'].isna(), 'date'].unique())}")
     df["matchweek"] = df["matchweek"].astype(int)
 
+    # A gameweek 1 with nothing played yet has fixtures but no scores at all
+    df = df.reindex(columns=df.columns.union(["score"], sort=False))
     df["played"] = df["score"].notna()
     df["is_away"] = df["opp"].str.startswith("@").astype(int)
     df["opp"] = df["opp"].str.replace("@", "")
@@ -122,11 +124,12 @@ def _add_positional_averages(df: pd.DataFrame) -> pd.DataFrame:
 def _league_standings(df: pd.DataFrame) -> pd.DataFrame:
     """Each club's league position going into each gameweek, from results in earlier gameweeks."""
     games = df[df["played"]].drop_duplicates(["team", "date"])
-    goals = games["score"].str.extract(r"(\d+)-(\d+)").astype(int)
+    scores = games["score"].astype(str)
+    goals = scores.str.extract(r"(\d+)-(\d+)").astype(int)
     results = pd.DataFrame({
         "team": games["team"],
         "matchweek": games["matchweek"],
-        "table_points": games["score"].str[0].map({"W": 3, "T": 1}).fillna(0),
+        "table_points": scores.str[0].map({"W": 3, "T": 1}).fillna(0),
         "goals_for": goals[0],
         "goals_against": goals[1],
     })

@@ -14,7 +14,9 @@ Every leaf has to hold a minimum amount of evidence. Weighting can't help inside
 one key pass in a one-minute cameo would become 90 per full game.
 
 Players with no minutes this season get what their position has actually produced against that opponent
-this season, whatever they did in earlier ones.
+this season, whatever they did in earlier ones. Before a season's first game that's everyone, and last
+season's record is used instead. Backtested on three season openers, that beat the forests, whose form
+features are empty that week, so gameweek 1's numbers come from this and not from its stored model.
 
 Saved models are plain JSON and predict exactly what the fitted forests do.
 """
@@ -171,8 +173,10 @@ class FptsModel:
         for stat, forest in self.forests.items():
             predictions[stat] = forest.predict(encoded[feature_columns(stat)])
         predictions["basis"] = BASIS_PLAYER
-        history = features[latest & features["played"] & (features["matchweek"] < self.week) & (features["minutes"] > 0)]
-        predictions = self._use_position_rates_without_history(predictions, set(history["player_id"]), history)
+        played = features[features["played"] & (features["minutes"] > 0)]
+        history = played[latest & (played["matchweek"] < self.week)]
+        record = history if not history.empty else played[played["season"] == played["season"].max()]
+        predictions = self._use_position_rates_without_history(predictions, set(history["player_id"]), record)
 
         return predictions.groupby(["player_id", "team", "position"], as_index=False).agg(
             {"fixtures": list, "basis": "first", **{stat: "mean" for stat in self.forests}}
