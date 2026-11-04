@@ -27,9 +27,13 @@ TARGET_STATS = ROLLING_STATS + CONTEXT_ONLY_STATS
 
 CATEGORICAL_FEATURES = ["player_id", "team", "opp", "position"]
 
+# How fast earlier games fade in the rolling averages against each opponent
+OPPONENT_AVERAGE_HALF_LIFE_DAYS = 30
+
 CONTEXT_FEATURES = [
     "player_id", "team", "opp", "team_week_standing",
     "team_week_standing_opp", "position", "is_away",
+    "has_season_form", "has_opponent_record",
 ]
 
 
@@ -92,7 +96,7 @@ def _add_rolling_stats(df: pd.DataFrame) -> pd.DataFrame:
     for stat in ROLLING_STATS:
         last = df.groupby("player_id")[stat].shift(1).fillna(0)
         season = last.groupby(players).cumsum()
-        rates[f"{stat}_per_min_gameweek"] = last / last_minutes
+        rates[f"{stat}_per_min_last_appearance"] = last / last_minutes
         rates[f"{stat}_per_min_season"] = season / season_minutes
     rates = pd.DataFrame(rates)
 
@@ -103,19 +107,35 @@ def _add_rolling_stats(df: pd.DataFrame) -> pd.DataFrame:
     blanked.loc[repeats] = np.nan
     rates.loc[repeats] = blanked.groupby(players).ffill().loc[repeats]
 
-    return pd.concat([df, rates], axis=1)
+    # Lets the forests tell "no data yet" from a real rate of 0, since undefined rates are filled with 0
+    games_so_far = df.groupby("player_id")["played"].cumsum() - df["played"]
+    return pd.concat([df, rates, (games_so_far > 0).astype(int).rename("has_season_form")], axis=1)
 
 
 def _add_positional_averages(df: pd.DataFrame) -> pd.DataFrame:
-    """Adds the trimmed mean per-minute rates of each position facing each opponent in earlier gameweeks."""
+    """Adds rolling, time-weighted averages of each position against each opponent in earlier gameweeks.
+
+    A game's weight halves every OPPONENT_AVERAGE_HALF_LIFE_DAYS before the gameweek being built. The
+    averages describe the form of players who've faced the opponent, measured before they did. Trimming
+    empties an average of two values, leaving it undefined, which backtested better than keeping them.
+    """
     rate_cols = [col for col in df.columns if "per_min" in col]
 
     rows = []
     for (opp, position), group in df.groupby(["opp", "position"]):
         for week in group["matchweek"].unique():
-            earlier = group.loc[group["matchweek"] < week, rate_cols]
-            trimmed = earlier.where(earlier.ge(earlier.quantile(0.05)) & earlier.le(earlier.quantile(0.95)))
-            rows.append({"opp": opp, "position": position, "matchweek": week, **trimmed.mean().to_dict()})
+            games = group[group["matchweek"] < week]
+            as_of = group.loc[group["matchweek"] == week, "date"].min()
+            weights = 0.5 ** ((as_of - games["date"]).dt.days / OPPONENT_AVERAGE_HALF_LIFE_DAYS)
+
+            rates = games[rate_cols]
+            rates = rates.where(rates.ge(rates.quantile(0.05)) & rates.le(rates.quantile(0.95)))
+            # Rows with an undefined or trimmed rate don't count towards that column's total weight
+            averages_now = rates.mul(weights, axis=0).sum() / rates.notna().mul(weights, axis=0).sum()
+            rows.append({
+                "opp": opp, "position": position, "matchweek": week, "has_opponent_record": int(not games.empty),
+                **averages_now.to_dict(),
+            })
 
     averages = pd.DataFrame(rows).rename(columns={col: f"positional_avg_{col}" for col in rate_cols})
     return df.merge(averages, on=["opp", "position", "matchweek"])
@@ -170,7 +190,7 @@ def build_features(game_logs: pd.DataFrame, gw_dates: Dict[int, Dict[str, date]]
     df = _add_positional_averages(df)
     df = _add_league_standings(df)
 
-    # A player's first game, games after a DNP and first meetings with an opponent have undefined rates
+    # A player's first appearance of a season and a position's first meeting with an opponent have undefined rates
     rate_cols = [col for col in df.columns if "per_min" in col]
     df[rate_cols] = df[rate_cols].fillna(0)
     return df
@@ -181,8 +201,8 @@ def feature_columns(stat: str) -> List[str]:
     if stat not in ROLLING_STATS:
         return list(CONTEXT_FEATURES)
     return CONTEXT_FEATURES + [
-        f"{stat}_per_min_gameweek",
+        f"{stat}_per_min_last_appearance",
         f"{stat}_per_min_season",
-        f"positional_avg_{stat}_per_min_gameweek",
+        f"positional_avg_{stat}_per_min_last_appearance",
         f"positional_avg_{stat}_per_min_season",
     ]

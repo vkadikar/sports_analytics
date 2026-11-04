@@ -24,6 +24,7 @@ from fantrax_wrapper import predictions as predictions_module
 from fpts_model import TARGET_STATS, FptsModel, build_features, feature_columns
 from sklearn.ensemble import RandomForestRegressor
 from fpts_model import data as data_module
+from fpts_model import features as features_module
 from fpts_model import evaluate as evaluate_module
 from fpts_model import model as model_module
 from fpts_model import train as train_module
@@ -105,8 +106,8 @@ class TestBuildFeatures(unittest.TestCase):
         features = build_features(logs, GW_DATES)
         rows = features[features["player_id"] == "AAAF"].set_index("matchweek")
         goals = logs[logs["player_id"] == "AAAF"].sort_values("Date")["G"].astype(int).tolist()
-        self.assertEqual(rows.loc[1, "g_per_min_gameweek"], 0)
-        self.assertAlmostEqual(rows.loc[3, "g_per_min_gameweek"], goals[1] / 90)
+        self.assertEqual(rows.loc[1, "g_per_min_last_appearance"], 0)
+        self.assertAlmostEqual(rows.loc[3, "g_per_min_last_appearance"], goals[1] / 90)
         self.assertAlmostEqual(rows.loc[3, "g_per_min_season"], sum(goals[:2]) / 180)
 
     def test_standings_use_earlier_gameweeks_only(self):
@@ -115,6 +116,59 @@ class TestBuildFeatures(unittest.TestCase):
         self.assertEqual(week_two.loc[week_two["team"] == "AAA", "team_week_standing"].iloc[0], 1)
         self.assertEqual(week_two.loc[week_two["team"] == "BBB", "team_week_standing"].iloc[0], 3)
         self.assertEqual(week_two.loc[week_two["team"] == "AAA", "team_week_standing_opp"].iloc[0], 4)
+
+    def opponent_rows(self, days_ago, values):
+        """Rows for one position against one opponent, followed by a row in the gameweek being built."""
+        today = pd.Timestamp("2026-11-01")
+        rows = [
+            {"opp": "XXX", "position": "M", "matchweek": index + 1, "date": today - pd.Timedelta(days=days), "minutes": 90, "kp_per_min_season": value}
+            for index, (days, value) in enumerate(zip(days_ago, values))
+        ]
+        rows.append({"opp": "XXX", "position": "M", "matchweek": len(rows) + 1, "date": today, "minutes": 0, "kp_per_min_season": np.nan})
+        df = pd.DataFrame(rows)
+        for stat in TARGET_STATS:
+            df[stat] = 0
+        return df
+
+    def test_opponent_averages_weight_recent_games_more(self):
+        df = self.opponent_rows([240, 180, 120, 60, 30], [0.0, 0.1, 0.2, 0.3, 9.0])
+        with patch.object(features_module, "OPPONENT_AVERAGE_HALF_LIFE_DAYS", 60):
+            result = features_module._add_positional_averages(df)
+        latest = result[result["matchweek"] == 6].iloc[0]
+        # The extremes are trimmed. Weights 0.125, 0.25 and 0.5, against 0.2 for a plain average
+        self.assertAlmostEqual(latest["positional_avg_kp_per_min_season"], (0.0125 + 0.05 + 0.15) / 0.875)
+
+    def test_opponent_averages_are_rolling(self):
+        df = self.opponent_rows([120, 60], [0.05, 0.3])
+        result = features_module._add_positional_averages(df).set_index("matchweek")
+        self.assertTrue(np.isnan(result.loc[1, "positional_avg_kp_per_min_season"]))
+        self.assertAlmostEqual(result.loc[2, "positional_avg_kp_per_min_season"], 0.05)
+        self.assertEqual(result.loc[1, "has_opponent_record"], 0)
+        self.assertEqual(result.loc[2, "has_opponent_record"], 1)
+
+    def test_two_values_are_trimmed_away(self):
+        df = self.opponent_rows([20, 10], [0.1, 0.3])
+        result = features_module._add_positional_averages(df)
+        self.assertTrue(np.isnan(result.loc[result["matchweek"] == 3, "positional_avg_kp_per_min_season"].item()))
+
+    def test_extreme_values_are_trimmed(self):
+        df = self.opponent_rows(list(range(30, 0, -1)), [0.1] * 29 + [50.0])
+        result = features_module._add_positional_averages(df)
+        self.assertAlmostEqual(result.loc[result["matchweek"] == 31, "positional_avg_kp_per_min_season"].item(), 0.1)
+
+    def test_season_form_flag_separates_no_data_from_a_real_zero(self):
+        logs = make_game_logs()
+        logs["G"] = "0"
+        features = build_features(logs, GW_DATES)
+        rows = features[features["player_id"] == "AAAF"].set_index("matchweek")
+        self.assertEqual(rows.loc[1, "has_season_form"], 0)
+        self.assertEqual(rows.loc[2, "has_season_form"], 1)
+        self.assertEqual(rows.loc[1, "g_per_min_season"], rows.loc[2, "g_per_min_season"])
+
+    def test_every_forest_can_see_the_no_data_flags(self):
+        for stat in ("kp", "yc"):
+            self.assertIn("has_season_form", feature_columns(stat))
+            self.assertIn("has_opponent_record", feature_columns(stat))
 
     def test_first_meeting_with_an_opponent_has_no_positional_average(self):
         features = build_features(make_game_logs(), GW_DATES)
@@ -151,7 +205,7 @@ class TestBuildFeatures(unittest.TestCase):
         rows = features[(features["player_id"] == "AAAF") & (features["matchweek"] == 5)]
         self.assertEqual(len(rows), 2)
         self.assertEqual(rows["kp_per_min_season"].nunique(), 1)
-        self.assertEqual(rows["kp_per_min_gameweek"].nunique(), 1)
+        self.assertEqual(rows["kp_per_min_last_appearance"].nunique(), 1)
 
     def test_rejects_multiple_seasons(self):
         logs = make_game_logs()
