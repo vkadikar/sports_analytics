@@ -673,6 +673,23 @@ class TestWeeklyTraining(unittest.TestCase):
         self.assertNotIn("prediction", lineup["starters"][0])
         self.assertIs(with_predictions(lineup, 9), lineup)
 
+    def test_lineups_can_include_the_stats_behind_predictions(self):
+        scoring = {"M": {"per_min": 0.1, "clean_sheet": 1.0}, "F": {"per_min": 0.2, "clean_sheet": 0}}
+        predictions_module.predictions_path(4).write_text(json.dumps({"season": 2026, "players": {
+            "a": {"position": "M", "fixtures": ["X"], "basis": "player", "scoring": scoring,
+                  "per_minute": {"kp": 0.05}, "clean_sheet_chance": 0.25},
+        }}))
+        lineup = {
+            "starters": [{"id": "a", "slot": "F"}], "bench": [{"id": "a", "slot": ""}], "injured_reserve": [],
+        }
+        result = with_predictions(lineup, 4, stats=True)
+        self.assertEqual(result["starters"][0]["prediction"], {
+            "per_min": 0.2, "clean_sheet": 0, "games": 1, "basis": "player",
+            "position": "F", "per_minute": {"kp": 0.05}, "clean_sheet_chance": 0.25,
+        })
+        self.assertEqual(result["bench"][0]["prediction"]["position"], "M")
+        self.assertNotIn("per_minute", with_predictions(lineup, 4)["starters"][0]["prediction"])
+
     def test_errors_use_actual_minutes_and_skip_players_who_did_not_play(self):
         predictions_module.predictions_path(2).write_text(json.dumps({"season": 2026, "players": {
             "a": {"position": "D", "fixtures": ["X"], "basis": "player", "scoring": {"D": {"per_min": 0.1, "clean_sheet": 3.0}}},

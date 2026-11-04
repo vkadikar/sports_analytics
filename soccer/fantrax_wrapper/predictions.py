@@ -49,15 +49,29 @@ def points_at_minutes(prediction: Dict[str, Any], minutes_per_game: float) -> fl
     return round(prediction["games"] * (prediction["per_min"] * minutes_per_game + clean_sheet), 2)
 
 
-def with_predictions(lineup: Dict[str, Any], week: int) -> Dict[str, Any]:
-    """A copy of a FantraxClient.get_lineup result with each player's "prediction", where available."""
+def prediction_with_stats(entry: Dict[str, Any], slot: str = "") -> Dict[str, Any]:
+    """A player_prediction plus what it's made of: the "position" it's scored at, the "per_minute" rate of each
+    stat, and the "clean_sheet_chance" per game."""
+    position = slot if slot in entry["scoring"] else entry["position"]
+    return {
+        **player_prediction(entry, slot),
+        "position": position,
+        "per_minute": entry["per_minute"],
+        "clean_sheet_chance": entry["clean_sheet_chance"],
+    }
+
+
+def with_predictions(lineup: Dict[str, Any], week: int, stats: bool = False) -> Dict[str, Any]:
+    """A copy of a FantraxClient.get_lineup result with each player's "prediction", where available. With
+    stats, each one is a prediction_with_stats."""
     data = load_week_predictions(week)
     if data is None:
         return lineup
 
     def add(player: Dict[str, Any]) -> Dict[str, Any]:
         entry = data["players"].get(player["id"])
-        return {**player, "prediction": player_prediction(entry, player.get("slot", "")) if entry else None}
+        build = prediction_with_stats if stats else player_prediction
+        return {**player, "prediction": build(entry, player.get("slot", "")) if entry else None}
 
     groups = ("starters", "bench", "injured_reserve")
     return {**lineup, **{group: [add(player) for player in lineup[group]] for group in groups}}
