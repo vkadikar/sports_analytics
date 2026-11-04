@@ -34,6 +34,19 @@ const ICON = {
   moon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></svg>`,
 };
 
+const svgIcon = paths => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
+const PAGE_ICON = {
+  home: svgIcon(`<path d="M3 11l9-8 9 8"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/>`),
+  news: svgIcon(`<path d="M4 5h13v15H6a2 2 0 01-2-2z"/><path d="M17 9h3v9a2 2 0 01-2 2h-1"/><path d="M8 9h5M8 13h5M8 16h3"/>`),
+  table: svgIcon(`<path d="M8 6h13M8 12h13M8 18h13"/><path d="M3.5 6h.01M3.5 12h.01M3.5 18h.01"/>`),
+  matches: svgIcon(`<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/>`),
+  cups: svgIcon(`<path d="M7 4h10v6a5 5 0 01-10 0z"/><path d="M7 6H4v2a3 3 0 003 3M17 6h3v2a3 3 0 01-3 3"/><path d="M12 15v4M8 21h8"/>`),
+  managers: svgIcon(`<circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0114 0"/><path d="M16 4.5a4 4 0 010 7M18 14.5a7 7 0 014 6.5"/>`),
+  history: svgIcon(`<path d="M3 12a9 9 0 109-9 9 9 0 00-7 3.4L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/>`),
+  rules: svgIcon(`<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5"/><path d="M9 13h7M9 17h7"/>`),
+  more: svgIcon(`<circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/>`),
+};
+
 /* ---------- Helpers ---------- */
 
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -94,9 +107,19 @@ function delta(n, str) {
   return `<span class="${v > 0 ? "delta-up" : "delta-down"}">${v > 0 ? "▲" : "▼"} ${esc(str ?? Math.abs(v))}</span>`;
 }
 
+// `short` swaps in for `long` on phones.
+function phoneLabel(long, short) {
+  return short ? `<span class="wide-only">${esc(long)}</span><span class="phone-only">${esc(short)}</span>` : esc(long);
+}
+
 function segmented(name, options, active) {
   return `<div class="segmented" role="tablist" data-seg="${name}">${options.map(o =>
-    `<button class="seg-btn" role="tab" data-val="${o.id}" aria-selected="${o.id === active}">${esc(o.label)}</button>`).join("")}</div>`;
+    `<button class="seg-btn" role="tab" data-val="${o.id}" aria-selected="${o.id === active}">${phoneLabel(o.label, o.short)}</button>`).join("")}</div>`;
+}
+
+// A section switcher that only exists on phones, where the sections it picks between would otherwise stack.
+function phoneTabs(name, options, active) {
+  return `<div class="phone-only"><div class="toolbar">${segmented(name, options, active)}</div></div>`;
 }
 
 function cardHead(title, sub = "", right = "") {
@@ -183,7 +206,7 @@ function dataTable(key, rows, cols, { rowClass = () => "", defaultSort = null } 
   const th = cols.map(c => {
     const sortAttr = c.sortable === false ? "" : ` class="sortable ${c.cls || ""}" data-sort-table="${key}" data-sort-col="${c.key}" tabindex="0"`;
     const aria = st.col === c.key ? ` aria-sort="${st.dir === "asc" ? "ascending" : "descending"}"` : "";
-    return `<th${sortAttr || ` class="${c.cls || ""}"`}${aria} title="${esc(c.title || c.label)}">${esc(c.label)}</th>`;
+    return `<th${sortAttr || ` class="${c.cls || ""}"`}${aria} title="${esc(c.title || c.label)}">${phoneLabel(c.label, c.short)}</th>`;
   }).join("");
   const body = sorted.map(r => `<tr class="${rowClass(r)}">${cols.map(c => `<td class="${c.cls || ""}">${c.render ? c.render(r) : esc(r[c.key])}</td>`).join("")}</tr>`).join("");
   return `<div class="table-wrap"><table class="data"><thead><tr>${th}</tr></thead><tbody>${body}</tbody></table></div>`;
@@ -218,6 +241,9 @@ const state = {
   season: Object.keys(D.history.seasons).sort().reverse()[0],
   pancakes: 12,
   bylawQuery: "",
+  clView: "table",
+  cupRound: null,
+  scoringView: "rules",
 };
 
 function parseHash() {
@@ -235,6 +261,22 @@ function go(page, sub) {
 function renderNav() {
   const html = PAGES.map(p => `<button class="nav-link" data-go="${p.id}" ${p.id === state.page ? 'aria-current="page"' : ""}>${p.label}</button>`).join("");
   $$("[data-nav]").forEach(n => (n.innerHTML = html));
+  renderPhoneNav();
+}
+
+// Phones get a bottom tab bar. The Commish Bot button sits in its middle slot and the other pages live under More.
+const PHONE_TABS = ["home", "matches", "table"];
+function renderPhoneNav() {
+  const tab = id => {
+    const p = PAGES.find(x => x.id === id);
+    return `<button class="tab" data-go="${id}" ${id === state.page ? 'aria-current="page"' : ""}>${PAGE_ICON[id]}<span>${esc(p.tab || p.label)}</span></button>`;
+  };
+  const inMore = !PHONE_TABS.includes(state.page);
+  $("#tab-bar").innerHTML = `${tab("home")}${tab("matches")}<span class="tab tab-bot" aria-hidden="true"><span>Commish</span></span>${tab("table")}
+    <button class="tab" data-more aria-haspopup="dialog" ${inMore ? 'aria-current="page"' : ""}>${PAGE_ICON.more}<span>More</span></button>`;
+  $("#more-items").innerHTML = PAGES.filter(p => !PHONE_TABS.includes(p.id)).map(p =>
+    `<button class="more-item" data-go="${p.id}" data-close ${p.id === state.page ? 'aria-current="page"' : ""}>${PAGE_ICON[p.id]}<span>${esc(p.label)}</span></button>`).join("");
+  $("#brand-page").textContent = state.page === "home" ? "Gentlemen's Invitational" : PAGES.find(p => p.id === state.page).label;
 }
 
 const RENDERERS = {};
@@ -248,13 +290,45 @@ function rerender() {
   const el = $("#page-" + state.page);
   el.innerHTML = RENDERERS[state.page]();
   afterRender[state.page] && afterRender[state.page](el);
+  syncCollapsibles(el);
   loadPredictedTotals();
 }
 const afterRender = {};
 
+// Phone only: secondary cards start closed and their head opens them. Open cards stay open across rerenders.
+const phoneOpen = new Set();
+function collapsible(key, cls) {
+  return `class="${cls} m-collapse ${phoneOpen.has(key) ? "m-open" : ""}" data-collapse="${key}"`;
+}
+function syncCollapsibles(root) {
+  $$("[data-collapse] > .card-head", root).forEach(head => {
+    if (phoneLayout.matches) {
+      head.setAttribute("role", "button");
+      head.setAttribute("aria-expanded", phoneOpen.has(head.parentElement.dataset.collapse));
+    } else {
+      head.removeAttribute("role");
+      head.removeAttribute("aria-expanded");
+    }
+  });
+}
+document.addEventListener("click", e => {
+  const head = e.target.closest("[data-collapse] > .card-head");
+  if (!head || !phoneLayout.matches || e.target.closest("button")) return;
+  const card = head.parentElement, key = card.dataset.collapse;
+  phoneOpen.has(key) ? phoneOpen.delete(key) : phoneOpen.add(key);
+  card.classList.toggle("m-open", phoneOpen.has(key));
+  head.setAttribute("aria-expanded", phoneOpen.has(key));
+});
+
 document.addEventListener("click", e => {
   const g = e.target.closest("[data-go]");
-  if (g) { e.preventDefault(); go(g.dataset.go, g.dataset.sub); return; }
+  if (g) {
+    e.preventDefault();
+    if (g.closest("#tab-bar")) closeCommish();
+    go(g.dataset.go, g.dataset.sub);
+    return;
+  }
+  if (e.target.closest("[data-more]")) { closeCommish(); openOverlay("#more-overlay"); return; }
   const m = e.target.closest("[data-mgr]");
   if (m) { openManager(m.dataset.mgr); return; }
   const seg = e.target.closest("[data-seg] .seg-btn");
@@ -268,6 +342,9 @@ function onSegment(name, val) {
   if (name === "comp") state.comp = val;
   else if (name === "pos") { state.scoringPos = val; state.sim = {}; }
   else if (name === "season") state.season = val;
+  else if (name === "clview") state.clView = val;
+  else if (name === "cupround") state.cupRound = +val;
+  else if (name === "scoringview") state.scoringView = val;
   else {
     state.sub[name] = val;
     history.replaceState(null, "", "#" + name + "/" + val);
@@ -335,7 +412,7 @@ RENDERERS.home = () => {
     </div>
   </div>
 
-  <div class="grid grid-4" style="margin-bottom:16px">
+  <div class="grid grid-4 home-stats" style="margin-bottom:16px">
     <div class="card stat-tile"><span class="stat-label">League leader</span><span class="stat-value">${esc(leader.team)}</span><span class="stat-foot">${leader.pts} pts · ${esc(leader.name)}</span></div>
     <div class="card stat-tile"><span class="stat-label">Most points scored</span><span class="stat-value num">${fmtPts(topPf.pf)}</span><span class="stat-foot">${esc(topPf.team)}</span></div>
     <div class="card stat-tile"><span class="stat-label">GW ${hs ? hs.gw : "–"} high score${hs && hs.live ? `<span class="live-dot" title="Live"></span>` : ""}</span><span class="stat-value num">${hs ? fmtPts(hs.score) : "–"}</span><span class="stat-foot">${!hs ? "No results yet" : hs.live ? `${esc(hs.team)} · leading the race for ${esc(hs.prize)}` : `${esc(hs.team)} · won ${esc(hs.prize)}`}</span></div>
@@ -344,24 +421,24 @@ RENDERERS.home = () => {
 
   ${homeNews()}
 
-  <div class="grid grid-2">
-    <div class="card">
+  <div class="grid grid-2 home-main">
+    <div class="card home-snapshot">
       ${cardHead("Table snapshot", `After gameweek ${lastCompleted}`, `<button class="link-btn" data-go="table">Full table ${ICON.arrow}</button>`)}
       ${snapshotTable()}
     </div>
     <div class="stack">
-      <div class="card">
+      <div class="card home-fixtures">
         ${cardHead(`Gameweek ${currentGw} ${featuredState === "final" ? "results" : featuredState === "live" ? "· live scores" : "fixtures"}`, featuredState === "live" ? `Final ${fmtDateTime(gwDates[currentGw] && gwDates[currentGw].end)}` : "Includes cup fixtures that week", `<button class="link-btn" data-go="matches">All matches ${ICON.arrow}</button>`)}
         <div style="padding:6px 0">${featured.length ? featured.map(compactResult).join("") : `<div class="empty" style="margin:14px 20px">No fixtures</div>`}</div>
       </div>
-      ${upcoming.length ? `<div class="card">
+      ${upcoming.length ? `<div ${collapsible("upcoming", "card home-upcoming")}>
         ${cardHead(`Up next · Gameweek ${nextGw}`, gwState(nextGw) === "live" ? "Already under way" : upcoming.some(m => m.competition !== "league") ? "Includes cup fixtures" : "Premier League")}
         <div style="padding:6px 0">${upcoming.map(compactResult).join("")}</div>
       </div>` : ""}
     </div>
   </div>
 
-  <div class="card" style="margin-top:16px">
+  <div ${collapsible("highs", "card home-highs")} style="margin-top:16px">
     ${cardHead("Weekly high scores", "$10 to the top scorer every gameweek")}
     ${dataTable("hs", CS.weeklyHighScores.slice().reverse(), [
       { key: "gw", label: "GW", cls: "l strong", render: r => `GW ${r.gw}` },
@@ -477,12 +554,18 @@ RENDERERS.news = () => {
       ${cardHead("All posts", `${NEWS.posts.length} from Commish Bot`)}
       <div class="news-list-items">${NEWS.posts.map(p => `
         <button class="news-item" data-go="news" data-sub="${esc(p.slug)}" ${p === post ? 'aria-current="true"' : ""}>
-          <span class="news-item-meta"><span class="chip ${p.kind === "preview" ? "cl" : "accent"}">${newsKind(p)}</span>GW ${p.gameweek} · ${fmtDate(p.published)}</span>
+          <span class="news-item-meta"><span class="chip ${p.kind === "preview" ? "cl" : "accent"}">${newsKind(p)}</span><span>GW ${p.gameweek}<span class="wide-only"> · ${fmtDate(p.published)}</span></span></span>
           <span class="news-item-title">${esc(p.title)}</span>
         </button>`).join("")}
       </div>
     </aside>
   </div>`;
+};
+
+// On phones the post list is a sideways strip, so bring the open post into view.
+afterRender.news = el => {
+  const list = $(".news-list-items", el), active = $(".news-item[aria-current]", el);
+  if (list && active && phoneLayout.matches) list.scrollLeft = active.offsetLeft - list.offsetLeft - 12;
 };
 
 /* ==========================================================================
@@ -493,8 +576,8 @@ RENDERERS.table = () => {
   const view = state.sub.table || "official";
   const views = [
     { id: "official", label: "Official" },
-    { id: "optimal", label: "Optimal lineups" },
-    { id: "median", label: "vs Median" },
+    { id: "optimal", label: "Optimal lineups", short: "Optimal" },
+    { id: "median", label: "vs Median", short: "Median" },
     { id: "efficiency", label: "Efficiency" },
   ];
   const subs = {
@@ -514,13 +597,13 @@ const tableViews = {
   official: () => dataTable("official", CS.standings, [
     { key: "rank", label: "#", cls: "pos", title: "Position" },
     { key: "team", label: "Club", cls: "l club-cell", render: r => clubCell(r.name, r.team) },
-    { key: "p", label: "P", title: "Played" },
-    { key: "w", label: "W", title: "Won", cls: "hide-sm" },
-    { key: "d", label: "D", title: "Drawn", cls: "hide-sm" },
-    { key: "l", label: "L", title: "Lost", cls: "hide-sm" },
+    { key: "p", label: "P", title: "Played", cls: "hide-sm" },
+    { key: "w", label: "W", title: "Won" },
+    { key: "d", label: "D", title: "Drawn" },
+    { key: "l", label: "L", title: "Lost" },
     { key: "pf", label: "PF", title: "Points for", cls: "hide-sm", render: r => fmtPts(r.pf) },
     { key: "pa", label: "PA", title: "Points against", cls: "hide-sm", render: r => fmtPts(r.pa) },
-    { key: "diffNum", label: "+/-", title: "Points difference", cls: "hide-sm", render: r => esc(r.diff) },
+    { key: "diffNum", label: "+/-", title: "Points difference", render: r => esc(r.diff) },
     { key: "pts", label: "Pts", title: "League points", cls: "strong" },
     { key: "form", label: "Form", cls: "l hide-sm", sortable: false, render: r => formPills(r.form) },
   ], { rowClass: r => zoneClass(r.rank) }) + zoneLegend(),
@@ -530,9 +613,9 @@ const tableViews = {
     { key: "team", label: "Club", cls: "l club-cell", render: r => clubCell(r.name, r.team) },
     { key: "record", label: "W-D-L", title: "Record with optimal lineups", sortVal: r => r.pts },
     { key: "pts", label: "Pts", cls: "strong" },
-    { key: "optPf", label: "Opt PF", title: "Points scored with optimal lineups", render: r => fmtPts(r.optPf) },
+    { key: "optPf", label: "Opt PF", title: "Points scored with optimal lineups", cls: "hide-sm", render: r => fmtPts(r.optPf) },
     { key: "actualPf", label: "Actual PF", cls: "hide-sm", render: r => fmtPts(r.actualPf) },
-    { key: "benchPoints", label: "Left on bench", render: r => fmtPts(r.benchPoints) },
+    { key: "benchPoints", label: "Left on bench", short: "Bench", render: r => fmtPts(r.benchPoints) },
     { key: "actualRank", label: "Actual #", cls: "hide-sm" },
     { key: "rankShift", label: "Shift", title: "Places gained with optimal lineups", render: r => delta(r.rankShift, r.rankShiftStr) },
   ]),
@@ -540,7 +623,7 @@ const tableViews = {
   median: () => dataTable("median", CS.medianStandings, [
     { key: "rank", label: "#", cls: "pos" },
     { key: "team", label: "Club", cls: "l club-cell", render: r => clubCell(r.name, r.team) },
-    { key: "record", label: "Median W-D-L", sortVal: r => r.pts },
+    { key: "record", label: "Median W-D-L", short: "W-D-L", sortVal: r => r.pts },
     { key: "pts", label: "Pts", cls: "strong" },
     { key: "actualRecord", label: "Actual W-D-L", cls: "hide-sm", sortVal: r => r.actualPts },
     { key: "actualPts", label: "Actual pts", cls: "hide-sm" },
@@ -590,12 +673,12 @@ RENDERERS.matches = () => {
     </div>
     <div class="toolbar">
       ${segmented("comp", [
-        { id: "all", label: "All competitions" },
-        { id: "league", label: "Premier League" },
-        { id: "champions_league", label: "Champions League" },
-        { id: "lingineni_cup", label: "Lingineni Cup" },
+        { id: "all", label: "All competitions", short: "All" },
+        { id: "league", label: "Premier League", short: "League" },
+        { id: "champions_league", label: "Champions League", short: "UCL" },
+        { id: "lingineni_cup", label: "Lingineni Cup", short: "Cup" },
       ], state.comp)}
-      <span class="dim" style="font-size:13px"><span style="color:var(--accent-text)">●</span> played &nbsp; <span style="color:var(--cl)">●</span> CL &nbsp; <span style="color:var(--cup)">●</span> Cup</span>
+      <span class="dim gw-legend" style="font-size:13px"><span style="color:var(--accent-text)">●</span> played &nbsp; <span style="color:var(--cl)">●</span> CL &nbsp; <span style="color:var(--cup)">●</span> Cup</span>
     </div>
     ${predictionNote(gw, gwState(gw) === "final", "cards")}
     <div class="match-groups">
@@ -605,8 +688,8 @@ RENDERERS.matches = () => {
         : `<div class="empty">No ${state.comp === "all" ? "" : esc(compMeta(state.comp).label) + " "}matches in gameweek ${gw}.</div>`}
     </div>
 
-    <div class="card" style="margin-top:28px">
-      ${cardHead("Head-to-head this season", "Row club's record against column club, all competitions. Hover a cell for details.")}
+    <div ${collapsible("h2h", "card h2h-card")} style="margin-top:28px">
+      ${cardHead("Head-to-head this season", `Row club's record against column club, all competitions. ${phoneLayout.matches ? "Tap" : "Hover"} a cell for details.`)}
       ${h2hMatrix()}
     </div>`;
 };
@@ -638,7 +721,7 @@ function matchCard(m) {
   const hRes = final ? (h > a ? "win" : h < a ? "lose" : "") : "";
   const aRes = final ? (a > h ? "win" : a < h ? "lose" : "") : "";
   const total = h + a || 1;
-  return `<div class="card match ${c.cls}" ${matchAttr(m)}>
+  return `<div class="card match ${c.cls} ${played ? "" : "upcoming"}" ${matchAttr(m)}>
     <div class="match-top"><span>${esc(m.tournamentStage || c.label)}</span><span class="${final ? "status-final" : ""}">${final ? "Full time" : played ? LIVE_LABEL : "Scheduled"}</span></div>
     ${side(m.home, m.homeTeam, h, hRes)}
     ${side(m.away, m.awayTeam, a, aRes)}
@@ -670,7 +753,7 @@ function h2hMatrix() {
   const rec = h2hRecords();
   const mgrs = CS.standings.map(s => managerById[s.managerId]).filter(Boolean);
   const head = `<tr><th></th>${mgrs.map(m => `<th title="${esc(m.teamName)}">${esc(m.shortName)}</th>`).join("")}</tr>`;
-  const rows = mgrs.map(r => `<tr><th class="row-h">${esc(r.teamName)}</th>${mgrs.map(c => {
+  const rows = mgrs.map(r => `<tr><th class="row-h">${phoneLabel(r.teamName, r.shortName)}</th>${mgrs.map(c => {
     if (r.id === c.id) return `<td class="self"></td>`;
     const o = rec[r.id + "|" + c.id];
     if (!o) return `<td ${tipAttr(`<strong>${esc(r.teamName)} vs ${esc(c.teamName)}</strong>Not played yet`)}>·</td>`;
@@ -744,9 +827,11 @@ function championsLeague() {
     (form[m.awayTeam] = form[m.awayTeam] || []).push(a > h ? "W" : a < h ? "L" : "D");
   }));
 
-  const tracker = `<div class="card card-pad" style="margin-bottom:16px">
-    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px">
-      <div><div class="stat-label">Group stage</div><div class="display" style="font-size:28px;margin-top:4px">Matchday ${doneGroup} of ${groupStages.length} complete</div></div>
+  const inView = view => (state.clView === view ? "" : "m-hide");
+
+  const tracker = `<div class="card card-pad cl-tracker ${inView("table")}" style="margin-bottom:16px">
+    <div class="cl-tracker-top" style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+      <div><div class="stat-label">Group stage</div><div class="display cl-tracker-title" style="font-size:28px;margin-top:4px">Matchday ${doneGroup} of ${groupStages.length} complete</div></div>
       ${next ? `<span class="chip cl"><span class="live-dot" style="background:var(--cl)"></span>Next: ${esc(next.label)} · GW ${next.gw}</span>` : `<span class="chip cup">${champion ? `🏆 Champions: ${esc(champion)}` : "Final level: awaiting commissioners' ruling"}</span>`}
     </div>
     <div style="display:grid;grid-template-columns:repeat(${stages.length},minmax(0,1fr));gap:4px">
@@ -757,7 +842,7 @@ function championsLeague() {
     </div>
   </div>`;
 
-  const latestCard = latest ? `<div style="margin-bottom:16px">
+  const latestCard = latest ? `<div class="${inView("table")}" style="margin-bottom:16px">
       <h3 class="match-group-title">Latest results · ${esc(latest.label)} · GW ${latest.gw}</h3>
       <div class="match-grid">${latest.matches.map(matchCard).join("")}</div>
     </div>` : "";
@@ -770,9 +855,16 @@ function championsLeague() {
   }).join("");
 
   return `
+    ${phoneTabs("clview", [
+      { id: "table", label: "Table" },
+      { id: "schedule", label: "Schedule" },
+      { id: "knockout", label: "Knockout" },
+      { id: "clubs", label: "Clubs" },
+    ], state.clView)}
+    <div class="cl-sections">
     ${tracker}
     ${latestCard}
-    <div style="margin-bottom:16px">
+    <div class="cl-group ${inView("table")}" style="margin-bottom:16px">
       <div class="card">
           ${cardHead("Group table", `After matchday ${doneGroup} · Top 4 advance to the semi-finals`)}
           ${dataTable("clgroup", cl.currentGroupTable, [
@@ -790,11 +882,11 @@ function championsLeague() {
         </div>
     </div>
     <div class="grid grid-2">
-      <div class="card">
+      <div class="card ${inView("schedule")}">
         ${cardHead("Group stage schedule", "Played alongside the league fixture that week")}
         <ol class="timeline">${schedule}</ol>
       </div>
-      <div>
+      <div class="${inView("knockout")}">
         <div class="card">
           ${cardHead("Knockout stage")}
           ${cl.knockoutSchedule.map(k => `<div class="ko-card"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><h4>${esc(k.round)}</h4><span class="chip cl">${esc(k.gws)}</span></div>
@@ -803,11 +895,12 @@ function championsLeague() {
         </div>
       </div>
     </div>
-    <div class="card" style="margin-top:16px">
+    <div class="card ${inView("clubs")}" style="margin-top:16px">
       ${cardHead("Qualified clubs", "Last season's top finishers plus the reigning champion")}
       <div class="qual-grid">${cl.qualifiers.map(q => `
         <div class="qual"><span class="seed">SEED ${esc(q.code)}</span>${clubCell(q.name, q.team)}<div class="reason">${esc(q.reason)}</div></div>`).join("")}
       </div>
+    </div>
     </div>`;
 }
 
@@ -835,11 +928,16 @@ function tieCard(m) {
 
 function lingineniCup() {
   const rounds = D.lingineniCup.rounds;
+  // Phones show one round at a time, starting from the first one still being played.
+  const firstOpen = rounds.findIndex(r => r.matches.some(m => m.status !== "Final"));
+  const shown = state.cupRound ?? (firstOpen < 0 ? rounds.length - 1 : firstOpen);
+  const shortRound = name => name.replace(/^Round /, "R").replace(/^Quarter-Finals$/, "QF").replace(/^Semi-Finals$/, "SF");
   return `
+    ${phoneTabs("cupround", rounds.map((r, i) => ({ id: i, label: shortRound(r.name) })), shown)}
     <div class="card">
       ${cardHead("Bracket", "Scroll sideways on smaller screens")}
       <div class="bracket">${rounds.map((r, i) => `
-        <div class="round ${i === rounds.length - 1 ? "final" : ""}">
+        <div class="round ${i === rounds.length - 1 ? "final" : ""} ${i === shown ? "" : "m-hide"}">
           <div class="round-head"><b>${esc(r.name)}</b><span>${esc(r.gw)}</span></div>
           <div class="round-body">${r.matches.map(tieCard).join("")}</div>
         </div>`).join("")}
@@ -862,7 +960,8 @@ RENDERERS.managers = () => {
       return `<button class="card mgr-card" data-mgr="${m.id}" style="--c:${m.color}">
         <span class="mgr-band"></span>
         <span class="mgr-body">
-          <span class="mgr-top">${crest(m)}<span style="min-width:0"><span class="mgr-team" style="display:block">${esc(m.teamName)}</span><span class="mgr-name" style="display:block">${esc(m.name)} · ${esc(m.city)}</span></span>
+          <span class="mgr-top">${crest(m)}<span style="min-width:0"><span class="mgr-team" style="display:block">${esc(m.teamName)}${trophyBadge(m)}</span><span class="mgr-name" style="display:block">${esc(m.name)} · ${esc(m.city)}</span></span>
+            ${s ? `<span class="phone-only mgr-form">${formPills(s.form)}</span>` : ""}
             ${s ? `<span class="mgr-rank"><b>${ordinal(s.rank)}</b><small>${s.pts} PTS</small></span>` : ""}</span>
           <span style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
             <span class="chip ${/Commissioner/.test(m.role) ? "accent" : ""}">${esc(m.role)}</span>
@@ -878,6 +977,12 @@ RENDERERS.managers = () => {
       </button>`;
     }).join("")}</div>`;
 };
+
+// Accolades also cover things like "New Manager", so only count the silverware.
+function trophyBadge(m) {
+  const n = (m.accolades || []).filter(a => /Champion|Winner/i.test(a)).length;
+  return n ? `<span class="phone-only mgr-cups" aria-label="${n} ${n > 1 ? "trophies" : "trophy"}">🏆${n > 1 ? n : ""}</span>` : "";
+}
 
 function openManager(id) {
   const m = managerById[id];
@@ -909,13 +1014,13 @@ function openManager(id) {
       ${crest(m, "lg")}
       <div style="min-width:0">
         <div class="eyebrow" style="margin-bottom:2px">${esc(m.role)}</div>
-        <h2 class="display" style="margin:0;font-size:36px">${esc(m.teamName)}</h2>
+        <h2 class="display modal-title" style="margin:0;font-size:36px">${esc(m.teamName)}</h2>
         <div class="muted">${esc(m.name)} · ${esc(m.city)}</div>
       </div>
       <button class="icon-btn modal-close" data-close aria-label="Close">${ICON.close}</button>
     </div>
     <div class="modal-body">
-      ${m.bio ? `<p style="margin:0;color:var(--text-2);font-size:15px">${esc(m.bio)}</p>` : ""}
+      ${m.bio ? `<p class="modal-bio" style="margin:0;color:var(--text-2);font-size:15px">${esc(m.bio)}</p>` : ""}
       ${m.accolades && m.accolades.length ? `<div class="trophies">${m.accolades.map(a => `<span class="chip cup">🏆 ${esc(a)}</span>`).join("")}</div>` : ""}
       ${s ? `<div class="modal-section"><h4>This season</h4><div class="kv-grid">
         <div class="kv"><small>Position</small><b>${ordinal(s.rank)}</b></div>
@@ -929,9 +1034,9 @@ function openManager(id) {
         <div class="kv"><small>Weeks</small><b>${c.weeks ?? 0}</b></div>
         <div class="kv"><small>Winnings</small><b>${money(m.careerMoney || 0)}</b></div>
       </div></div>
-      ${m.teamId ? `<div class="modal-section"><h4>Current squad</h4><div id="squad-list">${skeletonRows(6)}</div></div>` : ""}
-      ${played.length ? `<div class="modal-section"><h4>Results</h4><div class="fixture-list">${played.map(fixtureRow).join("")}</div></div>` : ""}
-      ${upcoming.length ? `<div class="modal-section"><h4>Next up</h4><div class="fixture-list">${upcoming.map(fixtureRow).join("")}</div></div>` : ""}
+      ${m.teamId ? `<div class="modal-section mgr-squad"><h4>Current squad</h4><div id="squad-list">${skeletonRows(6)}</div></div>` : ""}
+      ${played.length ? `<div class="modal-section mgr-results"><h4>Results</h4><div class="fixture-list">${played.map(fixtureRow).join("")}</div></div>` : ""}
+      ${upcoming.length ? `<div class="modal-section mgr-next"><h4>Next up</h4><div class="fixture-list">${upcoming.map(fixtureRow).join("")}</div></div>` : ""}
     </div>`;
   openOverlay("#mgr-overlay");
   if (m.teamId) loadSquad(m.teamId);
@@ -1000,6 +1105,10 @@ const PRED_NOTES = {
     upcoming: "Predicted totals assume every starter plays 90 minutes. Open a match and click any prediction to change a player's minutes.",
     final: "Predicted totals use the minutes each player actually played. Open a match and click any prediction to try different minutes.",
   },
+  cardsPhone: {
+    upcoming: "Pred assumes 90 minutes per starter. Open a match to change it.",
+    final: "Pred uses actual minutes. Open a match to change it.",
+  },
   lineup: {
     upcoming: "Predictions assume each player plays 90 minutes. Click a prediction to change a player's minutes.",
     final: "Predictions use the minutes each player actually played. Click a prediction to try different minutes.",
@@ -1010,7 +1119,9 @@ const PRED_NOTES = {
   },
 };
 function predictionNote(gw, final, kind) {
-  return `<p class="pred-note" data-pred-note="${gw}" hidden>${PRED_NOTES[kind][final ? "final" : "upcoming"]}</p>`;
+  const key = final ? "final" : "upcoming";
+  const text = kind === "cards" ? phoneLabel(PRED_NOTES.cards[key], PRED_NOTES.cardsPhone[key]) : PRED_NOTES[kind][key];
+  return `<p class="pred-note" data-pred-note="${gw}" hidden>${text}</p>`;
 }
 function refreshPredictedTotals() {
   $$("[data-pred-total]").forEach(el => {
@@ -1182,6 +1293,7 @@ function boardTeam(name, team, score, side, m) {
 
 let openMatch = null;
 phoneLayout.addEventListener("change", () => {
+  rerender();
   if (openMatch && $("#match-overlay").classList.contains("open")) openMatchup(openMatch);
 });
 
@@ -1265,10 +1377,10 @@ RENDERERS.history = () => {
   const view = state.sub.history || "alltime";
   const h = D.history;
   const views = [
-    { id: "alltime", label: "All-time table" },
-    { id: "money", label: "Prize money" },
-    { id: "seasons", label: "Past seasons" },
-    { id: "shame", label: "Wall of Shame" },
+    { id: "alltime", label: "All-time table", short: "All-time" },
+    { id: "money", label: "Prize money", short: "Money" },
+    { id: "seasons", label: "Past seasons", short: "Seasons" },
+    { id: "shame", label: "Wall of Shame", short: "Shame" },
   ];
   let body = "";
   if (view === "alltime") {
@@ -1331,10 +1443,10 @@ RENDERERS.history = () => {
 RENDERERS.rules = () => {
   const view = state.sub.rules || "prizes";
   const views = [
-    { id: "prizes", label: "Prize pool" },
+    { id: "prizes", label: "Prize pool", short: "Prizes" },
     { id: "scoring", label: "Scoring" },
-    { id: "ihop", label: "🥞 IHOP Challenge" },
-    { id: "bylaws", label: "Constitution" },
+    { id: "ihop", label: "🥞 IHOP Challenge", short: "🥞 IHOP" },
+    { id: "bylaws", label: "Constitution", short: "Bylaws" },
   ];
   const bodies = { prizes: rulesPrizes, scoring: rulesScoring, ihop: rulesIhop, bylaws: rulesBylaws };
   return `${pageHead("rules", `${money(D.metadata.buyIn)} buy-in · ${D.metadata.memberCount} managers`, "Rules & Prizes", "")}
@@ -1347,16 +1459,16 @@ function rulesPrizes() {
     <div class="grid grid-3">${D.prizes.map(p => `
       <div class="card prize-card">
         <span class="prize-icon" aria-hidden="true">${p.icon}</span>
-        <div style="min-width:0;flex:1">
+        <div class="prize-text" style="min-width:0;flex:1">
           <div class="prize-amt num">${money(p.amount)}</div>
           <div class="prize-name">${esc(p.rank)}</div>
           <div class="prize-desc">${esc(p.desc)}</div>
           <div class="bar-track" style="margin-top:12px" ${tipAttr(`${fmt(p.amount / total * 100, 1)}% of the ${money(total)} pool`)}><div class="bar-fill" style="width:${p.amount / total * 100}%"></div></div>
-          <div class="dim" style="font-size:12px;margin-top:4px">${fmt(p.amount / total * 100, 1)}% of pool</div>
+          <div class="dim prize-share" style="font-size:12px;margin-top:4px">${fmt(p.amount / total * 100, 1)}% of pool</div>
         </div>
       </div>`).join("")}
     </div>
-    <div class="card card-pad" style="margin-top:16px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">
+    <div class="card card-pad prize-total" style="margin-top:16px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap">
       <div><div class="stat-label">Total prize pool</div><div class="stat-value">${money(total)}</div></div>
       <div class="muted" style="max-width:52ch">${D.metadata.memberCount} managers × ${money(D.metadata.buyIn)}. The weekly prize pays ${money(10)} to the top scorer in each of the ${TOTAL_GW} gameweeks.</div>
     </div>`;
@@ -1371,6 +1483,7 @@ function rulesScoring() {
   const pos = state.scoringPos;
   const rules = D.scoringMatrix[pos] || [];
   const posNames = { G: "Goalkeeper", D: "Defender", M: "Midfielder", F: "Forward" };
+  const posShort = { G: "GK", D: "DEF", M: "MID", F: "FWD" };
   const groups = [
     { id: "attacking", label: "Attacking" },
     { id: "defensive", label: "Defensive" },
@@ -1378,9 +1491,10 @@ function rulesScoring() {
   ];
   const total = rules.reduce((s, r) => s + (state.sim[r.stat] || 0) * r.pts, 0);
   return `
-    <div class="toolbar">${segmented("pos", Object.entries(posNames).map(([id, label]) => ({ id, label })), pos)}</div>
+    <div class="toolbar">${segmented("pos", Object.entries(posNames).map(([id, label]) => ({ id, label, short: posShort[id] })), pos)}</div>
+    ${phoneTabs("scoringview", [{ id: "rules", label: "Points per stat" }, { id: "sim", label: "Simulator" }], state.scoringView)}
     <div class="scoring-layout">
-      <div class="card">
+      <div class="card ${state.scoringView === "rules" ? "" : "m-hide"}">
         ${cardHead(`${posNames[pos]} scoring`, `${rules.length} scoring categories`)}
         ${groups.map(g => {
           const rs = rules.filter(r => r.type === g.id);
@@ -1388,7 +1502,7 @@ function rulesScoring() {
           return `<div class="rule-group"><h5>${g.label}</h5>${rs.map(r => `<div class="rule-row"><span>${esc(r.stat)}</span><span class="pts-badge ${r.pts < 0 ? "pts-neg" : "pts-pos"}">${r.pts > 0 ? "+" : ""}${r.pts}</span></div>`).join("")}</div>`;
         }).join("")}
       </div>
-      <div class="card sim">
+      <div class="card sim ${state.scoringView === "sim" ? "" : "m-hide"}">
         ${cardHead("Points simulator", "Enter a stat line to see what it scores", `<button class="link-btn" data-sim-reset>Reset</button>`)}
         <div class="sim-grid">${rules.map(r => `
           <div class="stepper"><label for="sim-${statAbbr(r.stat)}" title="${esc(r.stat)}">${esc(r.stat.replace(/\s*\([^)]*\)/, ""))}</label>
@@ -1489,8 +1603,10 @@ function renderBylawList() {
     const secs = a.sections.filter(s => !q || (a.title + s.subtitle + s.content).toLowerCase().includes(q));
     if (!secs.length) return "";
     matches += secs.length;
-    return `<div class="card acc-item ${q || i === 0 ? "open" : ""}">
-      <button class="acc-btn" data-acc aria-expanded="${!!(q || i === 0)}"><span class="art">${esc(a.article)}</span><span class="ttl">${highlight(a.title, q)}</span>${ICON.chevron}</button>
+    // On a phone every article starts closed, so the list of articles fits on one screen.
+    const open = q || (i === 0 && !phoneLayout.matches);
+    return `<div class="card acc-item ${open ? "open" : ""}">
+      <button class="acc-btn" data-acc aria-expanded="${!!open}"><span class="art">${esc(a.article)}</span><span class="ttl">${highlight(a.title, q)}</span>${ICON.chevron}</button>
       <div class="acc-panel">${secs.map(s => `<div class="acc-sec"><h5>${highlight(s.subtitle, q)}</h5><p>${highlight(s.content, q)}</p></div>`).join("")}</div>
     </div>`;
   }).join("") || `<div class="empty">Nothing in the constitution matches “${esc(state.bylawQuery)}”.</div>`;
@@ -1907,7 +2023,7 @@ function openCommish() {
   $("#commish-fab").setAttribute("aria-expanded", "true");
   $("#commish-panel").classList.add("open");
   if (!commishManager && !$("#commish-picker")) commishShowPicker();
-  (commishManager ? $("#commish-input") : $(".commish-pick"))?.focus();
+  if (!phoneLayout.matches) (commishManager ? $("#commish-input") : $(".commish-pick"))?.focus();
 }
 function setCommishFullScreen(full) {
   $("#commish-panel").classList.toggle("full", full);
