@@ -5,6 +5,7 @@ soccer/config/.env
 
 # Not used by the League Hub
 soccer/examples
+soccer/fpts_model
 soccer/pitchrank
 soccer/research
 soccer/tests

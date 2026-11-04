@@ -19,6 +19,7 @@ An interactive web application for draft day tier list generation and player ran
 ### 3. Additional Modules
 - **`config/`**: Shared configuration and environment settings (`soccer/config/.env`).
 - **`examples/`**: Ready-to-run Python scripts demonstrating API wrapper usage.
+- **`fpts_model/`**: Per-stat random forest model that projects a gameweek's fantasy points from player game logs (`pip install -r soccer/fpts_model/requirements.txt`).
 - **`research/`**: Exploratory data science notebooks and statistical modeling scripts.
 - **`tests/`**: Pytest test suite for backend analytics and API models.
 

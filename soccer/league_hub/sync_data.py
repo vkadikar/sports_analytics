@@ -438,6 +438,8 @@ def main():
     # 1. Fetch Real Matchups & Tables
     matchups_df = client.get_matchups(through_week=38, as_dataframe=True)
     if matchups_df.empty:
+        if not os.path.exists(cookie_path):
+            raise RuntimeError(f"Fantrax returned no matchups because there's no login cookie at {cookie_path}. On a hosted run, check that FANTRAX_COOKIE_B64 is set.")
         raise RuntimeError(f"Fantrax returned no matchups. The login cookie ({cookie_path}) has probably expired.")
     gw_dates = client.get_gameweek_dates()
 
