@@ -485,6 +485,7 @@ tr.zone-champ .pos::before { background: var(--accent); }
 .ko-card { padding: 16px 20px; border-top: 1px solid var(--border); }
 .ko-card:first-of-type { border-top: 0; }
 .ko-card h4 { margin: 0 0 2px; font-size: 15px; }
+.ko-ties { display: grid; gap: 10px; }
 
 .bracket { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(220px, 1fr); gap: 18px; overflow-x: auto; padding: 18px 20px 22px; }
 .round { display: flex; flex-direction: column; }
@@ -497,6 +498,9 @@ tr.zone-champ .pos::before { background: var(--accent); }
 .tie-side + .tie-side { border-top: 1px solid var(--border); }
 .tie-side.tbd { color: var(--text-3); font-style: italic; }
 .tie-side.won { background: var(--cup-soft); font-weight: 700; }
+.tie-side.lost, .tie-side.lost .club-name { color: var(--text-3); }
+.tie-score { margin: 0 -33px 0 auto; font-weight: 700; flex-shrink: 0; }
+.tie-note { padding: 6px 11px; font-size: 11.5px; color: var(--text-2); border-top: 1px solid var(--border); }
 .tie-side .t-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tie-side .t-team { font-size: 11.5px; color: var(--text-3); display: block; }
 .tie-id { position: absolute; top: 6px; right: 8px; font-size: 10px; font-weight: 700; color: var(--text-3); letter-spacing: 0.06em; }

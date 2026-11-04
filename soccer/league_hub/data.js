@@ -595,7 +595,7 @@ const LEAGUE_DATA = {
             "lastKickoff": "2027-05-30T11:00:00-04:00"
       }
 },
-    syncedAt: "2026-11-03T18:00:39-05:00",
+    syncedAt: "2026-11-04T08:14:57-05:00",
     standings: [
       {
             "rank": 1,
@@ -3002,8 +3002,8 @@ const LEAGUE_DATA = {
                   "competition": "lingineni_cup",
                   "competitionName": "Lingineni Cup",
                   "tournamentStage": "Round 2 (Match 1)",
-                  "home": "Winner (Birds & Bees / MOO)",
-                  "homeTeam": "Winner (Birds & Bees / MOO)",
+                  "home": "Rahul Mohankumar",
+                  "homeTeam": "MOO FC",
                   "homeScore": 0.0,
                   "away": "Nilay Agarwalla",
                   "awayTeam": "Wallalujah",
@@ -3038,8 +3038,8 @@ const LEAGUE_DATA = {
                   "competition": "lingineni_cup",
                   "competitionName": "Lingineni Cup",
                   "tournamentStage": "Round 2 (Match 4)",
-                  "home": "Winner (seanbridges7 / Estimated Profit)",
-                  "homeTeam": "Winner (seanbridges7 / Estimated Profit)",
+                  "home": "Sean Bridges",
+                  "homeTeam": "seanbridges7",
                   "homeScore": 0.0,
                   "away": "Subba Duvuuru",
                   "awayTeam": "sduvuuru",
@@ -3551,8 +3551,8 @@ const LEAGUE_DATA = {
                   "competition": "lingineni_cup",
                   "competitionName": "Lingineni Cup",
                   "tournamentStage": "Quarter-Final 1",
-                  "home": "Toadenham Frogspur (Bye)",
-                  "homeTeam": "Toadenham Frogspur (Bye)",
+                  "home": "Ari Diddams",
+                  "homeTeam": "Toadenham Frogspur",
                   "homeScore": 0.0,
                   "away": "Winner R2 Match 1",
                   "awayTeam": "Winner R2 Match 1",
@@ -3563,8 +3563,8 @@ const LEAGUE_DATA = {
                   "competition": "lingineni_cup",
                   "competitionName": "Lingineni Cup",
                   "tournamentStage": "Quarter-Final 2",
-                  "home": "Traderjoe18 (Bye)",
-                  "homeTeam": "Traderjoe18 (Bye)",
+                  "home": "Joseph Lei",
+                  "homeTeam": "Traderjoe18",
                   "homeScore": 0.0,
                   "away": "Winner R2 Match 2",
                   "awayTeam": "Winner R2 Match 2",
@@ -3575,8 +3575,8 @@ const LEAGUE_DATA = {
                   "competition": "lingineni_cup",
                   "competitionName": "Lingineni Cup",
                   "tournamentStage": "Quarter-Final 3",
-                  "home": "youngmoon (Bye)",
-                  "homeTeam": "youngmoon (Bye)",
+                  "home": "Young Moon",
+                  "homeTeam": "youngmoon",
                   "homeScore": 0.0,
                   "away": "Winner R2 Match 3",
                   "awayTeam": "Winner R2 Match 3",
@@ -3587,8 +3587,8 @@ const LEAGUE_DATA = {
                   "competition": "lingineni_cup",
                   "competitionName": "Lingineni Cup",
                   "tournamentStage": "Quarter-Final 4",
-                  "home": "FC VAR (Bye)",
-                  "homeTeam": "FC VAR (Bye)",
+                  "home": "Varun Kadikar",
+                  "homeTeam": "FC VAR",
                   "homeScore": 0.0,
                   "away": "Winner R2 Match 4",
                   "awayTeam": "Winner R2 Match 4",
@@ -5575,9 +5575,54 @@ const LEAGUE_DATA = {
       { gw: 26, m1: "Joseph (Traderjoe18) vs Arnav (Arnie-senal)", m2: "Young (youngmoon) vs Shawn (Smip Estonian)", m3: "Varun (FC VAR) vs Ari (Toadenham Frogspur)" }
     ],
     knockoutSchedule: [
-      { round: "Semi-Finals", gws: "GW 31 & GW 33", format: "Two-Legged Aggregate", m1: "Group Winner (1st) vs 4th Place", m2: "Runner-Up (2nd) vs 3rd Place" },
-      { round: "Champions League Final", gws: "GW 36", format: "One-Legged Match", m1: "Semi-Final 1 Winner vs Semi-Final 2 Winner" }
-    ],
+      {
+            "round": "Semi-Finals",
+            "gws": "GW 31 & GW 33",
+            "format": "Two-Legged Aggregate",
+            "matches": [
+                  {
+                        "id": "CL_SF1",
+                        "p1": "CL Group Winner (1st)",
+                        "p2": "CL Group 4th Place",
+                        "p1Score": 0.0,
+                        "p2Score": 0.0,
+                        "legs": [],
+                        "status": "Scheduled",
+                        "level": false,
+                        "winner": null
+                  },
+                  {
+                        "id": "CL_SF2",
+                        "p1": "CL Runner-Up (2nd)",
+                        "p2": "CL Group 3rd Place",
+                        "p1Score": 0.0,
+                        "p2Score": 0.0,
+                        "legs": [],
+                        "status": "Scheduled",
+                        "level": false,
+                        "winner": null
+                  }
+            ]
+      },
+      {
+            "round": "Champions League Final",
+            "gws": "GW 36",
+            "format": "One-Legged Match",
+            "matches": [
+                  {
+                        "id": "CL_FINAL",
+                        "p1": "CL Semi-Final 1 Winner",
+                        "p2": "CL Semi-Final 2 Winner",
+                        "p1Score": 0.0,
+                        "p2Score": 0.0,
+                        "legs": [],
+                        "status": "Scheduled",
+                        "level": false,
+                        "winner": null
+                  }
+            ]
+      }
+],
     currentGroupTable: [
       {
             "name": "Ari Diddams",
@@ -5651,30 +5696,192 @@ const LEAGUE_DATA = {
   lingineniCup: {
     format: "Single elimination bracket based on last season's finishes. Bottom 4 contest Round 1, Top 4 receive Byes to Quarter-Finals.",
     rounds: [
-      { name: "Round 1", gw: "GW 9", matches: [
-        { id: "R1_M1", p1: "Suda (Birds & Bees FC)", p2: "Rahul Mohankumar (MOO FC)", winner: "TBD" },
-        { id: "R1_M2", p1: "Sean Bridges (seanbridges7)", p2: "Isaac Owen (Estimated Profit)", winner: "TBD" }
-      ]},
-      { name: "Round 2", gw: "GW 14", matches: [
-        { id: "R2_M1", p1: "Winner (Suda/Rahul)", p2: "Nilay Agarwalla (Wallalujah)", winner: "TBD" },
-        { id: "R2_M2", p1: "Shawn Hussain (Smip Estonian)", p2: "Arnav Jain (Arnie-senal)", winner: "TBD" },
-        { id: "R2_M3", p1: "Danny Najafian (WayneRooney10)", p2: "Puru Lohiya (FC Purulona)", winner: "TBD" },
-        { id: "R2_M4", p1: "Winner (Sean/Isaac)", p2: "Subba Duvuuru (sduvuuru)", winner: "TBD" }
-      ]},
-      { name: "Quarter-Finals", gw: "GW 19", matches: [
-        { id: "QF1", p1: "Ari Diddams (Bye)", p2: "Winner R2_M1", winner: "TBD" },
-        { id: "QF2", p1: "Joseph Lei (Bye)", p2: "Winner R2_M2", winner: "TBD" },
-        { id: "QF3", p1: "Young Moon (Bye)", p2: "Winner R2_M3", winner: "TBD" },
-        { id: "QF4", p1: "Varun Kadikar (Bye)", p2: "Winner R2_M4", winner: "TBD" }
-      ]},
-      { name: "Semi-Finals", gw: "GW 24 & 29 (2-Legged)", matches: [
-        { id: "SF1", p1: "Winner QF1", p2: "Winner QF2", winner: "TBD" },
-        { id: "SF2", p1: "Winner QF3", p2: "Winner QF4", winner: "TBD" }
-      ]},
-      { name: "Final", gw: "GW 34", matches: [
-        { id: "FINAL", p1: "Winner SF1", p2: "Winner SF2", winner: "TBD" }
-      ]}
-    ]
+      {
+            "name": "Round 1",
+            "gw": "GW 9",
+            "matches": [
+                  {
+                        "id": "R1_M1",
+                        "p1": "Suda (Birds & Bees FC)",
+                        "p2": "Rahul Mohankumar (MOO FC)",
+                        "p1Score": 79.75,
+                        "p2Score": 130.5,
+                        "legs": [
+                              {
+                                    "gw": 9,
+                                    "p1Score": 79.75,
+                                    "p2Score": 130.5
+                              }
+                        ],
+                        "status": "Final",
+                        "level": false,
+                        "winner": "Rahul Mohankumar"
+                  },
+                  {
+                        "id": "R1_M2",
+                        "p1": "Sean Bridges (seanbridges7)",
+                        "p2": "Isaac Owen (Estimated Profit)",
+                        "p1Score": 91.5,
+                        "p2Score": 54.5,
+                        "legs": [
+                              {
+                                    "gw": 9,
+                                    "p1Score": 91.5,
+                                    "p2Score": 54.5
+                              }
+                        ],
+                        "status": "Final",
+                        "level": false,
+                        "winner": "Sean Bridges"
+                  }
+            ]
+      },
+      {
+            "name": "Round 2",
+            "gw": "GW 14",
+            "matches": [
+                  {
+                        "id": "R2_M1",
+                        "p1": "Rahul Mohankumar (MOO FC)",
+                        "p2": "Nilay Agarwalla (Wallalujah)",
+                        "p1Score": 0.0,
+                        "p2Score": 0.0,
+                        "legs": [],
+                        "status": "Scheduled",
+                        "level": false,
+                        "winner": null
+                  },
+                  {
+                        "id": "R2_M2",
+                        "p1": "Shawn Hussain (Smip Estonian)",
+                        "p2": "Arnav Jain (Arnie-senal)",
+                        "p1Score": 0.0,
+                        "p2Score": 0.0,
+                        "legs": [],
+                        "status": "Scheduled",
+                        "level": false,
+                        "winner": null
+                  },
+                  {
+                        "id": "R2_M3",
+                        "p1": "Danny Najafian (WayneRooney10)",
+                        "p2": "Puru Lohiya (FC Purulona)",
+                        "p1Score": 0.0,
+                        "p2Score": 0.0,
+                        "legs": [],
+                        "status": "Scheduled",
+                        "level": false,
+                        "winner": null
+                  },
+                  {
+                        "id": "R2_M4",
+                        "p1": "Sean Bridges (seanbridges7)",
+                        "p2": "Subba Duvuuru (sduvuuru)",
+                        "p1Score": 0.0,
+                        "p2Score": 0.0,
+                        "legs": [],
+                        "status": "Scheduled",
+                        "level": false,
+                        "winner": null
+                  }
+            ]
+      },
+      {
+            "name": "Quarter-Finals",
+            "gw": "GW 19",
+            "matches": [
+                  {
+                        "id": "QF1",
+                        "p1": "Ari Diddams (Bye)",
+                        "p2": "Winner R2 Match 1",
+                        "p1Score": 0.0,
+                        "p2Score": 0.0,
+                        "legs": [],
+                        "status": "Scheduled",
+                        "level": false,
+                        "winner": null
+                  },
+                  {
+                        "id": "QF2",
+                        "p1": "Joseph Lei (Bye)",
+                        "p2": "Winner R2 Match 2",
+                        "p1Score": 0.0,
+                        "p2Score": 0.0,
+                        "legs": [],
+                        "status": "Scheduled",
+                        "level": false,
+                        "winner": null
+                  },
+                  {
+                        "id": "QF3",
+                        "p1": "Young Moon (Bye)",
+                        "p2": "Winner R2 Match 3",
+                        "p1Score": 0.0,
+                        "p2Score": 0.0,
+                        "legs": [],
+                        "status": "Scheduled",
+                        "level": false,
+                        "winner": null
+                  },
+                  {
+                        "id": "QF4",
+                        "p1": "Varun Kadikar (Bye)",
+                        "p2": "Winner R2 Match 4",
+                        "p1Score": 0.0,
+                        "p2Score": 0.0,
+                        "legs": [],
+                        "status": "Scheduled",
+                        "level": false,
+                        "winner": null
+                  }
+            ]
+      },
+      {
+            "name": "Semi-Finals",
+            "gw": "GW 24 & 29 (2-Legged)",
+            "matches": [
+                  {
+                        "id": "SF1",
+                        "p1": "Winner QF1",
+                        "p2": "Winner QF2",
+                        "p1Score": 0.0,
+                        "p2Score": 0.0,
+                        "legs": [],
+                        "status": "Scheduled",
+                        "level": false,
+                        "winner": null
+                  },
+                  {
+                        "id": "SF2",
+                        "p1": "Winner QF3",
+                        "p2": "Winner QF4",
+                        "p1Score": 0.0,
+                        "p2Score": 0.0,
+                        "legs": [],
+                        "status": "Scheduled",
+                        "level": false,
+                        "winner": null
+                  }
+            ]
+      },
+      {
+            "name": "Final",
+            "gw": "GW 34",
+            "matches": [
+                  {
+                        "id": "FINAL",
+                        "p1": "Winner Semi-Final 1",
+                        "p2": "Winner Semi-Final 2",
+                        "p1Score": 0.0,
+                        "p2Score": 0.0,
+                        "legs": [],
+                        "status": "Scheduled",
+                        "level": false,
+                        "winner": null
+                  }
+            ]
+      }
+]
   },
 
   bylaws: [

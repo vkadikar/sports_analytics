@@ -731,6 +731,7 @@ function championsLeague() {
   const doneGroup = groupStages.filter(s => s.done).length;
   const latest = stages.filter(s => s.done).slice(-1)[0];
   const next = stages.find(s => s.next);
+  const champion = cl.knockoutSchedule[cl.knockoutSchedule.length - 1].matches[0].winner;
 
   // Form per club from completed group fixtures, in gameweek order
   const form = {};
@@ -743,7 +744,7 @@ function championsLeague() {
   const tracker = `<div class="card card-pad" style="margin-bottom:16px">
     <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px">
       <div><div class="stat-label">Group stage</div><div class="display" style="font-size:28px;margin-top:4px">Matchday ${doneGroup} of ${groupStages.length} complete</div></div>
-      ${next ? `<span class="chip cl"><span class="live-dot" style="background:var(--cl)"></span>Next: ${esc(next.label)} · GW ${next.gw}</span>` : `<span class="chip cup">Tournament complete</span>`}
+      ${next ? `<span class="chip cl"><span class="live-dot" style="background:var(--cl)"></span>Next: ${esc(next.label)} · GW ${next.gw}</span>` : `<span class="chip cup">${champion ? `🏆 Champions: ${esc(champion)}` : "Final level: awaiting commissioners' ruling"}</span>`}
     </div>
     <div style="display:grid;grid-template-columns:repeat(${stages.length},minmax(0,1fr));gap:4px">
       ${stages.map(s => `<div ${tipAttr(`<strong>${esc(s.label)}</strong>GW ${s.gw} · ${s.done ? "Completed" : s.next ? "Up next" : "Scheduled"}`)}>
@@ -795,7 +796,7 @@ function championsLeague() {
           ${cardHead("Knockout stage")}
           ${cl.knockoutSchedule.map(k => `<div class="ko-card"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><h4>${esc(k.round)}</h4><span class="chip cl">${esc(k.gws)}</span></div>
             <p class="card-sub" style="margin-bottom:8px">${esc(k.format)}</p>
-            ${[k.m1, k.m2].filter(Boolean).map(s => `<div style="font-size:14px;padding:3px 0">${esc(s)}</div>`).join("")}</div>`).join("")}
+            <div class="ko-ties">${k.matches.map(tieCard).join("")}</div></div>`).join("")}
         </div>
       </div>
     </div>
@@ -815,21 +816,29 @@ function parseEntrant(s) {
   return { mgr, team: m && m[2] !== "Bye" ? m[2] : mgr.teamName, bye: m && m[2] === "Bye" };
 }
 
-function lingineniCup() {
-  const rounds = D.lingineniCup.rounds;
-  const tieSide = (s, winner) => {
+function tieCard(m) {
+  const scored = m.status !== "Scheduled";
+  const side = (s, score) => {
     const e = parseEntrant(s);
     if (e.tbd) return `<div class="tie-side tbd"><span class="crest sm tbd" aria-hidden="true">?</span><span class="t-name">${esc(e.label)}</span></div>`;
-    const won = winner && winner !== "TBD" && String(winner).includes(e.mgr.name);
-    return `<div class="tie-side ${won ? "won" : ""}">${crest(e.mgr, "sm")}<button class="club-btn t-name" data-mgr="${e.mgr.id}"><span class="club-name">${esc(e.mgr.name)}</span><span class="t-team">${esc(e.team)}${e.bye ? " · Bye" : ""}</span></button></div>`;
+    const res = !m.winner ? "" : m.winner === e.mgr.name ? "won" : "lost";
+    return `<div class="tie-side ${res}">${crest(e.mgr, "sm")}<button class="club-btn t-name" data-mgr="${e.mgr.id}"><span class="club-name">${esc(e.mgr.name)}</span><span class="t-team">${esc(e.team)}${e.bye ? " · Bye" : ""}</span></button>${scored ? `<span class="tie-score num">${fmtPts(score)}</span>` : ""}</div>`;
   };
+  const id = m.id.replace("CL_", "");
+  const legs = m.legs.length > 1 || (scored && m.status !== "Final") ? tipAttr(`<strong>${esc(id)}</strong>${m.status === "Final" ? "Full time" : "In progress"}<br>${m.legs.map(l => `GW ${l.gw}: ${fmtPts(l.p1Score)} – ${fmtPts(l.p2Score)}`).join("<br>")}`) : "";
+  const note = m.level ? `<div class="tie-note">Level: awaiting commissioners' ruling</div>` : "";
+  return `<div class="tie" ${legs}><span class="tie-id">${esc(id)}</span>${side(m.p1, m.p1Score)}${side(m.p2, m.p2Score)}${note}</div>`;
+}
+
+function lingineniCup() {
+  const rounds = D.lingineniCup.rounds;
   return `
     <div class="card">
       ${cardHead("Bracket", "Scroll sideways on smaller screens")}
       <div class="bracket">${rounds.map((r, i) => `
         <div class="round ${i === rounds.length - 1 ? "final" : ""}">
           <div class="round-head"><b>${esc(r.name)}</b><span>${esc(r.gw)}</span></div>
-          <div class="round-body">${r.matches.map(m => `<div class="tie"><span class="tie-id">${esc(m.id)}</span>${tieSide(m.p1, m.winner)}${tieSide(m.p2, m.winner)}</div>`).join("")}</div>
+          <div class="round-body">${r.matches.map(tieCard).join("")}</div>
         </div>`).join("")}
       </div>
     </div>`;

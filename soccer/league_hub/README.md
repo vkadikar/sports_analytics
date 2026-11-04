@@ -30,6 +30,7 @@ While a gameweek is live (from its start until the official end), the site shows
 | Table: points, W-D-L, form | Unchanged | Updated |
 | Table: points for/against, +/- | Include live scores; clubs level on points re-sort by them | Final |
 | Weekly high score | Current leader, "leading the race for $10" | "won $10" |
+| Cup ties (Champions League, Lingineni Cup) | Live scores in the bracket | Winner advances |
 | Efficiency, optimal/median tables, head-to-head, Champions League table, all-time records | Unchanged | Updated |
 
 Between the switch and the next gameweek's first scores, the high-score tile keeps showing the last winner.
@@ -48,6 +49,18 @@ When a browser loads the site, the server re-runs the Fantrax sync before servin
 - a gameweek has started or officially ended since the last sync.
 
 If Fantrax is down, the last good `data.js` is served. The footer shows when the data was last updated.
+
+### Cups
+
+Every sync works out both cups from results, so nothing needs updating by hand. A club's cup score is its score
+in that gameweek's league matchup, and fixtures live in `CL_SCHEDULE_DEFS` and `LINGINENI_SCHEDULE_DEFS` in `sync_data.py`.
+
+- **Champions League:** the group table counts final group fixtures (3 points for a win, 1 for a draw; level clubs
+  rank by points for). After the last group gameweek, the top 4 fill the semi-finals (1st v 4th, 2nd v 3rd).
+- **Knockout ties:** the higher score goes through, on aggregate for two-legged semi-finals. The winner replaces the
+  placeholder in the next round, in the bracket and everywhere fixtures appear (match pages, manager profiles, News).
+- **Level ties:** the bylaws have no tiebreak, so a level tie shows "awaiting commissioners' ruling" and the next round
+  waits. Record the decision in `CUP_TIE_RULINGS` in `sync_data.py`.
 
 ### Lineups and squads
 

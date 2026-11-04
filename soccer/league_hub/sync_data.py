@@ -214,6 +214,212 @@ def get_meta(team_name: str) -> dict:
     })
 
 
+# Cup fixtures by gameweek. A knockout fixture belongs to a "tie" (two fixtures for a two-legged tie). Its
+# clubs can be placeholders, which are replaced once the tie or group stage that feeds them is decided.
+CL_SCHEDULE_DEFS = {
+    6: [
+        {"homeTeam": "Traderjoe18", "awayTeam": "FC VAR", "stage": "Group Stage (Matchday 1)"},
+        {"homeTeam": "Arnie-senal", "awayTeam": "Smip Estonian", "stage": "Group Stage (Matchday 1)"},
+        {"homeTeam": "youngmoon", "awayTeam": "Toadenham Frogspur", "stage": "Group Stage (Matchday 1)"}
+    ],
+    11: [
+        {"homeTeam": "Traderjoe18", "awayTeam": "Smip Estonian", "stage": "Group Stage (Matchday 2)"},
+        {"homeTeam": "Arnie-senal", "awayTeam": "Toadenham Frogspur", "stage": "Group Stage (Matchday 2)"},
+        {"homeTeam": "youngmoon", "awayTeam": "FC VAR", "stage": "Group Stage (Matchday 2)"}
+    ],
+    16: [
+        {"homeTeam": "Traderjoe18", "awayTeam": "Toadenham Frogspur", "stage": "Group Stage (Matchday 3)"},
+        {"homeTeam": "Arnie-senal", "awayTeam": "youngmoon", "stage": "Group Stage (Matchday 3)"},
+        {"homeTeam": "Smip Estonian", "awayTeam": "FC VAR", "stage": "Group Stage (Matchday 3)"}
+    ],
+    21: [
+        {"homeTeam": "Traderjoe18", "awayTeam": "youngmoon", "stage": "Group Stage (Matchday 4)"},
+        {"homeTeam": "Arnie-senal", "awayTeam": "FC VAR", "stage": "Group Stage (Matchday 4)"},
+        {"homeTeam": "Toadenham Frogspur", "awayTeam": "Smip Estonian", "stage": "Group Stage (Matchday 4)"}
+    ],
+    26: [
+        {"homeTeam": "Traderjoe18", "awayTeam": "Arnie-senal", "stage": "Group Stage (Matchday 5)"},
+        {"homeTeam": "youngmoon", "awayTeam": "Smip Estonian", "stage": "Group Stage (Matchday 5)"},
+        {"homeTeam": "FC VAR", "awayTeam": "Toadenham Frogspur", "stage": "Group Stage (Matchday 5)"}
+    ],
+    31: [
+        {"tie": "CL_SF1", "homeTeam": "CL Group Winner (1st)", "awayTeam": "CL Group 4th Place", "stage": "Semi-Finals (Leg 1)"},
+        {"tie": "CL_SF2", "homeTeam": "CL Runner-Up (2nd)", "awayTeam": "CL Group 3rd Place", "stage": "Semi-Finals (Leg 1)"}
+    ],
+    33: [
+        {"tie": "CL_SF1", "homeTeam": "CL Group 4th Place", "awayTeam": "CL Group Winner (1st)", "stage": "Semi-Finals (Leg 2)"},
+        {"tie": "CL_SF2", "homeTeam": "CL Group 3rd Place", "awayTeam": "CL Runner-Up (2nd)", "stage": "Semi-Finals (Leg 2)"}
+    ],
+    36: [
+        {"tie": "CL_FINAL", "homeTeam": "CL Semi-Final 1 Winner", "awayTeam": "CL Semi-Final 2 Winner", "stage": "Champions League Final 🏆"}
+    ]
+}
+# Filled from the final group table, in order, once the group stage is over.
+CL_GROUP_SEATS = ["CL Group Winner (1st)", "CL Runner-Up (2nd)", "CL Group 3rd Place", "CL Group 4th Place"]
+CL_SLOTS = {"CL Semi-Final 1 Winner": "CL_SF1", "CL Semi-Final 2 Winner": "CL_SF2"}
+CL_ROUNDS = [
+    {"round": "Semi-Finals", "gws": "GW 31 & GW 33", "format": "Two-Legged Aggregate", "matches": ["CL_SF1", "CL_SF2"]},
+    {"round": "Champions League Final", "gws": "GW 36", "format": "One-Legged Match", "matches": ["CL_FINAL"]}
+]
+
+LINGINENI_SCHEDULE_DEFS = {
+    9: [
+        {"tie": "R1_M1", "homeTeam": "Birds & Bees FC", "awayTeam": "MOO FC", "stage": "Round 1 (Match 1)"},
+        {"tie": "R1_M2", "homeTeam": "seanbridges7", "awayTeam": "Estimated Profit", "stage": "Round 1 (Match 2)"}
+    ],
+    14: [
+        {"tie": "R2_M1", "homeTeam": "Winner (Birds & Bees / MOO)", "awayTeam": "Wallalujah", "stage": "Round 2 (Match 1)"},
+        {"tie": "R2_M2", "homeTeam": "Smip Estonian", "awayTeam": "Arnie-senal", "stage": "Round 2 (Match 2)"},
+        {"tie": "R2_M3", "homeTeam": "WayneRooney10", "awayTeam": "FC Purulona", "stage": "Round 2 (Match 3)"},
+        {"tie": "R2_M4", "homeTeam": "Winner (seanbridges7 / Estimated Profit)", "awayTeam": "sduvuuru", "stage": "Round 2 (Match 4)"}
+    ],
+    19: [
+        {"tie": "QF1", "homeTeam": "Toadenham Frogspur", "homeBye": True, "awayTeam": "Winner R2 Match 1", "stage": "Quarter-Final 1"},
+        {"tie": "QF2", "homeTeam": "Traderjoe18", "homeBye": True, "awayTeam": "Winner R2 Match 2", "stage": "Quarter-Final 2"},
+        {"tie": "QF3", "homeTeam": "youngmoon", "homeBye": True, "awayTeam": "Winner R2 Match 3", "stage": "Quarter-Final 3"},
+        {"tie": "QF4", "homeTeam": "FC VAR", "homeBye": True, "awayTeam": "Winner R2 Match 4", "stage": "Quarter-Final 4"}
+    ],
+    24: [
+        {"tie": "SF1", "homeTeam": "Winner QF1", "awayTeam": "Winner QF2", "stage": "Semi-Final 1 (Leg 1)"},
+        {"tie": "SF2", "homeTeam": "Winner QF3", "awayTeam": "Winner QF4", "stage": "Semi-Final 2 (Leg 1)"}
+    ],
+    29: [
+        {"tie": "SF1", "homeTeam": "Winner QF2", "awayTeam": "Winner QF1", "stage": "Semi-Final 1 (Leg 2)"},
+        {"tie": "SF2", "homeTeam": "Winner QF4", "awayTeam": "Winner QF3", "stage": "Semi-Final 2 (Leg 2)"}
+    ],
+    34: [
+        {"tie": "FINAL", "homeTeam": "Winner Semi-Final 1", "awayTeam": "Winner Semi-Final 2", "stage": "Lingineni Cup Final 🏆"}
+    ]
+}
+LINGINENI_SLOTS = {
+    "Winner (Birds & Bees / MOO)": "R1_M1",
+    "Winner (seanbridges7 / Estimated Profit)": "R1_M2",
+    "Winner R2 Match 1": "R2_M1",
+    "Winner R2 Match 2": "R2_M2",
+    "Winner R2 Match 3": "R2_M3",
+    "Winner R2 Match 4": "R2_M4",
+    "Winner QF1": "QF1",
+    "Winner QF2": "QF2",
+    "Winner QF3": "QF3",
+    "Winner QF4": "QF4",
+    "Winner Semi-Final 1": "SF1",
+    "Winner Semi-Final 2": "SF2"
+}
+LINGINENI_ROUNDS = [
+    {"name": "Round 1", "gw": "GW 9", "matches": ["R1_M1", "R1_M2"]},
+    {"name": "Round 2", "gw": "GW 14", "matches": ["R2_M1", "R2_M2", "R2_M3", "R2_M4"]},
+    {"name": "Quarter-Finals", "gw": "GW 19", "matches": ["QF1", "QF2", "QF3", "QF4"]},
+    {"name": "Semi-Finals", "gw": "GW 24 & 29 (2-Legged)", "matches": ["SF1", "SF2"]},
+    {"name": "Final", "gw": "GW 34", "matches": ["FINAL"]}
+]
+
+# The bylaws have no tiebreak for a knockout tie level on points, so it waits for the commissioners.
+# Record their decision here as {tie id: team name}, e.g. {"QF2": "Traderjoe18"}.
+CUP_TIE_RULINGS = {}
+
+
+def build_cl_group_table(completed_gws, score_of) -> list:
+    """Champions League group table from the final group-stage fixtures, ranked by points then points for."""
+    rows = {}
+    for gw, fixtures in CL_SCHEDULE_DEFS.items():
+        for m in fixtures:
+            if "tie" in m:
+                continue
+            for team in (m["homeTeam"], m["awayTeam"]):
+                rows.setdefault(team, {"name": get_meta(team)["manager"], "team": team, "w": 0, "d": 0, "l": 0, "pts": 0, "pf": 0.0, "pa": 0.0})
+            if gw not in completed_gws:
+                continue
+            home_score = score_of(gw, m["homeTeam"]) or 0.0
+            away_score = score_of(gw, m["awayTeam"]) or 0.0
+            for team, pf, pa in ((m["homeTeam"], home_score, away_score), (m["awayTeam"], away_score, home_score)):
+                row = rows[team]
+                row["pf"] = round(row["pf"] + pf, 2)
+                row["pa"] = round(row["pa"] + pa, 2)
+                if pf > pa:
+                    row["w"] += 1
+                    row["pts"] += 3
+                elif pf < pa:
+                    row["l"] += 1
+                else:
+                    row["d"] += 1
+                    row["pts"] += 1
+    table = sorted(rows.values(), key=lambda r: (-r["pts"], -r["pf"]))
+    for i, row in enumerate(table, start=1):
+        row["pos"] = i
+    return table
+
+
+def resolve_knockouts(schedule: dict, slots: dict, gw_status, score_of, seats: dict = None) -> tuple:
+    """Play a cup's schedule forward: put each decided tie's winner into the fixtures it feeds.
+
+    `slots` maps a placeholder to the tie whose winner takes it; `seats` holds placeholders already filled.
+    A tie is decided when all its legs are final and one club leads on aggregate (or by CUP_TIE_RULINGS).
+    Returns (the schedule with placeholders filled in, {tie id: tie with aggregate scores, legs and winner}).
+    """
+    seats = dict(seats or {})
+    legs_total = {}
+    for fixtures in schedule.values():
+        for m in fixtures:
+            if "tie" in m:
+                legs_total[m["tie"]] = legs_total.get(m["tie"], 0) + 1
+
+    resolved, ties = {}, {}
+    for gw in sorted(schedule):
+        resolved[gw] = []
+        for m in schedule[gw]:
+            home = seats.get(m["homeTeam"], m["homeTeam"])
+            away = seats.get(m["awayTeam"], m["awayTeam"])
+            resolved[gw].append({**m, "homeTeam": home, "awayTeam": away})
+            if "tie" not in m:
+                continue
+
+            tie = ties.setdefault(m["tie"], {"id": m["tie"], "home": home, "away": away, "homeBye": m.get("homeBye", False),
+                                             "homeScore": 0.0, "awayScore": 0.0, "legs": [], "winner": None, "level": False, "status": "Scheduled"})
+            home_score, away_score = score_of(gw, home), score_of(gw, away)
+            if home != tie["home"]:  # Second leg: the clubs swap, but the aggregate keeps the first leg's order.
+                home_score, away_score = away_score, home_score
+            status = gw_status(gw)
+            if status != "Scheduled":
+                tie["homeScore"] = round(tie["homeScore"] + (home_score or 0.0), 2)
+                tie["awayScore"] = round(tie["awayScore"] + (away_score or 0.0), 2)
+                tie["legs"].append({"gw": gw, "homeScore": home_score or 0.0, "awayScore": away_score or 0.0,
+                                    "status": status, "complete": home_score is not None and away_score is not None})
+
+            all_final = len(tie["legs"]) == legs_total[m["tie"]] and all(l["status"] == "Final" for l in tie["legs"])
+            tie["status"] = "Final" if all_final else ("Live" if tie["legs"] else "Scheduled")
+            if all_final and all(l["complete"] for l in tie["legs"]):
+                if m["tie"] in CUP_TIE_RULINGS:
+                    tie["winner"] = CUP_TIE_RULINGS[m["tie"]]
+                elif tie["homeScore"] != tie["awayScore"]:
+                    tie["winner"] = tie["home"] if tie["homeScore"] > tie["awayScore"] else tie["away"]
+                tie["level"] = not tie["winner"]
+                if tie["winner"]:
+                    seats.update({slot: tie["winner"] for slot, tie_id in slots.items() if tie_id == m["tie"]})
+    return resolved, ties
+
+
+def bracket_rounds(rounds: list, ties: dict) -> list:
+    """Rounds for the site's brackets, with each tie's clubs written as "Manager (Team)" once known."""
+    def entrant(team: str, bye: bool = False) -> str:
+        meta = TEAM_MANAGER_MAP.get(team)
+        return f"{meta['manager']} ({'Bye' if bye else team})" if meta else team
+
+    def match(tie: dict) -> dict:
+        return {
+            "id": tie["id"],
+            "p1": entrant(tie["home"], tie["homeBye"]),
+            "p2": entrant(tie["away"]),
+            "p1Score": tie["homeScore"],
+            "p2Score": tie["awayScore"],
+            "legs": [{"gw": l["gw"], "p1Score": l["homeScore"], "p2Score": l["awayScore"]} for l in tie["legs"]],
+            "status": tie["status"],
+            "level": tie["level"],
+            "winner": get_meta(tie["winner"])["manager"] if tie["winner"] else None
+        }
+
+    return [{**r, "matches": [match(ties[i]) for i in r["matches"]]} for r in rounds]
+
+
 def main():
     """Sync Fantrax data into data.js.
 
@@ -412,75 +618,20 @@ def main():
             "luckStatus": luck_status
         })
 
-    # 5. Tournament Matchup Definitions & 38 Gameweeks Integration
-    cl_schedule_defs = {
-        6: [
-            {"homeTeam": "Traderjoe18", "awayTeam": "FC VAR", "stage": "Group Stage (Matchday 1)"},
-            {"homeTeam": "Arnie-senal", "awayTeam": "Smip Estonian", "stage": "Group Stage (Matchday 1)"},
-            {"homeTeam": "youngmoon", "awayTeam": "Toadenham Frogspur", "stage": "Group Stage (Matchday 1)"}
-        ],
-        11: [
-            {"homeTeam": "Traderjoe18", "awayTeam": "Smip Estonian", "stage": "Group Stage (Matchday 2)"},
-            {"homeTeam": "Arnie-senal", "awayTeam": "Toadenham Frogspur", "stage": "Group Stage (Matchday 2)"},
-            {"homeTeam": "youngmoon", "awayTeam": "FC VAR", "stage": "Group Stage (Matchday 2)"}
-        ],
-        16: [
-            {"homeTeam": "Traderjoe18", "awayTeam": "Toadenham Frogspur", "stage": "Group Stage (Matchday 3)"},
-            {"homeTeam": "Arnie-senal", "awayTeam": "youngmoon", "stage": "Group Stage (Matchday 3)"},
-            {"homeTeam": "Smip Estonian", "awayTeam": "FC VAR", "stage": "Group Stage (Matchday 3)"}
-        ],
-        21: [
-            {"homeTeam": "Traderjoe18", "awayTeam": "youngmoon", "stage": "Group Stage (Matchday 4)"},
-            {"homeTeam": "Arnie-senal", "awayTeam": "FC VAR", "stage": "Group Stage (Matchday 4)"},
-            {"homeTeam": "Toadenham Frogspur", "awayTeam": "Smip Estonian", "stage": "Group Stage (Matchday 4)"}
-        ],
-        26: [
-            {"homeTeam": "Traderjoe18", "awayTeam": "Arnie-senal", "stage": "Group Stage (Matchday 5)"},
-            {"homeTeam": "youngmoon", "awayTeam": "Smip Estonian", "stage": "Group Stage (Matchday 5)"},
-            {"homeTeam": "FC VAR", "awayTeam": "Toadenham Frogspur", "stage": "Group Stage (Matchday 5)"}
-        ],
-        31: [
-            {"homeTeam": "CL Group Winner (1st)", "awayTeam": "CL Group 4th Place", "stage": "Semi-Finals (Leg 1)"},
-            {"homeTeam": "CL Runner-Up (2nd)", "awayTeam": "CL Group 3rd Place", "stage": "Semi-Finals (Leg 1)"}
-        ],
-        33: [
-            {"homeTeam": "CL Group 4th Place", "awayTeam": "CL Group Winner (1st)", "stage": "Semi-Finals (Leg 2)"},
-            {"homeTeam": "CL Group 3rd Place", "awayTeam": "CL Runner-Up (2nd)", "stage": "Semi-Finals (Leg 2)"}
-        ],
-        36: [
-            {"homeTeam": "CL Semi-Final 1 Winner", "awayTeam": "CL Semi-Final 2 Winner", "stage": "Champions League Final 🏆"}
-        ]
-    }
+    # 5. Tournament fixtures: fill in the group table and knockout ties from results, then the 38 gameweeks
+    scores = dict(zip(zip(matchups_df["week"], matchups_df["team"]), matchups_df["score"]))
 
-    lingineni_schedule_defs = {
-        9: [
-            {"homeTeam": "Birds & Bees FC", "awayTeam": "MOO FC", "stage": "Round 1 (Match 1)"},
-            {"homeTeam": "seanbridges7", "awayTeam": "Estimated Profit", "stage": "Round 1 (Match 2)"}
-        ],
-        14: [
-            {"homeTeam": "Winner (Birds & Bees / MOO)", "awayTeam": "Wallalujah", "stage": "Round 2 (Match 1)"},
-            {"homeTeam": "Smip Estonian", "awayTeam": "Arnie-senal", "stage": "Round 2 (Match 2)"},
-            {"homeTeam": "WayneRooney10", "awayTeam": "FC Purulona", "stage": "Round 2 (Match 3)"},
-            {"homeTeam": "Winner (seanbridges7 / Estimated Profit)", "awayTeam": "sduvuuru", "stage": "Round 2 (Match 4)"}
-        ],
-        19: [
-            {"homeTeam": "Toadenham Frogspur (Bye)", "awayTeam": "Winner R2 Match 1", "stage": "Quarter-Final 1"},
-            {"homeTeam": "Traderjoe18 (Bye)", "awayTeam": "Winner R2 Match 2", "stage": "Quarter-Final 2"},
-            {"homeTeam": "youngmoon (Bye)", "awayTeam": "Winner R2 Match 3", "stage": "Quarter-Final 3"},
-            {"homeTeam": "FC VAR (Bye)", "awayTeam": "Winner R2 Match 4", "stage": "Quarter-Final 4"}
-        ],
-        24: [
-            {"homeTeam": "Winner QF1", "awayTeam": "Winner QF2", "stage": "Semi-Final 1 (Leg 1)"},
-            {"homeTeam": "Winner QF3", "awayTeam": "Winner QF4", "stage": "Semi-Final 2 (Leg 1)"}
-        ],
-        29: [
-            {"homeTeam": "Winner QF2", "awayTeam": "Winner QF1", "stage": "Semi-Final 1 (Leg 2)"},
-            {"homeTeam": "Winner QF4", "awayTeam": "Winner QF3", "stage": "Semi-Final 2 (Leg 2)"}
-        ],
-        34: [
-            {"homeTeam": "Winner Semi-Final 1", "awayTeam": "Winner Semi-Final 2", "stage": "Lingineni Cup Final 🏆"}
-        ]
-    }
+    def score_of(gw: int, team: str):
+        """A club's score that gameweek: None before it starts, or if the club isn't in the matchups."""
+        if gw_status(gw) == "Scheduled" or (gw, team) not in scores:
+            return None
+        return round(float(scores[(gw, team)]), 2)
+
+    cl_group_table = build_cl_group_table(completed_gws, score_of)
+    cl_group_done = all(gw in completed_gws for gw, ms in CL_SCHEDULE_DEFS.items() if "tie" not in ms[0])
+    cl_seats = dict(zip(CL_GROUP_SEATS, (r["team"] for r in cl_group_table))) if cl_group_done else {}
+    cl_fixtures, cl_ties = resolve_knockouts(CL_SCHEDULE_DEFS, CL_SLOTS, gw_status, score_of, cl_seats)
+    cup_fixtures, cup_ties = resolve_knockouts(LINGINENI_SCHEDULE_DEFS, LINGINENI_SLOTS, gw_status, score_of)
 
     gameweek_matchups = {}
     weekly_high_scores = []
@@ -506,8 +657,8 @@ def main():
                 # Check if this exact league match is also a Champions League group match
                 is_concurrent_cl = False
                 cl_stage_desc = ""
-                if gw in cl_schedule_defs:
-                    for cl_m in cl_schedule_defs[gw]:
+                if gw in cl_fixtures:
+                    for cl_m in cl_fixtures[gw]:
                         c1, c2 = cl_m["homeTeam"], cl_m["awayTeam"]
                         if (t == c1 and opp == c2) or (t == c2 and opp == c1):
                             is_concurrent_cl = True
@@ -529,20 +680,10 @@ def main():
                 })
 
         # 2. Add Champions League Tournaments
-        if gw in cl_schedule_defs:
-            for cl_m in cl_schedule_defs[gw]:
+        if gw in cl_fixtures:
+            for cl_m in cl_fixtures[gw]:
                 meta_h = get_meta(cl_m["homeTeam"])
                 meta_a = get_meta(cl_m["awayTeam"])
-                
-                h_score = 0.0
-                a_score = 0.0
-                if gw_status(gw) != "Scheduled" and not gw_df.empty:
-                    h_row = gw_df[gw_df["team"] == cl_m["homeTeam"]]
-                    a_row = gw_df[gw_df["team"] == cl_m["awayTeam"]]
-                    if not h_row.empty:
-                        h_score = round(float(h_row.iloc[0]["score"]), 2)
-                    if not a_row.empty:
-                        a_score = round(float(a_row.iloc[0]["score"]), 2)
 
                 gw_fixtures.append({
                     "competition": "champions_league",
@@ -550,28 +691,18 @@ def main():
                     "tournamentStage": cl_m["stage"],
                     "home": meta_h.get("manager", cl_m["homeTeam"]),
                     "homeTeam": cl_m["homeTeam"],
-                    "homeScore": h_score,
+                    "homeScore": score_of(gw, cl_m["homeTeam"]) or 0.0,
                     "away": meta_a.get("manager", cl_m["awayTeam"]),
                     "awayTeam": cl_m["awayTeam"],
-                    "awayScore": a_score,
+                    "awayScore": score_of(gw, cl_m["awayTeam"]) or 0.0,
                     "status": gw_status(gw)
                 })
 
         # 3. Add Lingineni Cup Tournaments
-        if gw in lingineni_schedule_defs:
-            for cup_m in lingineni_schedule_defs[gw]:
+        if gw in cup_fixtures:
+            for cup_m in cup_fixtures[gw]:
                 meta_h = get_meta(cup_m["homeTeam"])
                 meta_a = get_meta(cup_m["awayTeam"])
-                
-                h_score = 0.0
-                a_score = 0.0
-                if gw_status(gw) != "Scheduled" and not gw_df.empty:
-                    h_row = gw_df[gw_df["team"] == cup_m["homeTeam"]]
-                    a_row = gw_df[gw_df["team"] == cup_m["awayTeam"]]
-                    if not h_row.empty:
-                        h_score = round(float(h_row.iloc[0]["score"]), 2)
-                    if not a_row.empty:
-                        a_score = round(float(a_row.iloc[0]["score"]), 2)
 
                 gw_fixtures.append({
                     "competition": "lingineni_cup",
@@ -579,10 +710,10 @@ def main():
                     "tournamentStage": cup_m["stage"],
                     "home": meta_h.get("manager", cup_m["homeTeam"]),
                     "homeTeam": cup_m["homeTeam"],
-                    "homeScore": h_score,
+                    "homeScore": score_of(gw, cup_m["homeTeam"]) or 0.0,
                     "away": meta_a.get("manager", cup_m["awayTeam"]),
                     "awayTeam": cup_m["awayTeam"],
-                    "awayScore": a_score,
+                    "awayScore": score_of(gw, cup_m["awayTeam"]) or 0.0,
                     "status": gw_status(gw)
                 })
 
@@ -602,35 +733,6 @@ def main():
                     "prize": "$10",
                     "live": gw == live_gw
                 })
-
-    # 5b. Champions League group table from completed group-stage fixtures
-    cl_group_teams = ["FC VAR", "Smip Estonian", "youngmoon", "Arnie-senal", "Toadenham Frogspur", "Traderjoe18"]
-    cl_rows = {t: {"name": get_meta(t)["manager"], "team": t, "w": 0, "d": 0, "l": 0, "pts": 0, "pf": 0.0, "pa": 0.0}
-               for t in cl_group_teams}
-    for gw_fixtures in gameweek_matchups.values():
-        for m in gw_fixtures:
-            if m["competition"] != "champions_league" or m["status"] != "Final":
-                continue
-            if not m["tournamentStage"].startswith("Group Stage"):
-                continue
-            for team, pf, pa in ((m["homeTeam"], m["homeScore"], m["awayScore"]),
-                                 (m["awayTeam"], m["awayScore"], m["homeScore"])):
-                row = cl_rows.get(team)
-                if row is None:
-                    continue
-                row["pf"] = round(row["pf"] + pf, 2)
-                row["pa"] = round(row["pa"] + pa, 2)
-                if pf > pa:
-                    row["w"] += 1
-                    row["pts"] += 3
-                elif pf < pa:
-                    row["l"] += 1
-                else:
-                    row["d"] += 1
-                    row["pts"] += 1
-    cl_group_table = sorted(cl_rows.values(), key=lambda r: (-r["pts"], -r["pf"]))
-    for i, row in enumerate(cl_group_table, start=1):
-        row["pos"] = i
 
     # 5c. Current-season record per manager from final gameweeks only
     season_records = {}
@@ -765,40 +867,13 @@ const LEAGUE_DATA = {{
       {{ gw: 21, m1: "Joseph (Traderjoe18) vs Young (youngmoon)", m2: "Arnav (Arnie-senal) vs Varun (FC VAR)", m3: "Ari (Toadenham Frogspur) vs Shawn (Smip Estonian)" }},
       {{ gw: 26, m1: "Joseph (Traderjoe18) vs Arnav (Arnie-senal)", m2: "Young (youngmoon) vs Shawn (Smip Estonian)", m3: "Varun (FC VAR) vs Ari (Toadenham Frogspur)" }}
     ],
-    knockoutSchedule: [
-      {{ round: "Semi-Finals", gws: "GW 31 & GW 33", format: "Two-Legged Aggregate", m1: "Group Winner (1st) vs 4th Place", m2: "Runner-Up (2nd) vs 3rd Place" }},
-      {{ round: "Champions League Final", gws: "GW 36", format: "One-Legged Match", m1: "Semi-Final 1 Winner vs Semi-Final 2 Winner" }}
-    ],
+    knockoutSchedule: {json.dumps(bracket_rounds(CL_ROUNDS, cl_ties), indent=6)},
     currentGroupTable: {json.dumps(cl_group_table, indent=6)}
   }},
 
   lingineniCup: {{
     format: "Single elimination bracket based on last season's finishes. Bottom 4 contest Round 1, Top 4 receive Byes to Quarter-Finals.",
-    rounds: [
-      {{ name: "Round 1", gw: "GW 9", matches: [
-        {{ id: "R1_M1", p1: "Suda (Birds & Bees FC)", p2: "Rahul Mohankumar (MOO FC)", winner: "TBD" }},
-        {{ id: "R1_M2", p1: "Sean Bridges (seanbridges7)", p2: "Isaac Owen (Estimated Profit)", winner: "TBD" }}
-      ]}},
-      {{ name: "Round 2", gw: "GW 14", matches: [
-        {{ id: "R2_M1", p1: "Winner (Suda/Rahul)", p2: "Nilay Agarwalla (Wallalujah)", winner: "TBD" }},
-        {{ id: "R2_M2", p1: "Shawn Hussain (Smip Estonian)", p2: "Arnav Jain (Arnie-senal)", winner: "TBD" }},
-        {{ id: "R2_M3", p1: "Danny Najafian (WayneRooney10)", p2: "Puru Lohiya (FC Purulona)", winner: "TBD" }},
-        {{ id: "R2_M4", p1: "Winner (Sean/Isaac)", p2: "Subba Duvuuru (sduvuuru)", winner: "TBD" }}
-      ]}},
-      {{ name: "Quarter-Finals", gw: "GW 19", matches: [
-        {{ id: "QF1", p1: "Ari Diddams (Bye)", p2: "Winner R2_M1", winner: "TBD" }},
-        {{ id: "QF2", p1: "Joseph Lei (Bye)", p2: "Winner R2_M2", winner: "TBD" }},
-        {{ id: "QF3", p1: "Young Moon (Bye)", p2: "Winner R2_M3", winner: "TBD" }},
-        {{ id: "QF4", p1: "Varun Kadikar (Bye)", p2: "Winner R2_M4", winner: "TBD" }}
-      ]}},
-      {{ name: "Semi-Finals", gw: "GW 24 & 29 (2-Legged)", matches: [
-        {{ id: "SF1", p1: "Winner QF1", p2: "Winner QF2", winner: "TBD" }},
-        {{ id: "SF2", p1: "Winner QF3", p2: "Winner QF4", winner: "TBD" }}
-      ]}},
-      {{ name: "Final", gw: "GW 34", matches: [
-        {{ id: "FINAL", p1: "Winner SF1", p2: "Winner SF2", winner: "TBD" }}
-      ]}}
-    ]
+    rounds: {json.dumps(bracket_rounds(LINGINENI_ROUNDS, cup_ties), indent=6)}
   }},
 
   bylaws: [
