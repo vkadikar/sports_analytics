@@ -3,8 +3,9 @@ Trains and stores the model for every gameweek that's due, then writes that week
 
 For gameweek N this writes:
 
-    fpts_model/game_logs/gw<NN-1>.csv    gameweek N-1's stat lines, added to the training history
-    fpts_model/models/gw<NN>.json        the model, trained on every game before gameweek N (not in git)
+    fpts_model/game_logs/<season>/gw<NN-1>.csv    gameweek N-1's stat lines, added to the training history
+    fpts_model/models/gw<NN>.json        the model, trained on every game before gameweek N, including
+                                         past seasons' games in game_logs/ (not in git)
     league_hub/predictions/gw<NN>.json   its prediction for every player with a fixture in gameweek N
 
 Both are written once, as soon as gameweek N-1 has finished, and never change after that. Delete a
@@ -15,6 +16,7 @@ Run it from the soccer directory:
     python3 -m fpts_model.train              # train whatever is due
     python3 -m fpts_model.train --dry-run    # show what's due
     python3 -m fpts_model.train --rebuild-models    # recreate models missing from this machine
+    python3 -m fpts_model.train --fetch-history     # fetch past seasons in HISTORICAL_LEAGUES not stored yet
 
 Models are too big for GitHub, so they stay on the machine that trained them. The scheduled GitHub
 Action (.github/workflows/fpts-model.yml) runs the first form daily and commits only the game logs and
@@ -34,7 +36,15 @@ import pandas as pd
 from fantrax_wrapper import FantasyScoringEngine, FantraxClient, available_prediction_weeks
 from fantrax_wrapper.predictions import PREDICTIONS_DIR, load_week_predictions, predictions_path
 
-from .data import GAME_LOGS_DIR, LEAGUE_TZ, fetch_fixtures, fetch_player_pool, load_game_logs
+from .data import (
+    HISTORICAL_LEAGUES,
+    LEAGUE_TZ,
+    fetch_fixtures,
+    fetch_history,
+    fetch_player_pool,
+    load_game_logs,
+    load_history,
+)
 from .features import TARGET_STATS, build_features
 from .model import CLEAN_SHEET_STAT, N_ESTIMATORS, FptsModel
 
@@ -69,11 +79,12 @@ def weeks_due(gw_dates: Dict[int, Dict[str, date]], fixtures: pd.DataFrame, now:
 
 
 def remove_old_seasons(season: int) -> None:
-    """Clears last season's files, whose gameweek numbers would otherwise look already done."""
+    """Clears last season's predictions and models, whose gameweek numbers would otherwise look already
+    done. Game logs stay: they're stored by season and keep training later models."""
     weeks = available_prediction_weeks()
     if not weeks or load_week_predictions(weeks[0]).get("season") == season:
         return
-    for directory in (PREDICTIONS_DIR, MODELS_DIR, GAME_LOGS_DIR):
+    for directory in (PREDICTIONS_DIR, MODELS_DIR):
         for path in directory.glob("gw*"):
             path.unlink()
 
@@ -128,17 +139,38 @@ def prediction_entries(predictions: pd.DataFrame, pool: pd.DataFrame) -> Dict[st
     return entries
 
 
+def past_season_features(before_season: int) -> pd.DataFrame:
+    """Feature rows for every past season.
+
+    Raises:
+        RuntimeError: A season's files are missing. Training would otherwise quietly lose its history.
+    """
+    if before_season - 1 not in HISTORICAL_LEAGUES:
+        raise RuntimeError(f"Add the {before_season - 1} league to HISTORICAL_LEAGUES, then run --fetch-history")
+    frames = []
+    for season in sorted(HISTORICAL_LEAGUES):
+        if season >= before_season:
+            continue
+        logs, gw_dates = load_history(season)
+        if logs.empty:
+            raise RuntimeError(f"No stored game logs for {season}. Run python3 -m fpts_model.train --fetch-history")
+        frames.append(build_features(logs, gw_dates))
+    return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+
+
 def week_features(
     week: int,
     game_logs: pd.DataFrame,
     pool: pd.DataFrame,
     fixtures: pd.DataFrame,
     gw_dates: Dict[int, Dict[str, date]],
+    past: Optional[pd.DataFrame] = None,
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
-    """The games played before a gameweek, and the feature table built from them and its fixtures."""
+    """This season's games before a gameweek, and the feature table for them, its fixtures and past seasons."""
     history = game_logs[game_logs["Date"].dt.date < gw_dates[week]["start"]]
     upcoming = fixture_rows(history, pool, fixtures, week)
-    return history, build_features(pd.concat([history, upcoming], ignore_index=True), gw_dates)
+    features = build_features(pd.concat([history, upcoming], ignore_index=True), gw_dates)
+    return history, pd.concat([past, features], ignore_index=True) if past is not None and not past.empty else features
 
 
 def rebuild_model(
@@ -147,12 +179,13 @@ def rebuild_model(
     pool: pd.DataFrame,
     fixtures: pd.DataFrame,
     gw_dates: Dict[int, Dict[str, date]],
+    past: Optional[pd.DataFrame] = None,
     n_estimators: int = N_ESTIMATORS,
 ) -> None:
     """Recreates a gameweek's model file from its stored predictions' metadata. Predictions don't change."""
-    _, features = week_features(week, game_logs, pool, fixtures, gw_dates)
+    _, features = week_features(week, game_logs, pool, fixtures, gw_dates, past)
     document = load_week_predictions(week)
-    metadata = {key: document[key] for key in ("season", "trained_through_week", "training_games", "generated_at")}
+    metadata = {key: document[key] for key in ("season", "trained_through_week", "training_games", "games_this_season", "generated_at")}
     MODELS_DIR.mkdir(parents=True, exist_ok=True)
     FptsModel.train(features, week, n_estimators=n_estimators).save(model_path(week), metadata)
     print(f"GW {week}: rebuilt model", flush=True)
@@ -165,16 +198,18 @@ def train_week(
     fixtures: pd.DataFrame,
     gw_dates: Dict[int, Dict[str, date]],
     season: int,
+    past: Optional[pd.DataFrame] = None,
     n_estimators: int = N_ESTIMATORS,
 ) -> None:
     """Trains, stores and predicts one gameweek, using only games from before it started."""
-    history, features = week_features(week, game_logs, pool, fixtures, gw_dates)
+    history, features = week_features(week, game_logs, pool, fixtures, gw_dates, past)
 
     model = FptsModel.train(features, week, n_estimators=n_estimators)
     metadata = {
         "season": season,
         "trained_through_week": week - 1,
-        "training_games": len(history),
+        "training_games": int(((features["season"] < season) | (features["matchweek"] < week)).sum()),
+        "games_this_season": len(history),
         "generated_at": datetime.now(LEAGUE_TZ).isoformat(timespec="seconds"),
     }
     MODELS_DIR.mkdir(parents=True, exist_ok=True)
@@ -186,13 +221,14 @@ def train_week(
     PREDICTIONS_DIR.mkdir(parents=True, exist_ok=True)
     predictions_path(week).write_text(json.dumps(document, separators=(",", ":"), ensure_ascii=False), encoding="utf-8")
     size_mb = model_path(week).stat().st_size / 1_000_000
-    print(f"GW {week}: trained on {len(history)} games, predicted {len(document['players'])} players, model {size_mb:.0f} MB", flush=True)
+    print(f"GW {week}: trained on {metadata['training_games']} games, predicted {len(document['players'])} players, model {size_mb:.0f} MB", flush=True)
 
 
 def main(argv: Optional[List[str]] = None) -> int:
     parser = argparse.ArgumentParser(description="Train and store the fantasy points model for every gameweek that's due.")
     parser.add_argument("--dry-run", action="store_true", help="show what's due and stop")
     parser.add_argument("--rebuild-models", action="store_true", help="recreate models missing from this machine and stop")
+    parser.add_argument("--fetch-history", action="store_true", help="fetch past seasons not stored yet and stop")
     args = parser.parse_args(argv)
 
     if os.getenv("FANTRAX_COOKIE_B64") and not os.getenv("FANTRAX_COOKIE_PATH"):
@@ -200,6 +236,11 @@ def main(argv: Optional[List[str]] = None) -> int:
         cookie_file.write_bytes(base64.b64decode("".join(os.environ["FANTRAX_COOKIE_B64"].split()), validate=True))
         os.environ["FANTRAX_COOKIE_PATH"] = str(cookie_file)
     cookie_path = os.getenv("FANTRAX_COOKIE_PATH") or str(SOCCER_DIR.parent / "fantraxloggedin.cookie")
+
+    if args.fetch_history:
+        for past_season, league_id in sorted(HISTORICAL_LEAGUES.items(), reverse=True):
+            fetch_history(FantraxClient(league_id=league_id, cookie_path=cookie_path), past_season)
+        return 0
 
     client = FantraxClient(league_id=LEAGUE_ID, cookie_path=cookie_path)
     gw_dates = client.get_gameweek_dates()
@@ -215,9 +256,10 @@ def main(argv: Optional[List[str]] = None) -> int:
         print(f"Models to rebuild: {missing or 'none'}", flush=True)
         if missing:
             pool = fetch_player_pool(client)
-            game_logs = load_game_logs(client, list(range(1, max(missing))), gw_dates, fixtures)
+            game_logs = load_game_logs(client, season, list(range(1, max(missing))), gw_dates, fixtures)
+            past = past_season_features(season)
             for week in missing:
-                rebuild_model(week, game_logs, pool, fixtures, gw_dates)
+                rebuild_model(week, game_logs, pool, fixtures, gw_dates, past)
         return 0
 
     due = weeks_due(gw_dates, fixtures, datetime.now(LEAGUE_TZ))
@@ -226,9 +268,11 @@ def main(argv: Optional[List[str]] = None) -> int:
         return 0
 
     pool = fetch_player_pool(client)
-    game_logs = load_game_logs(client, list(range(1, max(due))), gw_dates, fixtures)
+    game_logs = load_game_logs(client, season, list(range(1, max(due))), gw_dates, fixtures)
+    past = past_season_features(season)
+    print(f"Past-season games to train on: {len(past)}", flush=True)
     for week in due:
-        train_week(week, game_logs, pool, fixtures, gw_dates, season)
+        train_week(week, game_logs, pool, fixtures, gw_dates, season, past)
     return 0
 
 

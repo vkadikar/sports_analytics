@@ -18,11 +18,11 @@ from .data import GAME_LOGS_DIR
 from .features import TARGET_STATS
 
 
-def load_scored_games() -> pd.DataFrame:
-    """Every stored game with its actual fantasy points."""
+def load_scored_games(season: int) -> pd.DataFrame:
+    """Every stored game of a season with its actual fantasy points."""
     engine = FantasyScoringEngine()
     logs = pd.concat(
-        [pd.read_csv(path, dtype={"player_id": str}).assign(week=int(path.stem[2:])) for path in sorted(GAME_LOGS_DIR.glob("gw*.csv"))],
+        [pd.read_csv(path, dtype={"player_id": str}).assign(week=int(path.stem[2:])) for path in sorted((GAME_LOGS_DIR / str(season)).glob("gw*.csv"))],
         ignore_index=True,
     )
     logs[TARGET_STATS] = logs[TARGET_STATS].fillna(0)
@@ -75,8 +75,9 @@ def summarize(errors: pd.DataFrame) -> pd.Series:
 
 
 def main() -> int:
-    games = load_scored_games()
-    weeks = [week for week in available_prediction_weeks() if week in set(games["week"])]
+    predicted = available_prediction_weeks()
+    games = load_scored_games(load_week_predictions(predicted[0])["season"])
+    weeks = [week for week in predicted if week in set(games["week"])]
     all_errors = prediction_errors(games, weeks)
     errors = all_errors[all_errors["has_history"]]
     print("All games with a baseline\n", summarize(errors).to_string())

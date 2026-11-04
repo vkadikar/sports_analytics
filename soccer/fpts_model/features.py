@@ -1,7 +1,8 @@
 """
 Feature engineering for the fantasy points model.
 
-Turns one season of player game logs into one row per player per game. Features are
+Turns one season of player game logs into one row per player per game. Past seasons are built
+the same way, one season at a time, so form and standings start fresh each year. Features are
 point in time: a row in gameweek N depends only on games played before gameweek N, so
 results from a week, or any later one, can never reach that week's features.
 """
@@ -58,6 +59,7 @@ def clean_game_logs(game_logs: pd.DataFrame, gw_dates: Dict[int, Dict[str, date]
     if "season" in df.columns and df["season"].nunique() > 1:
         raise ValueError("game_logs must cover a single season")
 
+    df["season"] = gw_dates[min(gw_dates)]["start"].year
     df["date"] = pd.to_datetime(df["date"])
     df["matchweek"] = df["date"].map(lambda day: gameweek_of(day.date(), gw_dates))
     if df["matchweek"].isna().any():

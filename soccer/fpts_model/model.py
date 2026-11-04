@@ -1,16 +1,20 @@
 """
 Fantasy points model.
 
-Fits one random forest per box score stat on all games before a gameweek. Each forest predicts how
+Fits one random forest per box score stat on all games before a gameweek, including past seasons, with
+each game's weight halving every RECENCY_HALF_LIFE_DAYS. Each forest predicts how
 much of that stat a player accumulates per minute, so a prediction can be scaled to any number of
-minutes. Games are weighted by minutes played, which stops short cameos dominating: one key pass in a
+minutes. Games are also weighted by minutes played, which stops short cameos dominating: one key pass in a
 5-minute appearance would otherwise count as much as a full game's rate.
 
 Clean sheets are the exception. They only count from CLEAN_SHEET_MINUTES on, so that forest predicts
 the chance of one per game, from games that reached that mark.
 
-Players with no minutes yet have nothing for the forests to go on, so they get what their position has
-actually produced against that opponent this season.
+Every leaf has to hold a minimum amount of evidence. Weighting can't help inside a one-game leaf, where
+one key pass in a one-minute cameo would become 90 per full game.
+
+Players with no minutes this season get what their position has actually produced against that opponent
+this season, whatever they did in earlier ones.
 
 Saved models are plain JSON and predict exactly what the fitted forests do.
 """
@@ -29,6 +33,12 @@ from .features import CATEGORICAL_FEATURES, TARGET_STATS, feature_columns
 N_ESTIMATORS = 300
 RANDOM_STATE = 42
 CLEAN_SHEET_STAT = "cs"
+# Both set by backtesting over GW2-9 with three past seasons. Half-lives from 120 to 730 days scored about the
+# same, and no decay at all scored worse, so this one simply means a game from a year ago counts half.
+RECENCY_HALF_LIFE_DAYS = 365
+# 80 full games' worth of recency-weighted minutes, and the same scale for clean sheet games
+MIN_LEAF_MINUTES = 7200
+MIN_LEAF_CLEAN_SHEET_GAMES = 320
 # Below this a position's record against an opponent is too thin, so its record against everyone is used
 MIN_OPPONENT_MINUTES = 180
 BASIS_PLAYER, BASIS_OPPONENT, BASIS_POSITION = "player", "position_vs_opponent", "position"
@@ -74,6 +84,12 @@ class JsonForest:
         return [{field: values.tolist() for field, values in tree.items()} for tree in self.trees]
 
 
+def recency_weights(dates: pd.Series) -> pd.Series:
+    """How much each game counts, from 1 for the latest game down, halving every RECENCY_HALF_LIFE_DAYS."""
+    age_days = (dates.max() - dates).dt.days
+    return 0.5 ** (age_days / RECENCY_HALF_LIFE_DAYS)
+
+
 class FptsModel:
     """One forest per target stat, trained on all games before a single gameweek."""
 
@@ -88,7 +104,8 @@ class FptsModel:
 
         Args:
             features: Feature table from build_features.
-            week: Gameweek being predicted. Only games played before it are used for training.
+            week: Gameweek of the latest season being predicted. Only games played before it are used
+                for training: the latest season's earlier gameweeks, and all of any past seasons.
             n_estimators: Number of trees per forest.
 
         Returns:
@@ -97,18 +114,29 @@ class FptsModel:
         encoders = {col: pd.factorize(features[col])[1].tolist() for col in CATEGORICAL_FEATURES}
         model = cls(week, {}, encoders)
         encoded = model._encode(features)
-        train = encoded[encoded["played"] & (encoded["matchweek"] < week)]
+        latest = encoded["season"] == encoded["season"].max()
+        train = encoded[encoded["played"] & (~latest | (encoded["matchweek"] < week))]
         if train.empty:
             raise ValueError(f"No games before matchweek {week} to train on")
 
+        recency = recency_weights(train["date"])
         for stat in TARGET_STATS:
-            forest = RandomForestRegressor(n_estimators=n_estimators, random_state=RANDOM_STATE, n_jobs=-1)
             if stat == CLEAN_SHEET_STAT:
                 games = train[train["minutes"] >= CLEAN_SHEET_MINUTES]
-                forest.fit(games[feature_columns(stat)], games[stat])
+                weights = recency[games.index]
+                forest = RandomForestRegressor(
+                    n_estimators=n_estimators, random_state=RANDOM_STATE, n_jobs=-1,
+                    min_weight_fraction_leaf=min(MIN_LEAF_CLEAN_SHEET_GAMES / weights.sum(), 0.5),
+                )
+                forest.fit(games[feature_columns(stat)], games[stat], sample_weight=weights)
             else:
                 games = train[train["minutes"] > 0]
-                forest.fit(games[feature_columns(stat)], games[stat] / games["minutes"], sample_weight=games["minutes"])
+                weights = games["minutes"] * recency[games.index]
+                forest = RandomForestRegressor(
+                    n_estimators=n_estimators, random_state=RANDOM_STATE, n_jobs=-1,
+                    min_weight_fraction_leaf=min(MIN_LEAF_MINUTES / weights.sum(), 0.5),
+                )
+                forest.fit(games[feature_columns(stat)], games[stat] / games["minutes"], sample_weight=weights)
             model.forests[stat] = JsonForest.from_sklearn(forest)
         return model
 
@@ -130,7 +158,8 @@ class FptsModel:
             DataFrame with one row per player, a column per stat averaged over their fixtures (per minute,
             except cs, which is the chance per game), and the fixtures themselves.
         """
-        in_week = features["matchweek"] == self.week
+        latest = features["season"] == features["season"].max()
+        in_week = latest & (features["matchweek"] == self.week)
         if not in_week.any():
             raise ValueError(f"No fixtures for matchweek {self.week} in features")
 
@@ -142,7 +171,7 @@ class FptsModel:
         for stat, forest in self.forests.items():
             predictions[stat] = forest.predict(encoded[feature_columns(stat)])
         predictions["basis"] = BASIS_PLAYER
-        history = features[features["played"] & (features["matchweek"] < self.week) & (features["minutes"] > 0)]
+        history = features[latest & features["played"] & (features["matchweek"] < self.week) & (features["minutes"] > 0)]
         predictions = self._use_position_rates_without_history(predictions, set(history["player_id"]), history)
 
         return predictions.groupby(["player_id", "team", "position"], as_index=False).agg(

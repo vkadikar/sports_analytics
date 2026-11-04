@@ -204,8 +204,8 @@ class TestModel(unittest.TestCase):
         logs.loc[logs["Team"] == "AAA", "Min"] = "30"
         logs["KP"] = "3"
         call = self.fit_calls(logs)["kp"]
-        self.assertEqual(set(call["weight"]), {30, 90})
-        self.assertTrue(np.allclose(call["y"] * call["weight"], 3))
+        self.assertEqual(set(call["y"].round(6)), {0.1, round(3 / 90, 6)})
+        self.assertEqual(call["weight"].max(), 90)
 
     def test_clean_sheet_forest_learns_a_per_game_chance_from_60_minute_games(self):
         logs = make_game_logs()
@@ -213,9 +213,33 @@ class TestModel(unittest.TestCase):
         logs.loc[logs["Team"] == "AAA", "Min"] = "59"
         logs.loc[logs["Team"] == "BBB", "Min"] = "60"
         call = self.fit_calls(logs)["cs"]
-        self.assertIsNone(call["weight"])
+        self.assertTrue((call["weight"] <= 1).all())  # recency only, not minutes
         self.assertTrue((call["y"] == 1).all())
         self.assertEqual(len(call["y"]), (logs["Min"].astype(int) >= 60).sum())
+
+    def test_every_leaf_must_hold_a_minimum_of_evidence(self):
+        class Recording(RandomForestRegressor):
+            seen = []
+
+            def fit(self, X, y, sample_weight=None):
+                Recording.seen.append((self.min_weight_fraction_leaf, self.min_samples_leaf, sample_weight))
+                return super().fit(X, y, sample_weight=sample_weight)
+
+        logs = make_game_logs()
+        with patch.object(model_module, "RandomForestRegressor", Recording):
+            FptsModel.train(build_features(logs, GW_DATES), UPCOMING_WEEK, n_estimators=2)
+        fraction, _, weight = Recording.seen[TARGET_STATS.index("kp")]
+        self.assertAlmostEqual(fraction, min(model_module.MIN_LEAF_MINUTES / weight.sum(), 0.5))
+        fraction, _, weight = Recording.seen[TARGET_STATS.index("cs")]
+        self.assertAlmostEqual(fraction, min(model_module.MIN_LEAF_CLEAN_SHEET_GAMES / weight.sum(), 0.5))
+
+    def test_older_games_count_for_less(self):
+        dates = pd.to_datetime(pd.Series(["2026-10-01", "2025-10-01", "2024-10-01"]))
+        with patch.object(model_module, "RECENCY_HALF_LIFE_DAYS", 365):
+            weights = model_module.recency_weights(dates).tolist()
+        self.assertEqual(weights[0], 1)
+        self.assertAlmostEqual(weights[1], 0.5)
+        self.assertAlmostEqual(weights[2], 0.25, places=2)
 
     def test_player_without_minutes_gets_their_positions_record_against_the_opponent(self):
         logs = make_game_logs()
@@ -279,6 +303,51 @@ class TestModel(unittest.TestCase):
         forest = RandomForestRegressor(n_estimators=10, random_state=42).fit(train[columns], train["kp"])
         np.testing.assert_array_equal(JsonForest.from_sklearn(forest).predict(encoded[columns]), forest.predict(encoded[columns]))
 
+    def test_past_seasons_are_trained_on_with_less_weight_but_never_predicted(self):
+        past_dates = {
+            week: {key: value - timedelta(days=364) for key, value in dates.items()} for week, dates in GW_DATES.items()
+        }
+        past_logs = make_game_logs().assign(Date=lambda logs: logs["Date"] - pd.Timedelta(days=364))
+        past = build_features(past_logs, past_dates)
+        self.assertEqual(past["season"].unique().tolist(), [2025])
+        features = pd.concat([past, self.features], ignore_index=True)
+
+        calls = []
+
+        class Recording(RandomForestRegressor):
+            def fit(self, X, y, sample_weight=None):
+                calls.append((len(y), sample_weight))
+                return super().fit(X, y, sample_weight=sample_weight)
+
+        with patch.object(model_module, "RandomForestRegressor", Recording):
+            model = FptsModel.train(features, UPCOMING_WEEK, n_estimators=2)
+        rows, weights = calls[TARGET_STATS.index("kp")]
+        self.assertEqual(rows, len(past) + self.features["played"].sum())
+        self.assertLess(weights.iloc[:len(past)].mean(), weights.iloc[len(past):].mean() * 0.75)
+
+        predictions = model.predict(features)
+        self.assertEqual(set(predictions["player_id"]), set(make_pool()["player_id"]))
+        self.assertEqual(predictions["fixtures"].map(len).max(), 1)
+
+    def test_no_minutes_this_season_ignores_past_seasons_and_uses_this_seasons_opponent_record(self):
+        past_dates = {
+            week: {key: value - timedelta(days=364) for key, value in dates.items()} for week, dates in GW_DATES.items()
+        }
+        logs = make_game_logs()
+        logs["KP"] = "0"
+        last_year = make_game_logs().assign(Date=lambda frame: frame["Date"] - pd.Timedelta(days=364), KP="9")
+        last_year.loc[last_year.index[:4], "player_id"] = "NEW"  # played last season, not this one
+        past = build_features(last_year, past_dates)
+        features = features_for_week(UPCOMING_WEEK, logs)
+        features = pd.concat([past, features], ignore_index=True)
+        predictions = FptsModel.train(features, UPCOMING_WEEK, n_estimators=2).predict(features).set_index("player_id")
+        self.assertEqual(predictions.loc["NEW", "basis"], "position_vs_opponent")
+        self.assertEqual(predictions.loc["NEW", "kp"], 0)
+
+    def test_form_and_standings_reset_each_season(self):
+        features = build_features(make_game_logs(), GW_DATES)
+        self.assertTrue((features.loc[features["matchweek"] == 1, "kp_per_min_season"] == 0).all())
+
     def test_missing_gameweek_raises(self):
         with self.assertRaises(ValueError):
             FptsModel(UPCOMING_WEEK + 1, {}, {}).predict(self.features)
@@ -320,6 +389,23 @@ class TestGameLogData(unittest.TestCase):
         self.assertEqual((row["g"], row["kp"], row["gao"], row["sv"]), (1, 2, 1, 3))
         build_features(logs, GW_DATES)
 
+    def test_transferred_players_use_their_latest_club_unless_dropped(self):
+        client = FakeClient()
+        moved = {"id": "moved", "name": "Moved", "scored_as": "M", "club": "CCC/BBB", "games_played": 1, "minutes": 90, "stats": {}}
+        original = client.get_player_stats
+        client.get_player_stats = lambda **kwargs: original(**kwargs) + [moved]
+        logs = data_module.fetch_week_game_logs(client, 3, GW_DATES, self.fixtures())
+        self.assertEqual(logs.loc[logs["player_id"] == "moved", "Team"].item(), "BBB")
+        dropped = data_module.fetch_week_game_logs(client, 3, GW_DATES, self.fixtures(), drop_transfers=True)
+        self.assertNotIn("moved", set(dropped["player_id"]))
+
+    def test_transferred_players_count_towards_a_clubs_completeness(self):
+        client = FakeClient(players_per_club=10)
+        original = client.get_player_stats
+        extra = [{"id": f"m{club}", "name": "Moved", "scored_as": "M", "club": f"ZZZ/{club}", "games_played": 1, "minutes": 90, "stats": {}} for club in CLUBS]
+        client.get_player_stats = lambda **kwargs: original(**kwargs) + extra
+        data_module.fetch_week_game_logs(client, 3, GW_DATES, self.fixtures(), drop_transfers=True)
+
     def test_incomplete_listing_raises(self):
         with self.assertRaisesRegex(RuntimeError, "too few players"):
             data_module.fetch_week_game_logs(FakeClient(players_per_club=3), 3, GW_DATES, self.fixtures())
@@ -332,11 +418,41 @@ class TestGameLogData(unittest.TestCase):
         client = FakeClient()
         with tempfile.TemporaryDirectory() as tmp, patch.object(data_module, "GAME_LOGS_DIR", Path(tmp)), \
                 patch.object(data_module, "PAUSE_BETWEEN_WEEKS_SECONDS", 0):
-            first = data_module.load_game_logs(client, [1, 2], GW_DATES, self.fixtures())
-            second = data_module.load_game_logs(client, [1, 2], GW_DATES, self.fixtures())
+            first = data_module.load_game_logs(client, 2026, [1, 2], GW_DATES, self.fixtures())
+            second = data_module.load_game_logs(client, 2026, [1, 2], GW_DATES, self.fixtures())
         self.assertEqual(client.calls, 2)
         pd.testing.assert_frame_equal(first, second)
         self.assertEqual(first["player_id"].dtype.kind in "OU" or str(first["player_id"].dtype) == "str", True)
+
+    def test_flipped_results_read_from_the_other_clubs_side(self):
+        self.assertEqual(data_module._flip_result("W 3-1"), "L 1-3")
+        self.assertEqual(data_module._flip_result("L 0-2"), "W 2-0")
+        self.assertEqual(data_module._flip_result("T 1-1"), "T 1-1")
+
+    def test_historical_fixtures_use_few_game_logs_and_cover_both_clubs(self):
+        class Client:
+            calls = []
+
+            def get_player_game_log(self, player_id, year):
+                self.calls.append(player_id)
+                return pd.DataFrame([
+                    {"Team": "AAA", "Opp": "BBB", "Score": "W 2-1", "Date_dt": pd.Timestamp(GW_DATES[1]["start"])},
+                    {"Team": "AAA", "Opp": "@CCC", "Score": "T 0-0", "Date_dt": pd.Timestamp(GW_DATES[2]["start"])},
+                    {"Team": "AAA", "Opp": "DDD", "Score": "L 0-1", "Date_dt": pd.Timestamp("2030-01-01")},
+                ])
+
+        players = [
+            {"id": "a1", "club": "AAA", "minutes": 900},
+            {"id": "moved", "club": "AAA/BBB", "minutes": 3000},
+        ]
+        with patch.object(data_module, "PAUSE_BETWEEN_PROFILES_SECONDS", 0), patch.object(data_module, "GAMES_PER_CLUB", 3):
+            fixtures = data_module.fetch_historical_fixtures(Client(), 2025, GW_DATES, players)
+        self.assertEqual(Client.calls, ["a1"])
+        rows = fixtures.set_index(["week", "club"])
+        self.assertEqual((rows.loc[(1, "AAA"), "opp"], rows.loc[(1, "AAA"), "score"]), ("BBB", "W 2-1"))
+        self.assertEqual((rows.loc[(1, "BBB"), "opp"], rows.loc[(1, "BBB"), "score"]), ("@AAA", "L 1-2"))
+        self.assertEqual((rows.loc[(2, "CCC"), "opp"], rows.loc[(2, "CCC"), "score"]), ("AAA", "T 0-0"))
+        self.assertEqual(set(fixtures["week"]), {1, 2})  # the game outside every gameweek is dropped
 
     def test_results_read_from_the_clubs_side(self):
         self.assertEqual(data_module._result(4, 0), "W 4-0")
@@ -382,17 +498,28 @@ class TestWeeklyTraining(unittest.TestCase):
     def test_old_seasons_are_cleared(self):
         self.write_predictions(2, season=2025)
         self.write_predictions(3, season=2025)
-        with patch.object(train_module, "GAME_LOGS_DIR", self.predictions_dir.parent / "logs"):
-            train_module.GAME_LOGS_DIR.mkdir()
-            (train_module.GAME_LOGS_DIR / "gw01.csv").write_text("old")
-            train_module.remove_old_seasons(2026)
-            self.assertEqual(list(train_module.GAME_LOGS_DIR.iterdir()), [])
+        train_module.remove_old_seasons(2026)
         self.assertEqual(predictions_module.available_prediction_weeks(), [])
 
     def test_current_season_is_kept(self):
         self.write_predictions(2, season=2026)
         train_module.remove_old_seasons(2026)
         self.assertEqual(predictions_module.available_prediction_weeks(), [2])
+
+    def test_a_missing_last_season_stops_training(self):
+        with self.assertRaisesRegex(RuntimeError, "HISTORICAL_LEAGUES"):
+            train_module.past_season_features(2030)
+
+    def test_missing_history_stops_training(self):
+        with patch.object(train_module, "load_history", return_value=(pd.DataFrame(), {})):
+            with self.assertRaisesRegex(RuntimeError, "fetch-history"):
+                train_module.past_season_features(2026)
+
+    def test_only_earlier_seasons_are_history(self):
+        calls = []
+        with patch.object(train_module, "load_history", side_effect=lambda season: calls.append(season) or (make_game_logs(), GW_DATES)):
+            train_module.past_season_features(2024)
+        self.assertEqual(calls, [2023])
 
     def test_players_stay_at_the_club_they_last_played_for(self):
         logs = make_game_logs(through_week=2)
