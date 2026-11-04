@@ -36,7 +36,7 @@ from fantrax_wrapper.predictions import PREDICTIONS_DIR, load_week_predictions, 
 
 from .data import GAME_LOGS_DIR, LEAGUE_TZ, fetch_fixtures, fetch_player_pool, load_game_logs
 from .features import TARGET_STATS, build_features
-from .model import N_ESTIMATORS, FptsModel
+from .model import CLEAN_SHEET_STAT, N_ESTIMATORS, FptsModel
 
 SOCCER_DIR = Path(__file__).resolve().parents[1]
 MODELS_DIR = Path(__file__).resolve().parent / "models"
@@ -100,25 +100,30 @@ def fixture_rows(game_logs: pd.DataFrame, pool: pd.DataFrame, fixtures: pd.DataF
 
 def prediction_entries(predictions: pd.DataFrame, pool: pd.DataFrame) -> Dict[str, Dict[str, Any]]:
     """Per-player entries for a gameweek's predictions file."""
-    engine = FantasyScoringEngine()
+    rules = FantasyScoringEngine().rules
     players = pool.set_index("player_id")
     entries = {}
     for row in predictions.to_dict("records"):
         player = players.loc[row["player_id"]]
-        line = {stat: row[stat] for stat in TARGET_STATS}
-        entry = {
+        rates = {stat: row[stat] for stat in TARGET_STATS if stat != CLEAN_SHEET_STAT}
+        clean_sheet_chance = row[CLEAN_SHEET_STAT]
+        scoring = {
+            position: {
+                "per_min": round(sum(rules[position].get(stat.upper(), 0) * rate for stat, rate in rates.items()), 5),
+                "clean_sheet": round(rules[position].get("CS", 0) * clean_sheet_chance, 3),
+            }
+            for position in {row["position"], *player["positions"].split(",")}
+        }
+        entries[row["player_id"]] = {
             "name": player["name"],
             "club": row["team"],
             "position": row["position"],
             "positions": player["positions"],
             "fixtures": row["fixtures"],
-            "fpts": row["fpts_pred"],
-            "stats": {stat: round(value, 2) for stat, value in line.items() if round(value, 2)},
+            "scoring": scoring,
+            "clean_sheet_chance": round(clean_sheet_chance, 3),
+            "per_minute": {stat: round(rate, 5) for stat, rate in rates.items() if round(rate, 5)},
         }
-        eligible = player["positions"].split(",")
-        if len(eligible) > 1:
-            entry["by_position"] = {pos: engine.calculate_fantasy_score(line, pos) for pos in eligible}
-        entries[row["player_id"]] = entry
     return entries
 
 

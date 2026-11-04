@@ -957,7 +957,64 @@ async function fetchJson(url) {
   return body;
 }
 
-function playerRow(p, { bench = false, star = false, showSeason = false } = {}) {
+// Predictions are per minute, so the points depend on how long a player is on. Clean sheet points only
+// count from 60 minutes (fantrax_wrapper/predictions.py). The minutes someone picks last until a reload.
+const PRED_MINUTE_OPTIONS = [15, 30, 45, 60, 75, 90];
+const CLEAN_SHEET_MINUTES = 60;
+const predMinutesPicked = new Map();
+
+function predictedPoints(pr, minutesPerGame) {
+  return pr.games * (pr.per_min * minutesPerGame + (minutesPerGame >= CLEAN_SHEET_MINUTES ? pr.clean_sheet : 0));
+}
+function predLabel(pr, minutesPerGame) {
+  return `Pred ${fmt(predictedPoints(pr, minutesPerGame), 1)} · ${fmt(minutesPerGame * pr.games)}′`;
+}
+// A finished gameweek defaults to the minutes actually played, anything else to a full game.
+function predDefaultMinutes(p, final) { return final ? p.minutes / p.prediction.games : 90; }
+
+function predictionControl(p, gw, final) {
+  const pr = p.prediction;
+  const key = `${gw}:${p.id}`;
+  const picked = predMinutesPicked.get(key);
+  const minutes = picked ?? predDefaultMinutes(p, final);
+  return `<button type="button" class="pred ${picked != null ? "adjusted" : ""}" data-pred="${esc(key)}" data-per-min="${pr.per_min}" data-clean-sheet="${pr.clean_sheet}" data-games="${pr.games}" data-default="${predDefaultMinutes(p, final)}" aria-expanded="false" title="Predicted points at these minutes. Click to change the minutes.">${predLabel(pr, minutes)}</button>`;
+}
+function predictionPicker(p, gw, final) {
+  const key = `${gw}:${p.id}`;
+  const picked = predMinutesPicked.get(key);
+  const option = (value, label) => `<button type="button" data-pred-minutes="${value}" aria-pressed="${(picked ?? null) === (value === "default" ? null : value)}">${label}</button>`;
+  return `<div class="pred-picker" data-pred-picker="${esc(key)}" hidden><span class="pred-picker-label">Minutes</span>${PRED_MINUTE_OPTIONS.map(m => option(m, `${m}`)).join("")}${option("default", final ? "Actual" : "Reset")}</div>`;
+}
+
+document.addEventListener("click", e => {
+  const toggle = e.target.closest("[data-pred]");
+  if (toggle) {
+    const picker = document.querySelector(`[data-pred-picker="${CSS.escape(toggle.dataset.pred)}"]`);
+    const opening = picker.hidden;
+    document.querySelectorAll("[data-pred-picker]").forEach(el => { el.hidden = true; });
+    document.querySelectorAll("[data-pred]").forEach(el => el.setAttribute("aria-expanded", "false"));
+    picker.hidden = !opening;
+    toggle.setAttribute("aria-expanded", String(opening));
+    return;
+  }
+  const choice = e.target.closest("[data-pred-minutes]");
+  if (!choice) return;
+  const picker = choice.closest("[data-pred-picker]");
+  const key = picker.dataset.predPicker;
+  const button = document.querySelector(`[data-pred="${CSS.escape(key)}"]`);
+  const value = choice.dataset.predMinutes;
+  if (value === "default") predMinutesPicked.delete(key); else predMinutesPicked.set(key, +value);
+  const { perMin, cleanSheet, games, default: fallback } = button.dataset;
+  const pr = { per_min: +perMin, clean_sheet: +cleanSheet, games: +games };
+  button.textContent = predLabel(pr, value === "default" ? +fallback : +value);
+  button.classList.toggle("adjusted", value !== "default");
+  picker.querySelectorAll("[data-pred-minutes]").forEach(el => el.setAttribute("aria-pressed", String(el === choice && value !== "default")));
+  picker.hidden = true;
+  button.setAttribute("aria-expanded", "false");
+  button.focus();
+});
+
+function playerRow(p, { bench = false, star = false, showSeason = false, gw = null, final = false } = {}) {
   const pos = p.slot || (p.positions || "").split(",")[0] || "–";
   const meta = showSeason
     ? [p.club, p.positions && p.positions.replace(/,/g, "/"), `${p.games_played} GP`].filter(Boolean).join(" · ")
@@ -965,21 +1022,21 @@ function playerRow(p, { bench = false, star = false, showSeason = false } = {}) 
   return `<div class="lu-row ${bench ? "bench" : ""}">
     <span class="pos-tag" title="${esc(POS_NAMES[pos] || pos)}">${esc(pos)}</span>
     <span style="min-width:0"><span class="nm" style="display:block">${esc(p.name)}${star ? `<span class="star" title="Top scorer in this matchup">★</span>` : ""}</span><span class="meta" style="display:block">${esc(meta)}</span></span>
-    <span class="pts-cell"><span class="pts ${p.points < 0 ? "neg" : ""}">${fmtPts(p.points)}</span>${p.predicted == null ? "" : `<span class="pred" title="What the model predicted before this gameweek">Pred ${fmt(p.predicted, 1)}</span>`}</span>
-  </div>`;
+    <span class="pts-cell"><span class="pts ${p.points < 0 ? "neg" : ""}">${fmtPts(p.points)}</span>${p.prediction ? predictionControl(p, gw, final) : ""}</span>
+  </div>${p.prediction ? predictionPicker(p, gw, final) : ""}`;
 }
 
-function lineupColumn(lu, starId) {
+function lineupColumn(lu, starId, gw, final) {
   if (!lu) return `<div class="lu-col"><div class="empty">No lineup returned</div></div>`;
   const benchPts = lu.bench.reduce((t, p) => t + p.points, 0);
   return `<div class="lu-col">
     <div class="lu-section"><span>Starting XI</span><span>Pts</span></div>
-    ${lu.starters.map(p => playerRow(p, { star: p.id === starId })).join("")}
+    ${lu.starters.map(p => playerRow(p, { star: p.id === starId, gw, final })).join("")}
     <div class="lu-total"><span>Starters total</span><b class="num">${fmtPts(lu.total)}</b></div>
     <div class="lu-section"><span>Bench</span><span>Pts</span></div>
-    ${lu.bench.length ? lu.bench.map(p => playerRow(p, { bench: true })).join("") : `<div class="dim" style="font-size:13px">Empty</div>`}
+    ${lu.bench.length ? lu.bench.map(p => playerRow(p, { bench: true, gw, final })).join("") : `<div class="dim" style="font-size:13px">Empty</div>`}
     <div class="lu-total"><span>Left on the bench</span><b class="num">${fmtPts(benchPts)}</b></div>
-    ${lu.injured_reserve.length ? `<div class="lu-section"><span>Injured reserve</span><span></span></div>${lu.injured_reserve.map(p => playerRow(p, { bench: true })).join("")}` : ""}
+    ${lu.injured_reserve.length ? `<div class="lu-section"><span>Injured reserve</span><span></span></div>${lu.injured_reserve.map(p => playerRow(p, { bench: true, gw, final })).join("")}` : ""}
   </div>`;
 }
 
@@ -1008,7 +1065,7 @@ async function openMatchup(m) {
     const hl = data.lineups[hId], al = data.lineups[aId];
     const starters = [...(hl ? hl.starters : []), ...(al ? al.starters : [])];
     const top = starters.length && hasScore(m) ? starters.reduce((b, p) => (p.points > b.points ? p : b)) : null;
-    if (grid.isConnected) grid.innerHTML = lineupColumn(hl, top && top.id) + lineupColumn(al, top && top.id);
+    if (grid.isConnected) grid.innerHTML = lineupColumn(hl, top && top.id, m.gw, final) + lineupColumn(al, top && top.id, m.gw, final);
   } catch (err) {
     if (grid.isConnected) grid.innerHTML = `<div class="lu-col" style="grid-column:1/-1"><div class="empty">Couldn't load lineups (${esc(err.message)}).<br>${esc(LINEUP_API_HELP)}</div></div>`;
   }

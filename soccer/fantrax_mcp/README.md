@@ -21,7 +21,7 @@ first client.
 | `get_weekly_scores()` | Every team's score, opponent, result, and optimal score for every played week |
 | `get_form_table(window=3)` | Per team: season average, rolling mean, WMA, EWMA, trend, volatility, all-play record, expected wins |
 | `get_gameweek_lineups(week)` | Every team's lineup for one week (`FantraxClient.get_lineup` per team), plus top performers, no-shows, bench blunders |
-| `get_predictions(week?, player?, team?)` | The fantasy points model's saved prediction for a week (`league_hub/predictions/`), per player or per fantasy team's lineup (`FantraxClient.get_lineup`) |
+| `get_predictions(week?, player?, team?, minutes?)` | The fantasy points model's saved prediction for a week (`league_hub/predictions/`), per player or per fantasy team's lineup (`FantraxClient.get_lineup`). Finished games use actual minutes; otherwise 90, or `minutes` |
 | `calculate_fantasy_score(stats, position)` | `FantasyScoringEngine` |
 | `compute_optimal_lineup(g_scores, d_scores, m_scores, f_scores)` | `compute_optimal_lineup_score` |
 

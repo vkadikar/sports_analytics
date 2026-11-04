@@ -10,21 +10,23 @@ description: What the model predicted or predicts for a player or fantasy team i
    earlier data to train on.
 2. Call `get_predictions`:
    - **A player**: pass `player`. If several players match, use the one that fits the user's
-     wording, or list them and ask. `fpts` is the prediction at their usual position; `by_position`
-     has the alternatives for dual-position players. `stats` is the predicted stat line, so use it to
-     say where the points are expected to come from.
-   - **A fantasy team**: pass `team`. Use `predicted_total` for the starting XI and `predicted` per
-     player. A `predicted` of null means the player has no fixture that week or no prediction.
+     wording, or list them and ask. `predicted_stats` says where the points are expected to come from.
+   - **A fantasy team**: pass `team`. Use `predicted_total` for the starting XI and `predicted_points`
+     per player. A null means the player has no fixture that week or no prediction.
    - **A matchup**: call it once per team and compare the two `predicted_total`s.
    - **The week's best**: pass neither, and use `top_predicted`.
-3. For a gameweek that has been played, compare the prediction with the result. A team's call already
-   includes actual `points` and `actual_total`; for a player, call
-   `get_player_stats([name], from_week=week, to_week=week)`.
-4. Answer with the predicted number first, then what drives it, then the actual result if the week has
-   been played.
+   - **"What if they only play 30?"**: pass `minutes`.
+3. Always say what minutes a number assumes (`predicted_at_minutes`). The model predicts output per
+   minute and doesn't know who will play, so:
+   - **Upcoming games** assume 90 minutes. That flatters squad players and impact subs, and a team's
+     `predicted_total` assumes all eleven go the distance, so it runs high. Treat it as what a side
+     could do, and use `get_squad` or recent minutes to judge who will actually play.
+   - **Finished games** use the minutes actually played, which makes the prediction directly comparable
+     with `actual_points`. It tests whether the model read the player's output, not whether it
+     foresaw their minutes, so someone who didn't play predicts 0, and that's not a clever call.
+4. Answer with the predicted number and its minutes first, then what drives it, then the actual result
+   if the week has been played.
 
-Be straight about what these numbers are. The model predicts a player's output assuming they feature,
-from their rates this season and the opponent. It knows nothing about injuries, suspensions, rotation,
-or who was named in the lineup, so check `minutes` or the player's status before leaning on a number,
-and never present a prediction as a result. A big miss from a player who didn't play is the model's
-blind spot, not a bad call on their form. Predictions are made once before the week and never change.
+Clean sheet points only count from 60 minutes, so the number jumps at that point for defenders and
+goalkeepers. The model knows nothing about injuries, suspensions, or rotation. Never present a
+prediction as a result. Predictions are made once before the week and never change.

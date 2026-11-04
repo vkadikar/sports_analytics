@@ -13,7 +13,7 @@ import numpy as np
 import pandas as pd
 
 
-# Stats with rolling per-minute and per-90 features
+# Stats with rolling per-minute features
 ROLLING_STATS = [
     "g", "kp", "at", "sot", "tkw", "dis", "acnc", "int", "clr",
     "cos", "bs", "aer", "gao", "cs", "sv", "pks", "hcs", "sm",
@@ -79,7 +79,7 @@ def clean_game_logs(game_logs: pd.DataFrame, gw_dates: Dict[int, Dict[str, date]
 
 
 def _add_rolling_stats(df: pd.DataFrame) -> pd.DataFrame:
-    """Adds per-minute and per-90 rates from each player's previous game and season to date."""
+    """Adds per-minute rates from each player's previous game and season to date."""
     players = df["player_id"]
     last_minutes = df.groupby("player_id")["minutes"].shift(1).fillna(0)
     season_minutes = last_minutes.groupby(players).cumsum()
@@ -88,12 +88,8 @@ def _add_rolling_stats(df: pd.DataFrame) -> pd.DataFrame:
     for stat in ROLLING_STATS:
         last = df.groupby("player_id")[stat].shift(1).fillna(0)
         season = last.groupby(players).cumsum()
-        per_min_gameweek = (last / last_minutes).round(3)
-        per_min_season = (season / season_minutes).round(3)
-        rates[f"{stat}_per_min_gameweek"] = per_min_gameweek
-        rates[f"{stat}_per_min_season"] = per_min_season
-        rates[f"{stat}_per_90_gameweek"] = per_min_gameweek * 90
-        rates[f"{stat}_per_90_season"] = per_min_season * 90
+        rates[f"{stat}_per_min_gameweek"] = last / last_minutes
+        rates[f"{stat}_per_min_season"] = season / season_minutes
     rates = pd.DataFrame(rates)
 
     # A second unplayed fixture would otherwise treat the first one as a 0-minute game
@@ -107,17 +103,17 @@ def _add_rolling_stats(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def _add_positional_averages(df: pd.DataFrame) -> pd.DataFrame:
-    """Adds the trimmed mean per-90 rates of each position facing each opponent in earlier gameweeks."""
-    per90_cols = [col for col in df.columns if "per_90" in col]
+    """Adds the trimmed mean per-minute rates of each position facing each opponent in earlier gameweeks."""
+    rate_cols = [col for col in df.columns if "per_min" in col]
 
     rows = []
     for (opp, position), group in df.groupby(["opp", "position"]):
         for week in group["matchweek"].unique():
-            earlier = group.loc[group["matchweek"] < week, per90_cols]
+            earlier = group.loc[group["matchweek"] < week, rate_cols]
             trimmed = earlier.where(earlier.ge(earlier.quantile(0.05)) & earlier.le(earlier.quantile(0.95)))
             rows.append({"opp": opp, "position": position, "matchweek": week, **trimmed.mean().to_dict()})
 
-    averages = pd.DataFrame(rows).rename(columns={col: f"positional_avg_{col}" for col in per90_cols})
+    averages = pd.DataFrame(rows).rename(columns={col: f"positional_avg_{col}" for col in rate_cols})
     return df.merge(averages, on=["opp", "position", "matchweek"])
 
 
@@ -170,7 +166,7 @@ def build_features(game_logs: pd.DataFrame, gw_dates: Dict[int, Dict[str, date]]
     df = _add_league_standings(df)
 
     # A player's first game, games after a DNP and first meetings with an opponent have undefined rates
-    rate_cols = [col for col in df.columns if "per_min" in col or "per_90" in col]
+    rate_cols = [col for col in df.columns if "per_min" in col]
     df[rate_cols] = df[rate_cols].fillna(0)
     return df
 
@@ -182,8 +178,6 @@ def feature_columns(stat: str) -> List[str]:
     return CONTEXT_FEATURES + [
         f"{stat}_per_min_gameweek",
         f"{stat}_per_min_season",
-        f"{stat}_per_90_gameweek",
-        f"{stat}_per_90_season",
-        f"positional_avg_{stat}_per_90_gameweek",
-        f"positional_avg_{stat}_per_90_season",
+        f"positional_avg_{stat}_per_min_gameweek",
+        f"positional_avg_{stat}_per_min_season",
     ]

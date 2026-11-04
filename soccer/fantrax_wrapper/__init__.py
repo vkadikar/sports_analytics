@@ -8,7 +8,14 @@ from .client import FantraxClient
 from .session import FantraxSessionManager
 from .rpc import FantraxRPCClient
 from .scoring import FantasyScoringEngine, STAT_NAMES
-from .predictions import available_prediction_weeks, load_week_predictions, predicted_points, with_predictions
+from .predictions import (
+    FULL_GAME_MINUTES,
+    available_prediction_weeks,
+    load_week_predictions,
+    player_prediction,
+    points_at_minutes,
+    with_predictions,
+)
 from .utils import add_season_year, parse_opponent, load_env_file
 from .models import (
     LeagueInfo,
@@ -39,9 +46,11 @@ __version__ = "1.0.0"
 
 __all__ = [
     "FantraxClient",
+    "FULL_GAME_MINUTES",
     "available_prediction_weeks",
     "load_week_predictions",
-    "predicted_points",
+    "player_prediction",
+    "points_at_minutes",
     "with_predictions",
     "FantraxSessionManager",
     "FantraxRPCClient",

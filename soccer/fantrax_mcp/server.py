@@ -19,6 +19,7 @@ import dataclasses
 import os
 import unicodedata
 from concurrent.futures import ThreadPoolExecutor
+from datetime import date
 from typing import Any, Dict, List, Optional
 
 import numpy as np
@@ -28,12 +29,16 @@ from fantrax_wrapper import (
     STAT_NAMES,
     FantraxClient,
     FantasyScoringEngine,
+    FULL_GAME_MINUTES,
     available_prediction_weeks,
     calculate_median_standings,
     compute_optimal_lineup_score,
     load_week_predictions,
+    player_prediction,
+    points_at_minutes,
     with_predictions,
 )
+from fantrax_wrapper.predictions import CLEAN_SHEET_MINUTES
 
 LEAGUE_ID = os.getenv("FANTRAX_LEAGUE_ID", "iku2an1nmryzcfa2")
 COOKIE_PATH = os.getenv("FANTRAX_COOKIE_PATH") or os.path.join(
@@ -590,18 +595,42 @@ def get_player_stats(
         return {"error": str(e)}
 
 
+def _prediction_summary(entry: Dict[str, Any], player_id: str, minutes: float) -> Dict[str, Any]:
+    """A predictions file entry as the model should see it: points and stats at a number of minutes per game."""
+    games = len(entry["fixtures"])
+    return {
+        "id": player_id,
+        "name": entry["name"],
+        "club": entry["club"],
+        "position": entry["position"],
+        "fixtures": entry["fixtures"],
+        "predicted_at_minutes": minutes,
+        "predicted_points": points_at_minutes(player_prediction(entry), minutes),
+        "predicted_stats": {stat: round(rate * minutes * games, 2) for stat, rate in entry["per_minute"].items()},
+        "clean_sheet_chance": entry["clean_sheet_chance"] if minutes >= CLEAN_SHEET_MINUTES else 0,
+    }
+
+
 @mcp.tool()
-def get_predictions(week: Optional[int] = None, player: Optional[str] = None, team: Optional[str] = None) -> Dict[str, Any]:
+def get_predictions(
+    week: Optional[int] = None,
+    player: Optional[str] = None,
+    team: Optional[str] = None,
+    minutes: Optional[int] = None,
+) -> Dict[str, Any]:
     """The fantasy points model's prediction for a gameweek, made before that gameweek using only
-    earlier games, so past weeks show what it really would have said. Pass player for that player's
-    predicted points and stat line, or team for a fantasy team's lineup with predicted and actual
-    points per player. With neither, returns the week's 20 highest predictions. Predictions assume
-    the player features: the model doesn't know about injuries, suspensions, or rotation.
+    earlier games, so past weeks show what it really would have said. The model predicts production
+    per minute and doesn't know who will play, so points depend on minutes: by default a finished
+    game uses the minutes actually played, and anything else assumes 90. Clean sheet points only
+    count from 60 minutes. Pass player for that player's prediction, or team for a fantasy team's
+    lineup with predicted and actual points per player. With neither, returns the week's 20 highest
+    predictions at 90 minutes.
 
     Args:
         week: Gameweek number (2-38). Omit for the latest week with predictions.
         player: Player name, full or partial, e.g. "Saka".
         team: Fantasy team name, full or partial, or team ID.
+        minutes: What-if minutes per game for every player, overriding the default.
     """
     try:
         available = available_prediction_weeks()
@@ -609,7 +638,6 @@ def get_predictions(week: Optional[int] = None, player: Optional[str] = None, te
         data = load_week_predictions(week) if week is not None else None
         if data is None:
             return {"error": f"No predictions for gameweek {week}. Gameweek 1 never has them. Available: {available}"}
-        players = [{"id": player_id, **entry} for player_id, entry in data["players"].items()]
         result = {"week": week, "trained_through_week": data["trained_through_week"]}
 
         if team:
@@ -617,19 +645,51 @@ def get_predictions(week: Optional[int] = None, player: Optional[str] = None, te
             ids = _team_ids(client)
             name = _resolve_team(ids, team)
             lineup = with_predictions(client.get_lineup(ids[name], week), week)
-            keep = ("name", "slot", "positions", "club", "game", "points", "minutes", "predicted")
+            finished = client.get_gameweek_dates()[week]["end"] < date.today()
+
+            def row(p: Dict[str, Any]) -> Dict[str, Any]:
+                prediction = p["prediction"]
+                used = minutes if minutes is not None else None
+                if used is None and prediction:
+                    used = p["minutes"] / prediction["games"] if finished else FULL_GAME_MINUTES
+                keep = ("name", "slot", "positions", "club", "game", "points", "minutes")
+                return {
+                    **{k: p[k] for k in keep},
+                    "predicted_at_minutes": used,
+                    "predicted_points": points_at_minutes(prediction, used) if prediction else None,
+                }
+
+            starters = [row(p) for p in lineup["starters"]]
             return {
                 **result,
                 "team": name,
-                "predicted_total": round(sum(p["predicted"] or 0 for p in lineup["starters"]), 2),
+                "predicted_total": round(sum(p["predicted_points"] or 0 for p in starters), 2),
                 "actual_total": lineup["total"],
-                "starters": [{k: p[k] for k in keep} for p in lineup["starters"]],
-                "bench": [{k: p[k] for k in keep} for p in lineup["bench"]],
+                "starters": starters,
+                "bench": [row(p) for p in lineup["bench"]],
             }
+
         if player:
             query = _fold(player.strip())
-            return {**result, "players": [p for p in players if query in _fold(p["name"])]}
-        return {**result, "top_predicted": sorted(players, key=lambda p: p["fpts"], reverse=True)[:20]}
+            matches = {pid: entry for pid, entry in data["players"].items() if query in _fold(entry["name"])}
+            actual = {}
+            if matches and minutes is None:
+                start, end = _week_dates(_client(), week, week)
+                played = _client().get_player_stats(search=player.strip(), start_date=start, end_date=end, limit=10)
+                actual = {p["id"]: p for p in played if p["games_played"] > 0}
+            rows = []
+            for pid, entry in matches.items():
+                games = len(entry["fixtures"])
+                if pid in actual:
+                    summary = _prediction_summary(entry, pid, actual[pid]["minutes"] / games)
+                    rows.append({**summary, "actual_points": actual[pid]["points"], "actual_minutes": actual[pid]["minutes"]})
+                else:
+                    rows.append(_prediction_summary(entry, pid, minutes if minutes is not None else FULL_GAME_MINUTES))
+            return {**result, "players": rows}
+
+        used = minutes if minutes is not None else FULL_GAME_MINUTES
+        rows = [_prediction_summary(entry, pid, used) for pid, entry in data["players"].items()]
+        return {**result, "top_predicted": sorted(rows, key=lambda p: p["predicted_points"], reverse=True)[:20]}
     except Exception as e:
         return {"error": str(e)}
 

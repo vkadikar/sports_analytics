@@ -19,10 +19,13 @@ pytest.importorskip("sklearn")
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from fantrax_wrapper import FantasyScoringEngine, with_predictions
+from fantrax_wrapper import FantasyScoringEngine, player_prediction, points_at_minutes, with_predictions
 from fantrax_wrapper import predictions as predictions_module
 from fpts_model import TARGET_STATS, FptsModel, build_features, feature_columns
+from sklearn.ensemble import RandomForestRegressor
 from fpts_model import data as data_module
+from fpts_model import evaluate as evaluate_module
+from fpts_model import model as model_module
 from fpts_model import train as train_module
 from fpts_model.data import LEAGUE_TZ
 
@@ -102,9 +105,9 @@ class TestBuildFeatures(unittest.TestCase):
         features = build_features(logs, GW_DATES)
         rows = features[features["player_id"] == "AAAF"].set_index("matchweek")
         goals = logs[logs["player_id"] == "AAAF"].sort_values("Date")["G"].astype(int).tolist()
-        self.assertEqual(rows.loc[1, "g_per_90_gameweek"], 0)
-        self.assertAlmostEqual(rows.loc[3, "g_per_90_gameweek"], round(goals[1] / 90, 3) * 90)
-        self.assertAlmostEqual(rows.loc[3, "g_per_90_season"], round(sum(goals[:2]) / 180, 3) * 90)
+        self.assertEqual(rows.loc[1, "g_per_min_gameweek"], 0)
+        self.assertAlmostEqual(rows.loc[3, "g_per_min_gameweek"], goals[1] / 90)
+        self.assertAlmostEqual(rows.loc[3, "g_per_min_season"], sum(goals[:2]) / 180)
 
     def test_standings_use_earlier_gameweeks_only(self):
         features = build_features(make_game_logs(), GW_DATES)
@@ -116,7 +119,7 @@ class TestBuildFeatures(unittest.TestCase):
     def test_first_meeting_with_an_opponent_has_no_positional_average(self):
         features = build_features(make_game_logs(), GW_DATES)
         week_one = features[features["matchweek"] == 1]
-        self.assertTrue((week_one["positional_avg_kp_per_90_season"] == 0).all())
+        self.assertTrue((week_one["positional_avg_kp_per_min_season"] == 0).all())
 
     def test_every_feature_ignores_its_own_and_later_gameweeks(self):
         """The leak check: change all results from week 3 on, and features through week 3 must not move."""
@@ -147,8 +150,8 @@ class TestBuildFeatures(unittest.TestCase):
         features = build_features(pd.concat([logs, first, second], ignore_index=True), GW_DATES)
         rows = features[(features["player_id"] == "AAAF") & (features["matchweek"] == 5)]
         self.assertEqual(len(rows), 2)
-        self.assertEqual(rows["kp_per_90_season"].nunique(), 1)
-        self.assertEqual(rows["kp_per_90_gameweek"].nunique(), 1)
+        self.assertEqual(rows["kp_per_min_season"].nunique(), 1)
+        self.assertEqual(rows["kp_per_min_gameweek"].nunique(), 1)
 
     def test_rejects_multiple_seasons(self):
         logs = make_game_logs()
@@ -175,14 +178,54 @@ class TestModel(unittest.TestCase):
     def test_predicts_every_player_with_a_fixture(self):
         predictions = self.model.predict(self.features)
         self.assertEqual(set(predictions["player_id"]), set(make_pool()["player_id"]))
-        self.assertTrue(predictions[TARGET_STATS + ["fpts_pred"]].notna().all().all())
+        self.assertTrue(predictions[TARGET_STATS].notna().all().all())
 
-    def test_points_follow_the_scoring_rules(self):
-        engine = FantasyScoringEngine()
+    def test_predictions_are_rates_not_game_totals(self):
+        """Every game in the fixture is 90 minutes, so rates average the game totals over 90."""
         predictions = self.model.predict(self.features)
-        for _, row in predictions.iterrows():
-            self.assertEqual(row["fpts_pred"], engine.calculate_fantasy_score(row[TARGET_STATS].to_dict(), row["position"]))
-        self.assertGreater(predictions["fpts_pred"].nunique(), 1)
+        self.assertLess(predictions["kp"].max(), make_game_logs()["KP"].astype(int).max() / 90 + 1e-9)
+        self.assertGreater(predictions["kp"].max(), 0)
+
+    def fit_calls(self, logs):
+        """The rows, targets and weights each forest was fitted with."""
+        calls = {}
+
+        class Recording(RandomForestRegressor):
+            def fit(self, X, y, sample_weight=None):
+                calls[len(calls)] = {"X": X, "y": y, "weight": sample_weight}
+                return super().fit(X, y, sample_weight=sample_weight)
+
+        with patch.object(model_module, "RandomForestRegressor", Recording):
+            FptsModel.train(build_features(logs, GW_DATES), UPCOMING_WEEK, n_estimators=2)
+        return {stat: calls[i] for i, stat in enumerate(TARGET_STATS)}
+
+    def test_stat_forests_learn_per_minute_weighted_by_minutes(self):
+        logs = make_game_logs()
+        logs.loc[logs["Team"] == "AAA", "Min"] = "30"
+        logs["KP"] = "3"
+        call = self.fit_calls(logs)["kp"]
+        self.assertEqual(set(call["weight"]), {30, 90})
+        self.assertTrue(np.allclose(call["y"] * call["weight"], 3))
+
+    def test_clean_sheet_forest_learns_a_per_game_chance_from_60_minute_games(self):
+        logs = make_game_logs()
+        logs["CS"] = "1"
+        logs.loc[logs["Team"] == "AAA", "Min"] = "59"
+        logs.loc[logs["Team"] == "BBB", "Min"] = "60"
+        call = self.fit_calls(logs)["cs"]
+        self.assertIsNone(call["weight"])
+        self.assertTrue((call["y"] == 1).all())
+        self.assertEqual(len(call["y"]), (logs["Min"].astype(int) >= 60).sum())
+
+    def test_short_appearances_do_not_inflate_a_predicted_rate(self):
+        """One big cameo among 90-minute games barely moves the rate, because it carries little weight."""
+        logs = make_game_logs()
+        logs["KP"] = "9"
+        cameo = logs.index[(logs["player_id"] == "AAAF") & (logs["Date"] == week_day(1))]
+        logs.loc[cameo, ["Min", "KP"]] = ["1", "5"]
+        features = build_features(pd.concat([logs, train_module.fixture_rows(logs, make_pool(), make_fixtures(), UPCOMING_WEEK)], ignore_index=True), GW_DATES)
+        predictions = FptsModel.train(features, UPCOMING_WEEK, n_estimators=50).predict(features).set_index("player_id")
+        self.assertLess(predictions.loc["AAAF", "kp"], 0.5)
 
     def test_training_excludes_the_predicted_week(self):
         predicted_week_stats = self.features[self.features["matchweek"] == UPCOMING_WEEK]
@@ -200,7 +243,6 @@ class TestModel(unittest.TestCase):
         pd.testing.assert_frame_equal(self.model.predict(self.features), loaded.predict(self.features))
 
     def test_json_forest_matches_scikit_learn(self):
-        from sklearn.ensemble import RandomForestRegressor
         from fpts_model.model import JsonForest
 
         encoded = self.model._encode(self.features)
@@ -342,13 +384,13 @@ class TestWeeklyTraining(unittest.TestCase):
         self.assertEqual(document["training_games"], 32)
         self.assertEqual(set(document["players"]), set(make_pool()["player_id"]))
         self.assertEqual(document["players"]["AAAF"]["fixtures"], ["BBB"])
-        self.assertEqual(set(document["players"]["NEW"]["by_position"]), {"M", "F"})
+        self.assertEqual(set(document["players"]["NEW"]["scoring"]), {"M", "F"})
 
         # Later results must not change what week 3's model predicts
         changed = logs.copy()
         changed.loc[changed["Date"] >= week_day(3), "G"] = "9"
         train_module.train_week(3, changed, make_pool(), make_fixtures(), GW_DATES, 2026, n_estimators=3)
-        self.assertEqual(predictions_module.load_week_predictions(3)["players"]["AAAF"]["fpts"], document["players"]["AAAF"]["fpts"])
+        self.assertEqual(predictions_module.load_week_predictions(3)["players"]["AAAF"]["scoring"], document["players"]["AAAF"]["scoring"])
 
     def test_rebuilt_model_matches_the_original_and_leaves_predictions_alone(self):
         logs = make_game_logs(through_week=UPCOMING_WEEK)
@@ -362,18 +404,60 @@ class TestWeeklyTraining(unittest.TestCase):
         self.assertEqual(train_module.model_path(3).read_bytes(), original)
         self.assertEqual(predictions_module.predictions_path(3).read_bytes(), predictions)
 
+    def test_entries_score_rates_and_clean_sheets_by_position(self):
+        rates = {stat: 0.0 for stat in TARGET_STATS}
+        rates.update(g=0.01, cs=0.5)
+        predictions = pd.DataFrame([{"player_id": "NEW", "team": "AAA", "position": "M", "fixtures": ["BBB"], **rates}])
+        entry = train_module.prediction_entries(predictions, make_pool())["NEW"]
+        rules = FantasyScoringEngine().rules
+        self.assertEqual(entry["scoring"]["M"], {"per_min": round(rules["M"]["G"] * 0.01, 5), "clean_sheet": rules["M"]["CS"] * 0.5})
+        self.assertEqual(entry["scoring"]["F"], {"per_min": round(rules["F"]["G"] * 0.01, 5), "clean_sheet": 0})
+
+    def test_points_scale_with_minutes_and_clean_sheets_start_at_60(self):
+        prediction = {"per_min": 0.1, "clean_sheet": 2.0, "games": 1}
+        self.assertEqual(points_at_minutes(prediction, 0), 0)
+        self.assertEqual(points_at_minutes(prediction, 45), 4.5)
+        self.assertEqual(points_at_minutes(prediction, 59), 5.9)
+        self.assertEqual(points_at_minutes(prediction, 60), 8.0)
+        self.assertEqual(points_at_minutes(prediction, 90), 11.0)
+        self.assertEqual(points_at_minutes({**prediction, "games": 2}, 90), 22.0)
+
     def test_lineups_get_predictions_at_their_slot(self):
+        scoring = {"M": {"per_min": 0.1, "clean_sheet": 1.0}, "F": {"per_min": 0.2, "clean_sheet": 0}}
         predictions_module.predictions_path(4).write_text(json.dumps({"season": 2026, "players": {
-            "a": {"fpts": 5.0}, "b": {"fpts": 6.0, "by_position": {"M": 6.0, "F": 7.5}},
+            "a": {"position": "M", "fixtures": ["X"], "scoring": {"M": scoring["M"]}},
+            "b": {"position": "M", "fixtures": ["X", "Y"], "scoring": scoring},
         }}))
         lineup = {
-            "starters": [{"id": "a", "slot": "D"}, {"id": "b", "slot": "F"}, {"id": "c", "slot": "M"}],
-            "bench": [], "injured_reserve": [],
+            "starters": [{"id": "a", "slot": "M"}, {"id": "b", "slot": "F"}, {"id": "c", "slot": "M"}],
+            "bench": [{"id": "b", "slot": ""}], "injured_reserve": [],
         }
         result = with_predictions(lineup, 4)
-        self.assertEqual([p["predicted"] for p in result["starters"]], [5.0, 7.5, None])
-        self.assertNotIn("predicted", lineup["starters"][0])
+        self.assertEqual(result["starters"][0]["prediction"], {"per_min": 0.1, "clean_sheet": 1.0, "games": 1})
+        self.assertEqual(result["starters"][1]["prediction"], {"per_min": 0.2, "clean_sheet": 0, "games": 2})
+        self.assertIsNone(result["starters"][2]["prediction"])
+        self.assertEqual(result["bench"][0]["prediction"]["per_min"], 0.1)
+        self.assertNotIn("prediction", lineup["starters"][0])
         self.assertIs(with_predictions(lineup, 9), lineup)
+
+    def test_errors_use_actual_minutes_and_skip_players_who_did_not_play(self):
+        predictions_module.predictions_path(2).write_text(json.dumps({"season": 2026, "players": {
+            "a": {"position": "D", "fixtures": ["X"], "scoring": {"D": {"per_min": 0.1, "clean_sheet": 3.0}}},
+            "b": {"position": "D", "fixtures": ["X"], "scoring": {"D": {"per_min": 0.1, "clean_sheet": 3.0}}},
+            "new": {"position": "D", "fixtures": ["X"], "scoring": {"D": {"per_min": 0.1, "clean_sheet": 3.0}}},
+        }}))
+        games = pd.DataFrame([
+            {"player_id": "a", "week": 1, "position": "D", "Min": 90, "actual": 9.0},
+            {"player_id": "b", "week": 1, "position": "D", "Min": 90, "actual": 9.0},
+            {"player_id": "a", "week": 2, "position": "D", "Min": 30, "actual": 2.0},
+            {"player_id": "b", "week": 2, "position": "D", "Min": 0, "actual": 0.0},
+            {"player_id": "new", "week": 2, "position": "D", "Min": 90, "actual": 5.0},
+        ])
+        errors = evaluate_module.prediction_errors(games, [2])
+        self.assertEqual(len(errors), 1)
+        self.assertEqual(errors["model"].item(), 3.0)  # 30 minutes: no clean sheet
+        self.assertEqual(errors["baseline"].item(), 3.0)
+        self.assertEqual(errors["actual"].item(), 2.0)
 
 
 if __name__ == "__main__":

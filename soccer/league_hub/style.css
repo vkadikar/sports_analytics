@@ -584,7 +584,15 @@ tr.zone-champ .pos::before { background: var(--accent); }
 .lu-row .meta { font-size: 12px; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .lu-row .pts-cell { display: block; text-align: right; min-width: 44px; }
 .lu-row .pts { display: block; font-weight: 800; font-size: 15px; font-variant-numeric: tabular-nums; text-align: right; }
-.lu-row .pred { display: block; font-size: 11px; font-weight: 500; color: var(--text-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.lu-row .pred { display: block; margin-left: auto; padding: 0; border: 0; background: none; cursor: pointer; font: inherit; font-size: 11px; font-weight: 500; color: var(--text-3); font-variant-numeric: tabular-nums; white-space: nowrap; text-underline-offset: 2px; }
+.lu-row .pred:hover, .lu-row .pred[aria-expanded="true"] { color: var(--text-2); text-decoration: underline dotted; }
+.lu-row .pred.adjusted { color: var(--accent-text); }
+.pred-picker { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 4px; padding: 2px 0 8px; }
+.pred-picker[hidden] { display: none; }
+.pred-picker-label { margin-right: 4px; font-size: 11px; color: var(--text-3); }
+.pred-picker button { padding: 3px 7px; border: 1px solid var(--border); border-radius: 6px; background: none; cursor: pointer; font: inherit; font-size: 11px; font-variant-numeric: tabular-nums; color: var(--text-2); }
+.pred-picker button:hover { background: var(--surface-2); }
+.pred-picker button[aria-pressed="true"] { border-color: var(--accent-text); color: var(--accent-text); }
 .lu-row .pts.neg { color: var(--bad-text); }
 .lu-row.bench .nm, .lu-row.bench .pts { color: var(--text-2); font-weight: 500; }
 .lu-row .star { color: var(--cup); margin-left: 4px; }

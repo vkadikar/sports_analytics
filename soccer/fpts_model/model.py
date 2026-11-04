@@ -1,8 +1,14 @@
 """
 Fantasy points model.
 
-Fits one random forest per box score stat on all games before a gameweek, predicts each
-player's stat line for that gameweek, then scores the line with the league's scoring rules.
+Fits one random forest per box score stat on all games before a gameweek. Each forest predicts how
+much of that stat a player accumulates per minute, so a prediction can be scaled to any number of
+minutes. Games are weighted by minutes played, which stops short cameos dominating: one key pass in a
+5-minute appearance would otherwise count as much as a full game's rate.
+
+Clean sheets are the exception. They only count from CLEAN_SHEET_MINUTES on, so that forest predicts
+the chance of one per game, from games that reached that mark.
+
 Saved models are plain JSON and predict exactly what the fitted forests do.
 """
 
@@ -12,13 +18,14 @@ from typing import Any, Dict, List, Union
 
 import numpy as np
 import pandas as pd
-from fantrax_wrapper.scoring import FantasyScoringEngine
+from fantrax_wrapper.predictions import CLEAN_SHEET_MINUTES
 from sklearn.ensemble import RandomForestRegressor
 
 from .features import CATEGORICAL_FEATURES, TARGET_STATS, feature_columns
 
 N_ESTIMATORS = 300
 RANDOM_STATE = 42
+CLEAN_SHEET_STAT = "cs"
 
 
 class JsonForest:
@@ -90,7 +97,12 @@ class FptsModel:
 
         for stat in TARGET_STATS:
             forest = RandomForestRegressor(n_estimators=n_estimators, random_state=RANDOM_STATE, n_jobs=-1)
-            forest.fit(train[feature_columns(stat)], train[stat])
+            if stat == CLEAN_SHEET_STAT:
+                games = train[train["minutes"] >= CLEAN_SHEET_MINUTES]
+                forest.fit(games[feature_columns(stat)], games[stat])
+            else:
+                games = train[train["minutes"] > 0]
+                forest.fit(games[feature_columns(stat)], games[stat] / games["minutes"], sample_weight=games["minutes"])
             model.forests[stat] = JsonForest.from_sklearn(forest)
         return model
 
@@ -103,13 +115,14 @@ class FptsModel:
         return encoded
 
     def predict(self, features: pd.DataFrame) -> pd.DataFrame:
-        """Predicts each player's stat line and fantasy points for the model's gameweek.
+        """Predicts each player's per-minute stat rates and clean sheet chance for the model's gameweek.
 
         Args:
             features: Feature table from build_features, including the gameweek's fixtures.
 
         Returns:
-            DataFrame with one row per player, the predicted stats summed over their fixtures, and fpts_pred.
+            DataFrame with one row per player, a column per stat averaged over their fixtures (per minute,
+            except cs, which is the chance per game), and the fixtures themselves.
         """
         in_week = features["matchweek"] == self.week
         if not in_week.any():
@@ -121,17 +134,11 @@ class FptsModel:
             f"@{opp}" if away else opp for opp, away in zip(features.loc[in_week, "opp"], features.loc[in_week, "is_away"])
         ]
         for stat, forest in self.forests.items():
-            predictions[stat] = np.round(forest.predict(encoded[feature_columns(stat)]), 2)
+            predictions[stat] = forest.predict(encoded[feature_columns(stat)])
 
-        per_player = predictions.groupby(["player_id", "team", "position"], as_index=False).agg(
-            {"fixtures": list, **{stat: "sum" for stat in self.forests}}
+        return predictions.groupby(["player_id", "team", "position"], as_index=False).agg(
+            {"fixtures": list, **{stat: "mean" for stat in self.forests}}
         )
-        engine = FantasyScoringEngine()
-        per_player["fpts_pred"] = [
-            engine.calculate_fantasy_score(line, position)
-            for line, position in zip(per_player[list(self.forests)].to_dict("records"), per_player["position"])
-        ]
-        return per_player
 
     def save(self, path: Union[str, Path], metadata: Dict[str, Any]) -> None:
         """Writes the model as JSON, with every tree of every forest."""
