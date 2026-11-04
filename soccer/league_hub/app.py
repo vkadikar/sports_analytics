@@ -269,7 +269,7 @@ def get_lineups(week: int):
     try:
         client = get_client()
         lineups = {
-            t: with_predictions(cached(("lineup", week, t), ttl, lambda t=t: client.get_lineup(t, week)), week)
+            t: with_predictions(cached(("lineup", week, t), ttl, lambda t=t: client.get_lineup(t, week)), week, stats=True)
             for t in team_ids
         }
         return jsonify({"week": week, "final": week in _completed_gws, "lineups": lineups})

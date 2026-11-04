@@ -1110,12 +1110,12 @@ const PRED_NOTES = {
     final: "Pred uses actual minutes. Open a match to change it.",
   },
   lineup: {
-    upcoming: "Predictions assume each player plays 90 minutes. Click a prediction to change a player's minutes.",
-    final: "Predictions use the minutes each player actually played. Click a prediction to try different minutes.",
+    upcoming: "Predictions assume each player plays 90 minutes. Click a prediction to see its stats and change the minutes.",
+    final: "Predictions use the minutes each player actually played. Click a prediction to see its stats and try different minutes.",
   },
   board: {
-    upcoming: "Predictions assume 90 minutes. Tap one to change it.",
-    final: "Predictions use actual minutes. Tap one to change it.",
+    upcoming: "Predictions assume 90 minutes. Tap one for its stats or to change it.",
+    final: "Predictions use actual minutes. Tap one for its stats or to change it.",
   },
 };
 function predictionNote(gw, final, kind) {
@@ -1155,13 +1155,48 @@ function predictionControl(p, gw, final, compact = false) {
   const picked = predMinutesPicked.get(key);
   const minutes = picked ?? predDefaultMinutes(p, final);
   const adjusted = picked != null && picked !== predDefaultMinutes(p, final);
-  return `<button type="button" class="pred ${adjusted ? "adjusted" : ""}" ${compact ? "data-compact" : ""} data-pred="${esc(key)}" data-per-min="${pr.per_min}" data-clean-sheet="${pr.clean_sheet}" data-games="${pr.games}" data-default="${predDefaultMinutes(p, final)}" aria-expanded="false" title="${pr.basis === "player" ? "Predicted points at these minutes." : "No minutes this season, so this is how the position has done" + (pr.basis === "position_vs_opponent" ? " against this opponent." : " overall.")} Click to change the minutes.">${predLabel(pr, minutes, compact, adjusted)}</button>`;
+  return `<button type="button" class="pred ${adjusted ? "adjusted" : ""}" ${compact ? "data-compact" : ""} data-pred="${esc(key)}" aria-expanded="false" title="${pr.basis === "player" ? "Predicted points at these minutes." : "No minutes this season, so this is how the position has done" + (pr.basis === "position_vs_opponent" ? " against this opponent." : " overall.")} Click for the stats behind it and to change the minutes.">${predLabel(pr, minutes, compact, adjusted)}</button>`;
 }
+// The stats behind a prediction at these minutes, biggest points first. Stats the position doesn't score are left out.
+function predictedStatRows(pr, minutesPerGame) {
+  const minutes = minutesPerGame * pr.games;
+  return (D.scoringMatrix[pr.position] || []).map(rule => {
+    const abbr = statAbbr(rule.stat);
+    const name = rule.stat.replace(/\s*\([^)]*\)/, "");
+    if (abbr !== "CS") {
+      const count = (pr.per_minute[abbr.toLowerCase()] || 0) * minutes;
+      return { name, count, points: count * rule.pts };
+    }
+    const earned = minutesPerGame >= CLEAN_SHEET_MINUTES;
+    return { name, count: earned ? pr.clean_sheet_chance * pr.games : 0, points: earned ? pr.clean_sheet * pr.games : 0, needsMinutes: !earned };
+  }).filter(row => row.needsMinutes || Math.abs(row.points) >= 0.005)
+    .sort((a, b) => Math.abs(b.points) - Math.abs(a.points));
+}
+function predictionBreakdown(pr, minutesPerGame) {
+  if (!minutesPerGame) return `<p class="pred-breakdown-note">No minutes, so no points. Pick some minutes to see the stats.</p>`;
+  const signed = n => `${n > 0 ? "+" : n < 0 ? "−" : ""}${fmt(Math.abs(n), 2)}`;
+  const rows = predictedStatRows(pr, minutesPerGame).map(row => `<tr>
+    <th scope="row">${esc(row.name)}${row.needsMinutes ? ` <small>needs ${CLEAN_SHEET_MINUTES}′</small>` : ""}</th>
+    <td>${fmt(row.count, 2)}</td>
+    <td class="${row.points < 0 ? "neg" : ""}">${signed(row.points)}</td>
+  </tr>`).join("");
+  const basis = pr.basis === "player" ? "" : `<p class="pred-breakdown-note">No minutes this season, so this is how the position has done${pr.basis === "position_vs_opponent" ? " against this opponent" : " overall"}.</p>`;
+  return `<table>
+    <thead><tr><th scope="col">Predicted at ${fmt(minutesPerGame * pr.games)}′</th><th scope="col">Stat</th><th scope="col">Pts</th></tr></thead>
+    <tbody>${rows}</tbody>
+    <tfoot><tr><th scope="row" colspan="2">Total</th><td>${fmt(predictedPoints(pr, minutesPerGame), 1)}</td></tr></tfoot>
+  </table>${basis}`;
+}
+
+// What the click handler needs for each open-able prediction, by gameweek and player.
+const predRendered = new Map();
+
 function predictionPicker(p, gw, final, label = "Minutes") {
   const key = `${gw}:${p.id}`;
   const picked = predMinutesPicked.get(key);
+  predRendered.set(key, { pr: p.prediction, fallback: predDefaultMinutes(p, final) });
   const option = (value, label) => `<button type="button" data-pred-minutes="${value}" aria-pressed="${(picked ?? null) === (value === "default" ? null : value)}">${label}</button>`;
-  return `<div class="pred-picker" data-pred-picker="${esc(key)}" hidden><span class="pred-picker-label">${esc(label)}</span>${PRED_MINUTE_OPTIONS.map(m => option(m, `${m}`)).join("")}${option("default", final ? "Actual" : "Reset")}</div>`;
+  return `<div class="pred-picker" data-pred-picker="${esc(key)}" hidden><span class="pred-picker-label">${esc(label)}</span>${PRED_MINUTE_OPTIONS.map(m => option(m, `${m}`)).join("")}${option("default", final ? "Actual" : "Reset")}<div class="pred-breakdown" data-pred-breakdown>${predictionBreakdown(p.prediction, picked ?? predDefaultMinutes(p, final))}</div></div>`;
 }
 
 document.addEventListener("click", e => {
@@ -1182,15 +1217,13 @@ document.addEventListener("click", e => {
   const button = document.querySelector(`[data-pred="${CSS.escape(key)}"]`);
   const value = choice.dataset.predMinutes;
   if (value === "default") predMinutesPicked.delete(key); else predMinutesPicked.set(key, +value);
-  const { perMin, cleanSheet, games, default: fallback } = button.dataset;
-  const pr = { per_min: +perMin, clean_sheet: +cleanSheet, games: +games };
-  const adjusted = value !== "default" && +value !== +fallback;
-  button.textContent = predLabel(pr, value === "default" ? +fallback : +value, "compact" in button.dataset, adjusted);
+  const { pr, fallback } = predRendered.get(key);
+  const minutes = value === "default" ? fallback : +value;
+  const adjusted = value !== "default" && +value !== fallback;
+  button.textContent = predLabel(pr, minutes, "compact" in button.dataset, adjusted);
   button.classList.toggle("adjusted", adjusted);
   picker.querySelectorAll("[data-pred-minutes]").forEach(el => el.setAttribute("aria-pressed", String(el === choice && value !== "default")));
-  picker.hidden = true;
-  button.setAttribute("aria-expanded", "false");
-  button.focus();
+  picker.querySelector("[data-pred-breakdown]").innerHTML = predictionBreakdown(pr, minutes);
   refreshPredictedTotals();
 });
 
