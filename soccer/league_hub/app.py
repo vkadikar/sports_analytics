@@ -37,6 +37,7 @@ try:
         calculate_median_standings,
         calculate_optimal_standings,
         compare_standings_vs_optimal,
+        available_prediction_weeks,
         with_predictions,
     )
     FANTRAX_SDK_AVAILABLE = True
@@ -272,6 +273,28 @@ def get_lineups(week: int):
             for t in team_ids
         }
         return jsonify({"week": week, "final": week in _completed_gws, "lineups": lineups})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 502
+
+
+@app.route("/api/predicted-totals/<int:week>", methods=["GET"])
+def get_predicted_totals(week: int):
+    """Each team's starters with their predictions, for working out predicted team totals on match cards:
+    /api/predicted-totals/7?teams=id1,id2. Weeks without predictions return no teams, without calling Fantrax."""
+    if not FANTRAX_SDK_AVAILABLE:
+        return jsonify({"error": "Fantrax SDK unavailable"}), 500
+    if week not in available_prediction_weeks():
+        return jsonify({"week": week, "teams": {}})
+    team_ids = [t for t in request.args.get("teams", "").split(",") if t][:20]
+    refresh_data_if_stale()
+    ttl = LINEUP_TTL_FINAL_SECONDS if week in _completed_gws else LINEUP_TTL_LIVE_SECONDS
+    try:
+        client = get_client()
+        teams = {}
+        for t in team_ids:
+            lineup = with_predictions(cached(("lineup", week, t), ttl, lambda t=t: client.get_lineup(t, week)), week)
+            teams[t] = [{key: p.get(key) for key in ("id", "minutes", "prediction")} for p in lineup["starters"]]
+        return jsonify({"week": week, "teams": teams})
     except Exception as e:
         return jsonify({"error": str(e)}), 502
 

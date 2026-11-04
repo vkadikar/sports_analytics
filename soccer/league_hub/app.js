@@ -248,6 +248,7 @@ function rerender() {
   const el = $("#page-" + state.page);
   el.innerHTML = RENDERERS[state.page]();
   afterRender[state.page] && afterRender[state.page](el);
+  loadPredictedTotals();
 }
 const afterRender = {};
 
@@ -389,6 +390,7 @@ function compactResult(m) {
     </div>
     <div style="text-align:center;min-width:92px">
       ${played ? `<span class="display num" style="font-size:20px">${fmtPts(m.homeScore)} – ${fmtPts(m.awayScore)}</span>` : `<span class="vs-chip">VS</span>`}
+      ${predictedScoreline(m)}
       ${m.status === "Live" ? `<div style="font-size:11px;font-weight:700;margin-top:2px">${LIVE_LABEL}</div>` : ""}
       ${c.cls ? `<div class="chip ${c.cls}" style="padding:1px 7px;font-size:10.5px;margin-top:3px">${esc(c.label)}</div>` : ""}
     </div>
@@ -595,6 +597,7 @@ RENDERERS.matches = () => {
       ], state.comp)}
       <span class="dim" style="font-size:13px"><span style="color:var(--accent-text)">●</span> played &nbsp; <span style="color:var(--cl)">●</span> CL &nbsp; <span style="color:var(--cup)">●</span> Cup</span>
     </div>
+    ${predictionNote(gw, gwState(gw) === "final", "cards")}
     <div class="match-groups">
       ${list.length ? order.filter(k => groups[k]).map(k => `
         <div><h3 class="match-group-title">${esc(compMeta(k).label)}${groups[k][0].tournamentStage ? " · " + esc(groups[k][0].tournamentStage) : ""}</h3>
@@ -631,7 +634,7 @@ function matchCard(m) {
   const c = compMeta(m.competition);
   const h = +m.homeScore, a = +m.awayScore;
   const side = (name, team, score, res) => `
-    <div class="match-side ${res}">${clubCell(name, team, { link: false })}<span class="score num">${played ? fmtPts(score) : "–"}</span></div>`;
+    <div class="match-side ${res}">${clubCell(name, team, { link: false })}<span class="score-cell"><span class="score num">${played ? fmtPts(score) : "–"}</span>${predictedTotalTag(m.gw, teamIdByName[team], final)}</span></div>`;
   const hRes = final ? (h > a ? "win" : h < a ? "lose" : "") : "";
   const aRes = final ? (a > h ? "win" : a < h ? "lose" : "") : "";
   const total = h + a || 1;
@@ -972,12 +975,68 @@ function predLabel(pr, minutesPerGame) {
 // A finished gameweek defaults to the minutes actually played, anything else to a full game.
 function predDefaultMinutes(p, final) { return final ? p.minutes / p.prediction.games : 90; }
 
+// Predicted team totals: each team's starters by gameweek, added up with whatever minutes have been picked.
+const predictedStarters = {};
+const predictedLoads = {};
+
+function teamPredictedTotal(gw, teamId, final) {
+  const starters = (predictedStarters[gw] || {})[teamId] || [];
+  const predicted = starters.filter(p => p.prediction);
+  if (!predicted.length) return null;
+  return predicted.reduce((total, p) => total + predictedPoints(p.prediction, predMinutesPicked.get(`${gw}:${p.id}`) ?? predDefaultMinutes(p, final)), 0);
+}
+function predictedTotalTag(gw, teamId, final, plain = false) {
+  return `<span class="pred-total" data-pred-total="${gw}|${esc(teamId || "")}" data-final="${final ? 1 : 0}" ${plain ? "data-plain" : ""}></span>`;
+}
+function predictedScoreline(m) {
+  const final = isFinal(m);
+  return `<small class="lu-pred" hidden>${predictedTotalTag(m.gw, teamIdByName[m.homeTeam], final, true)}${predictedTotalTag(m.gw, teamIdByName[m.awayTeam], final, true)}</small>`;
+}
+const PRED_NOTES = {
+  cards: {
+    upcoming: "Predicted totals assume every starter plays 90 minutes. Open a match and click any prediction to change a player's minutes.",
+    final: "Predicted totals use the minutes each player actually played. Open a match and click any prediction to try different minutes.",
+  },
+  lineup: {
+    upcoming: "Predictions assume each player plays 90 minutes. Click a prediction to change a player's minutes.",
+    final: "Predictions use the minutes each player actually played. Click a prediction to try different minutes.",
+  },
+};
+function predictionNote(gw, final, kind) {
+  return `<p class="pred-note" data-pred-note="${gw}" hidden>${PRED_NOTES[kind][final ? "final" : "upcoming"]}</p>`;
+}
+function refreshPredictedTotals() {
+  $$("[data-pred-total]").forEach(el => {
+    const [gw, teamId] = el.dataset.predTotal.split("|");
+    const total = teamPredictedTotal(gw, teamId, el.dataset.final === "1");
+    el.textContent = total == null ? "" : `${"plain" in el.dataset ? "" : "Pred "}${fmt(total, 1)}`;
+  });
+  $$(".lu-pred").forEach(el => { el.hidden = [...el.querySelectorAll("[data-pred-total]")].some(t => !t.textContent); });
+  $$("[data-pred-note]").forEach(el => {
+    const hasPredictions = Object.values(predictedStarters[el.dataset.predNote] || {}).some(starters => starters.some(p => p.prediction));
+    el.hidden = !hasPredictions;
+    const box = el.closest("[data-pred-only]");
+    if (box) box.hidden = !hasPredictions;
+  });
+}
+function loadPredictedTotals() {
+  const gws = new Set([...$$("[data-pred-total]")].map(el => el.dataset.predTotal.split("|")[0]));
+  const teams = D.managers.map(m => encodeURIComponent(m.teamId)).join(",");
+  gws.forEach(gw => {
+    predictedLoads[gw] = predictedLoads[gw] || fetchJson(`/api/predicted-totals/${gw}?teams=${teams}`)
+      .then(data => { predictedStarters[gw] = { ...data.teams, ...predictedStarters[gw] }; })
+      .catch(() => {}); // the cards still work without totals
+    predictedLoads[gw].then(refreshPredictedTotals);
+  });
+  refreshPredictedTotals();
+}
+
 function predictionControl(p, gw, final) {
   const pr = p.prediction;
   const key = `${gw}:${p.id}`;
   const picked = predMinutesPicked.get(key);
   const minutes = picked ?? predDefaultMinutes(p, final);
-  return `<button type="button" class="pred ${picked != null ? "adjusted" : ""}" data-pred="${esc(key)}" data-per-min="${pr.per_min}" data-clean-sheet="${pr.clean_sheet}" data-games="${pr.games}" data-default="${predDefaultMinutes(p, final)}" aria-expanded="false" title="${pr.basis === "player" ? "Predicted points at these minutes." : "No minutes this season, so this is how the position has done" + (pr.basis === "position_vs_opponent" ? " against this opponent." : " overall.")} Click to change the minutes.">${predLabel(pr, minutes)}</button>`;
+  return `<button type="button" class="pred ${picked != null && picked !== predDefaultMinutes(p, final) ? "adjusted" : ""}" data-pred="${esc(key)}" data-per-min="${pr.per_min}" data-clean-sheet="${pr.clean_sheet}" data-games="${pr.games}" data-default="${predDefaultMinutes(p, final)}" aria-expanded="false" title="${pr.basis === "player" ? "Predicted points at these minutes." : "No minutes this season, so this is how the position has done" + (pr.basis === "position_vs_opponent" ? " against this opponent." : " overall.")} Click to change the minutes.">${predLabel(pr, minutes)}</button>`;
 }
 function predictionPicker(p, gw, final) {
   const key = `${gw}:${p.id}`;
@@ -1007,11 +1066,12 @@ document.addEventListener("click", e => {
   const { perMin, cleanSheet, games, default: fallback } = button.dataset;
   const pr = { per_min: +perMin, clean_sheet: +cleanSheet, games: +games };
   button.textContent = predLabel(pr, value === "default" ? +fallback : +value);
-  button.classList.toggle("adjusted", value !== "default");
+  button.classList.toggle("adjusted", value !== "default" && +value !== +fallback);
   picker.querySelectorAll("[data-pred-minutes]").forEach(el => el.setAttribute("aria-pressed", String(el === choice && value !== "default")));
   picker.hidden = true;
   button.setAttribute("aria-expanded", "false");
   button.focus();
+  refreshPredictedTotals();
 });
 
 function playerRow(p, { bench = false, star = false, showSeason = false, gw = null, final = false } = {}) {
@@ -1032,7 +1092,7 @@ function lineupColumn(lu, starId, gw, final) {
   return `<div class="lu-col">
     <div class="lu-section"><span>Starting XI</span><span>Pts</span></div>
     ${lu.starters.map(p => playerRow(p, { star: p.id === starId, gw, final })).join("")}
-    <div class="lu-total"><span>Starters total</span><b class="num">${fmtPts(lu.total)}</b></div>
+    <div class="lu-total"><span>Starters total</span><span class="score-cell"><b class="num">${fmtPts(lu.total)}</b>${predictedTotalTag(gw, lu.team_id, final)}</span></div>
     <div class="lu-section"><span>Bench</span><span>Pts</span></div>
     ${lu.bench.length ? lu.bench.map(p => playerRow(p, { bench: true, gw, final })).join("") : `<div class="dim" style="font-size:13px">Empty</div>`}
     <div class="lu-total"><span>Left on the bench</span><b class="num">${fmtPts(benchPts)}</b></div>
@@ -1050,11 +1110,11 @@ async function openMatchup(m) {
   $("#match-modal").innerHTML = `
     <div class="lu-head">
       ${side(m.home, m.homeTeam, "home")}
-      <div class="lu-score"><b class="num">${hasScore(m) ? `${fmtPts(m.homeScore)} – ${fmtPts(m.awayScore)}` : "vs"}</b><small>GW ${m.gw} · ${esc(m.tournamentStage || c.label)}</small></div>
+      <div class="lu-score"><b class="num">${hasScore(m) ? `${fmtPts(m.homeScore)} – ${fmtPts(m.awayScore)}` : "vs"}</b><small>GW ${m.gw} · ${esc(m.tournamentStage || c.label)}</small>${predictedScoreline(m)}</div>
       ${side(m.away, m.awayTeam, "away")}
       <button class="icon-btn modal-close" data-close aria-label="Close">${ICON.close}</button>
     </div>
-    ${note ? `<div class="lu-note">${note}</div>` : ""}
+    <div class="lu-note" ${note ? "" : "data-pred-only hidden"}>${note}${predictionNote(m.gw, final, "lineup")}</div>
     <div class="lu-grid" id="lu-grid"><div class="lu-col">${skeletonRows(11)}</div><div class="lu-col">${skeletonRows(11)}</div></div>`;
   openOverlay("#match-overlay");
 
@@ -1066,6 +1126,8 @@ async function openMatchup(m) {
     const starters = [...(hl ? hl.starters : []), ...(al ? al.starters : [])];
     const top = starters.length && hasScore(m) ? starters.reduce((b, p) => (p.points > b.points ? p : b)) : null;
     if (grid.isConnected) grid.innerHTML = lineupColumn(hl, top && top.id, m.gw, final) + lineupColumn(al, top && top.id, m.gw, final);
+    predictedStarters[m.gw] = { ...predictedStarters[m.gw], [hId]: hl ? hl.starters : [], [aId]: al ? al.starters : [] };
+    refreshPredictedTotals();
   } catch (err) {
     if (grid.isConnected) grid.innerHTML = `<div class="lu-col" style="grid-column:1/-1"><div class="empty">Couldn't load lineups (${esc(err.message)}).<br>${esc(LINEUP_API_HELP)}</div></div>`;
   }

@@ -587,6 +587,18 @@ tr.zone-champ .pos::before { background: var(--accent); }
 .lu-row .pred { display: block; margin-left: auto; padding: 0; border: 0; background: none; cursor: pointer; font: inherit; font-size: 11px; font-weight: 500; color: var(--text-3); font-variant-numeric: tabular-nums; white-space: nowrap; text-underline-offset: 2px; }
 .lu-row .pred:hover, .lu-row .pred[aria-expanded="true"] { color: var(--text-2); text-decoration: underline dotted; }
 .lu-row .pred.adjusted { color: var(--accent-text); }
+.score-cell { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.pred-total { font-size: 11px; font-weight: 500; color: var(--text-3); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pred-total:empty { display: none; }
+.lu-score small.lu-pred { font-weight: 500; letter-spacing: 0; text-transform: none; }
+.lu-pred { display: block; font-size: 11px; color: var(--text-3); font-variant-numeric: tabular-nums; }
+.lu-pred[hidden] { display: none; }
+.lu-pred::before { content: "Pred "; }
+.lu-pred .pred-total + .pred-total::before { content: " – "; }
+.pred-note { margin: 0 0 16px; font-size: 13px; color: var(--text-2); }
+.pred-note[hidden] { display: none; }
+.lu-note .pred-note { margin: 0; }
+.lu-note[hidden] { display: none; }
 .pred-picker { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 4px; padding: 2px 0 8px; }
 .pred-picker[hidden] { display: none; }
 .pred-picker-label { margin-right: 4px; font-size: 11px; color: var(--text-3); }
