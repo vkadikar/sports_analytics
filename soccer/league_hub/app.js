@@ -969,8 +969,11 @@ const predMinutesPicked = new Map();
 function predictedPoints(pr, minutesPerGame) {
   return pr.games * (pr.per_min * minutesPerGame + (minutesPerGame >= CLEAN_SHEET_MINUTES ? pr.clean_sheet : 0));
 }
-function predLabel(pr, minutesPerGame) {
-  return `Pred ${fmt(predictedPoints(pr, minutesPerGame), 1)} · ${fmt(minutesPerGame * pr.games)}′`;
+function predLabel(pr, minutesPerGame, compact = false, adjusted = false) {
+  const points = fmt(predictedPoints(pr, minutesPerGame), 1);
+  if (!compact) return `Pred ${points} · ${fmt(minutesPerGame * pr.games)}′`;
+  if (adjusted) return `${points} · ${fmt(minutesPerGame * pr.games)}′`;
+  return minutesPerGame ? points : "–";
 }
 // A finished gameweek defaults to the minutes actually played, anything else to a full game.
 function predDefaultMinutes(p, final) { return final ? p.minutes / p.prediction.games : 90; }
@@ -1000,6 +1003,10 @@ const PRED_NOTES = {
   lineup: {
     upcoming: "Predictions assume each player plays 90 minutes. Click a prediction to change a player's minutes.",
     final: "Predictions use the minutes each player actually played. Click a prediction to try different minutes.",
+  },
+  board: {
+    upcoming: "Predictions assume 90 minutes. Tap one to change it.",
+    final: "Predictions use actual minutes. Tap one to change it.",
   },
 };
 function predictionNote(gw, final, kind) {
@@ -1031,18 +1038,19 @@ function loadPredictedTotals() {
   refreshPredictedTotals();
 }
 
-function predictionControl(p, gw, final) {
+function predictionControl(p, gw, final, compact = false) {
   const pr = p.prediction;
   const key = `${gw}:${p.id}`;
   const picked = predMinutesPicked.get(key);
   const minutes = picked ?? predDefaultMinutes(p, final);
-  return `<button type="button" class="pred ${picked != null && picked !== predDefaultMinutes(p, final) ? "adjusted" : ""}" data-pred="${esc(key)}" data-per-min="${pr.per_min}" data-clean-sheet="${pr.clean_sheet}" data-games="${pr.games}" data-default="${predDefaultMinutes(p, final)}" aria-expanded="false" title="${pr.basis === "player" ? "Predicted points at these minutes." : "No minutes this season, so this is how the position has done" + (pr.basis === "position_vs_opponent" ? " against this opponent." : " overall.")} Click to change the minutes.">${predLabel(pr, minutes)}</button>`;
+  const adjusted = picked != null && picked !== predDefaultMinutes(p, final);
+  return `<button type="button" class="pred ${adjusted ? "adjusted" : ""}" ${compact ? "data-compact" : ""} data-pred="${esc(key)}" data-per-min="${pr.per_min}" data-clean-sheet="${pr.clean_sheet}" data-games="${pr.games}" data-default="${predDefaultMinutes(p, final)}" aria-expanded="false" title="${pr.basis === "player" ? "Predicted points at these minutes." : "No minutes this season, so this is how the position has done" + (pr.basis === "position_vs_opponent" ? " against this opponent." : " overall.")} Click to change the minutes.">${predLabel(pr, minutes, compact, adjusted)}</button>`;
 }
-function predictionPicker(p, gw, final) {
+function predictionPicker(p, gw, final, label = "Minutes") {
   const key = `${gw}:${p.id}`;
   const picked = predMinutesPicked.get(key);
   const option = (value, label) => `<button type="button" data-pred-minutes="${value}" aria-pressed="${(picked ?? null) === (value === "default" ? null : value)}">${label}</button>`;
-  return `<div class="pred-picker" data-pred-picker="${esc(key)}" hidden><span class="pred-picker-label">Minutes</span>${PRED_MINUTE_OPTIONS.map(m => option(m, `${m}`)).join("")}${option("default", final ? "Actual" : "Reset")}</div>`;
+  return `<div class="pred-picker" data-pred-picker="${esc(key)}" hidden><span class="pred-picker-label">${esc(label)}</span>${PRED_MINUTE_OPTIONS.map(m => option(m, `${m}`)).join("")}${option("default", final ? "Actual" : "Reset")}</div>`;
 }
 
 document.addEventListener("click", e => {
@@ -1065,8 +1073,9 @@ document.addEventListener("click", e => {
   if (value === "default") predMinutesPicked.delete(key); else predMinutesPicked.set(key, +value);
   const { perMin, cleanSheet, games, default: fallback } = button.dataset;
   const pr = { per_min: +perMin, clean_sheet: +cleanSheet, games: +games };
-  button.textContent = predLabel(pr, value === "default" ? +fallback : +value);
-  button.classList.toggle("adjusted", value !== "default" && +value !== +fallback);
+  const adjusted = value !== "default" && +value !== +fallback;
+  button.textContent = predLabel(pr, value === "default" ? +fallback : +value, "compact" in button.dataset, adjusted);
+  button.classList.toggle("adjusted", adjusted);
   picker.querySelectorAll("[data-pred-minutes]").forEach(el => el.setAttribute("aria-pressed", String(el === choice && value !== "default")));
   picker.hidden = true;
   button.setAttribute("aria-expanded", "false");
@@ -1079,14 +1088,9 @@ function playerRow(p, { bench = false, star = false, showSeason = false, gw = nu
   const meta = showSeason
     ? [p.club, p.positions && p.positions.replace(/,/g, "/"), `${p.games_played} GP`].filter(Boolean).join(" · ")
     : [p.club, p.game && prettyGame(p.game), p.minutes ? `${p.minutes}′` : (p.game ? "DNP" : "")].filter(Boolean).join(" · ");
-  // Side-by-side lineups on a phone only have room for the essentials
-  const played = /\d/.test(String(p.game || "").split(" ")[1] || "");
-  const shortMeta = !p.game ? p.club
-    : played ? [prettyGame(p.game), p.minutes ? `${p.minutes}′` : "DNP"].join(" · ")
-    : [p.club, prettyGame(p.game.split(" ")[0])].join(" · ");
   return `<div class="lu-row ${bench ? "bench" : ""}">
     <span class="pos-tag" title="${esc(POS_NAMES[pos] || pos)}">${esc(pos)}</span>
-    <span style="min-width:0"><span class="nm" style="display:block">${esc(p.name)}${star ? `<span class="star" title="Top scorer in this matchup">★</span>` : ""}</span><span class="meta meta-full" style="display:block">${esc(meta)}</span>${showSeason ? "" : `<span class="meta meta-short">${esc(shortMeta)}</span>`}</span>
+    <span style="min-width:0"><span class="nm" style="display:block">${esc(p.name)}${star ? `<span class="star" title="Top scorer in this matchup">★</span>` : ""}</span><span class="meta" style="display:block">${esc(meta)}</span></span>
     <span class="pts-cell"><span class="pts ${p.points < 0 ? "neg" : ""}">${fmtPts(p.points)}</span>${p.prediction ? predictionControl(p, gw, final) : ""}</span>
   </div>${p.prediction ? predictionPicker(p, gw, final) : ""}`;
 }
@@ -1105,21 +1109,106 @@ function lineupColumn(lu, starId, gw, final) {
   </div>`;
 }
 
+// On a phone, both lineups share one board: players at each position face each other across a centre
+// column, so a matchup can be read row by row without scrolling past one team to reach the other.
+const phoneLayout = window.matchMedia("(max-width: 560px)");
+const POSITION_ORDER = ["G", "D", "M", "F"];
+
+function shortPlayerName(name) {
+  const parts = String(name).trim().split(/\s+/);
+  return parts.length > 1 ? `${parts[0][0]}. ${parts.slice(1).join(" ")}` : parts[0];
+}
+function boardPosition(p) { return p.slot || (p.positions || "").split(",")[0] || ""; }
+
+function pairByPosition(home, away) {
+  const inPosition = (players, pos) => players.filter(p => boardPosition(p) === pos);
+  const others = players => players.filter(p => !POSITION_ORDER.includes(boardPosition(p)));
+  const rows = [];
+  [...POSITION_ORDER, ""].forEach(pos => {
+    const h = pos ? inPosition(home, pos) : others(home);
+    const a = pos ? inPosition(away, pos) : others(away);
+    for (let i = 0; i < Math.max(h.length, a.length); i++) rows.push({ pos, home: h[i], away: a[i] });
+  });
+  return rows;
+}
+
+function boardFixture(p, played) {
+  if (!p.game) return p.club || "";
+  if (!played) return [p.club, prettyGame(p.game.split(" ")[0])].join(" · ");
+  return [prettyGame(p.game), p.minutes ? `${p.minutes}′` : "DNP"].join(" · ");
+}
+
+function boardPlayer(p, side, m, starId) {
+  if (!p) return `<div class="mu-player ${side}"></div>`;
+  const played = hasScore(m), final = isFinal(m);
+  const score = played ? `<span class="mu-pts ${p.points < 0 ? "neg" : ""}">${fmtPts(p.points)}</span>` : "";
+  const prediction = p.prediction ? predictionControl(p, m.gw, final, true) : "";
+  return `<div class="mu-player ${side}">
+    <span class="mu-name">${esc(shortPlayerName(p.name))}${p.id === starId ? `<span class="star" title="Top scorer in this matchup">★</span>` : ""}</span>
+    <span class="mu-value">${played ? score : prediction}</span>
+    <span class="mu-fixture">${esc(boardFixture(p, played))}</span>
+    <span class="mu-value">${played ? prediction : ""}</span>
+  </div>`;
+}
+
+function boardRows(home, away, m, starId) {
+  return pairByPosition(home, away).map(row => {
+    const pickers = [row.home, row.away].filter(p => p && p.prediction).map(p => predictionPicker(p, m.gw, isFinal(m), `${shortPlayerName(p.name)} minutes`)).join("");
+    return `<div class="mu-row">${boardPlayer(row.home, "home", m, starId)}<span class="mu-pos" title="${esc(POS_NAMES[row.pos] || "")}">${esc(row.pos)}</span>${boardPlayer(row.away, "away", m, starId)}</div>${pickers}`;
+  }).join("");
+}
+
+function matchupBoard(hl, al, m, starId) {
+  const home = hl || { starters: [], bench: [], injured_reserve: [] };
+  const away = al || { starters: [], bench: [], injured_reserve: [] };
+  const benchPoints = lineup => fmtPts(lineup.bench.reduce((t, p) => t + p.points, 0));
+  const reserve = home.injured_reserve.length || away.injured_reserve.length;
+  return `<div class="mu-board">
+    ${boardRows(home.starters, away.starters, m, starId)}
+    <div class="mu-section">${hasScore(m) ? `<b class="num">${benchPoints(home)}</b>` : "<b></b>"}<span>Bench</span>${hasScore(m) ? `<b class="num">${benchPoints(away)}</b>` : "<b></b>"}</div>
+    ${boardRows(home.bench, away.bench, m, null)}
+    ${reserve ? `<div class="mu-section"><b></b><span>Injured reserve</span><b></b></div>${boardRows(home.injured_reserve, away.injured_reserve, m, null)}` : ""}
+  </div>`;
+}
+
+function boardTeam(name, team, score, side, m) {
+  const final = isFinal(m), played = hasScore(m);
+  const total = predictedTotalTag(m.gw, teamIdByName[team], final, true);
+  return `<div class="mu-team ${side}">
+    <div class="mu-club">${crest(name, "sm")}<div class="mu-club-text"><div class="team">${esc(team)}</div><div class="mgr">${esc(name)}</div></div></div>
+    <div class="mu-score">${played ? `<b class="num">${fmtPts(score)}</b><small class="mu-pred-total">Pred ${total}</small>` : `<b class="num">${total}</b><small class="mu-pred-total">Predicted</small>`}</div>
+  </div>`;
+}
+
+let openMatch = null;
+phoneLayout.addEventListener("change", () => {
+  if (openMatch && $("#match-overlay").classList.contains("open")) openMatchup(openMatch);
+});
+
 async function openMatchup(m) {
   closeOverlays();
+  openMatch = m;
+  const onPhone = phoneLayout.matches;
   const final = isFinal(m), live = m.status === "Live";
   const hId = teamIdByName[m.homeTeam], aId = teamIdByName[m.awayTeam];
   const c = compMeta(m.competition);
   const side = (name, team, cls) => `<div class="side ${cls}">${cls === "away" ? "" : crest(name, "lg")}<div style="min-width:0"><div class="team">${esc(team)}</div><div class="mgr">${esc(name)}</div></div>${cls === "away" ? crest(name, "lg") : ""}</div>`;
   const note = final ? "" : live ? `${LIVE_LABEL.replace("Live", "Live scores. Points can still change until the gameweek officially ends.")}` : "These are the lineups currently set. Managers can change them until each player's match kicks off.";
-  $("#match-modal").innerHTML = `
+  const boardHead = () => `
+    <div class="mu-head">
+      <div class="mu-title"><span>GW ${m.gw} · ${esc(m.tournamentStage || c.label)}</span><button class="icon-btn modal-close" data-close aria-label="Close">${ICON.close}</button></div>
+      <div class="mu-teams">${boardTeam(m.home, m.homeTeam, m.homeScore, "home", m)}${boardTeam(m.away, m.awayTeam, m.awayScore, "away", m)}</div>
+    </div>`;
+  $("#match-modal").innerHTML = onPhone ? `${boardHead()}
+    <div class="lu-note" ${live ? "" : "data-pred-only hidden"}>${live ? note : ""}${predictionNote(m.gw, final, "board")}</div>
+    <div class="lu-grid" id="lu-grid"><div class="lu-col">${skeletonRows(11)}</div><div class="lu-col">${skeletonRows(11)}</div></div>` : `
     <div class="lu-head">
       ${side(m.home, m.homeTeam, "home")}
       <div class="lu-score"><b class="num">${hasScore(m) ? `${fmtPts(m.homeScore)} – ${fmtPts(m.awayScore)}` : "vs"}</b><small>GW ${m.gw} · ${esc(m.tournamentStage || c.label)}</small>${predictedScoreline(m)}</div>
       ${side(m.away, m.awayTeam, "away")}
       <button class="icon-btn modal-close" data-close aria-label="Close">${ICON.close}</button>
     </div>
-    <div class="lu-note" ${note ? "" : "data-pred-only hidden"}>${note && !live ? `<span class="lu-note-static">${note}</span>` : note}${predictionNote(m.gw, final, "lineup")}</div>
+    <div class="lu-note" ${note ? "" : "data-pred-only hidden"}>${note}${predictionNote(m.gw, final, "lineup")}</div>
     <div class="lu-grid" id="lu-grid"><div class="lu-col">${skeletonRows(11)}</div><div class="lu-col">${skeletonRows(11)}</div></div>`;
   openOverlay("#match-overlay");
 
@@ -1130,7 +1219,7 @@ async function openMatchup(m) {
     const hl = data.lineups[hId], al = data.lineups[aId];
     const starters = [...(hl ? hl.starters : []), ...(al ? al.starters : [])];
     const top = starters.length && hasScore(m) ? starters.reduce((b, p) => (p.points > b.points ? p : b)) : null;
-    if (grid.isConnected) grid.innerHTML = lineupColumn(hl, top && top.id, m.gw, final) + lineupColumn(al, top && top.id, m.gw, final);
+    if (grid.isConnected) grid.innerHTML = onPhone ? matchupBoard(hl, al, m, top && top.id) : lineupColumn(hl, top && top.id, m.gw, final) + lineupColumn(al, top && top.id, m.gw, final);
     predictedStarters[m.gw] = { ...predictedStarters[m.gw], [hId]: hl ? hl.starters : [], [aId]: al ? al.starters : [] };
     refreshPredictedTotals();
   } catch (err) {
