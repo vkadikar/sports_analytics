@@ -1079,9 +1079,14 @@ function playerRow(p, { bench = false, star = false, showSeason = false, gw = nu
   const meta = showSeason
     ? [p.club, p.positions && p.positions.replace(/,/g, "/"), `${p.games_played} GP`].filter(Boolean).join(" · ")
     : [p.club, p.game && prettyGame(p.game), p.minutes ? `${p.minutes}′` : (p.game ? "DNP" : "")].filter(Boolean).join(" · ");
+  // Side-by-side lineups on a phone only have room for the essentials
+  const played = /\d/.test(String(p.game || "").split(" ")[1] || "");
+  const shortMeta = !p.game ? p.club
+    : played ? [prettyGame(p.game), p.minutes ? `${p.minutes}′` : "DNP"].join(" · ")
+    : [p.club, prettyGame(p.game.split(" ")[0])].join(" · ");
   return `<div class="lu-row ${bench ? "bench" : ""}">
     <span class="pos-tag" title="${esc(POS_NAMES[pos] || pos)}">${esc(pos)}</span>
-    <span style="min-width:0"><span class="nm" style="display:block">${esc(p.name)}${star ? `<span class="star" title="Top scorer in this matchup">★</span>` : ""}</span><span class="meta" style="display:block">${esc(meta)}</span></span>
+    <span style="min-width:0"><span class="nm" style="display:block">${esc(p.name)}${star ? `<span class="star" title="Top scorer in this matchup">★</span>` : ""}</span><span class="meta meta-full" style="display:block">${esc(meta)}</span>${showSeason ? "" : `<span class="meta meta-short">${esc(shortMeta)}</span>`}</span>
     <span class="pts-cell"><span class="pts ${p.points < 0 ? "neg" : ""}">${fmtPts(p.points)}</span>${p.prediction ? predictionControl(p, gw, final) : ""}</span>
   </div>${p.prediction ? predictionPicker(p, gw, final) : ""}`;
 }
@@ -1114,7 +1119,7 @@ async function openMatchup(m) {
       ${side(m.away, m.awayTeam, "away")}
       <button class="icon-btn modal-close" data-close aria-label="Close">${ICON.close}</button>
     </div>
-    <div class="lu-note" ${note ? "" : "data-pred-only hidden"}>${note}${predictionNote(m.gw, final, "lineup")}</div>
+    <div class="lu-note" ${note ? "" : "data-pred-only hidden"}>${note && !live ? `<span class="lu-note-static">${note}</span>` : note}${predictionNote(m.gw, final, "lineup")}</div>
     <div class="lu-grid" id="lu-grid"><div class="lu-col">${skeletonRows(11)}</div><div class="lu-col">${skeletonRows(11)}</div></div>`;
   openOverlay("#match-overlay");
 

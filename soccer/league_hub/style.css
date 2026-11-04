@@ -582,6 +582,7 @@ tr.zone-champ .pos::before { background: var(--accent); }
 .lu-row:hover { background: var(--surface-2); }
 .lu-row .nm { font-weight: 600; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .lu-row .meta { font-size: 12px; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lu-row .meta-short { display: none; }
 .lu-row .pts-cell { display: block; text-align: right; min-width: 44px; }
 .lu-row .pts { display: block; font-weight: 800; font-size: 15px; font-variant-numeric: tabular-nums; text-align: right; }
 .lu-row .pred { display: block; margin-left: auto; padding: 0; border: 0; background: none; cursor: pointer; font: inherit; font-size: 11px; font-weight: 500; color: var(--text-3); font-variant-numeric: tabular-nums; white-space: nowrap; text-underline-offset: 2px; }
@@ -957,13 +958,38 @@ mark { background: color-mix(in srgb, var(--accent) 45%, transparent); color: in
   .data th, .data td { padding-left: 8px; padding-right: 8px; }
   .hide-sm { display: none; }
   .fixture { grid-template-columns: 44px 22px 1fr auto; }
-  .lu-grid { grid-template-columns: minmax(0, 1fr); }
-  .lu-col + .lu-col { border-left: 0; border-top: 1px solid var(--border); }
-  .lu-head { padding: 44px 16px 18px; gap: 8px; }
-  .lu-head .modal-close { top: 10px; transform: none; right: 10px; }
-  .lu-head .team { font-size: 16px; }
-  .lu-head .crest.lg { width: 40px; height: 40px; font-size: 15px; border-radius: 12px; }
-  .lu-score b { font-size: 26px; }
+  /* Matchup lineups stay side by side, with each row stacked to fit half the screen */
+  #match-overlay { padding-left: 8px; padding-right: 8px; }
+  .lu-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lu-head { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); padding: 10px 10px 12px; gap: 6px; align-items: start; }
+  .lu-head .modal-close { top: 6px; transform: none; right: 6px; width: 28px; height: 28px; }
+  .lu-head .side { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .lu-head .side.away { flex-direction: column-reverse; justify-content: flex-end; align-items: flex-end; padding-top: 24px; }
+  .lu-head .side.home { padding-top: 24px; }
+  .lu-head .side > div { width: 100%; }
+  .lu-head .team { font-size: 14px; overflow-wrap: anywhere; }
+  .lu-head .mgr { font-size: 11px; }
+  .lu-head .crest.lg { width: 32px; height: 32px; font-size: 12px; border-radius: 10px; }
+  .lu-score { padding-top: 26px; max-width: 96px; }
+  .lu-score b { font-size: 22px; }
+  .lu-score small { font-size: 9.5px; letter-spacing: .06em; }
+  .lu-score small.lu-pred { font-size: 10.5px; white-space: nowrap; }
+  .lu-note { padding: 8px 12px; font-size: 12px; line-height: 1.35; }
+  .lu-note:has(.pred-note:not([hidden])) .lu-note-static { display: none; }
+  .lu-col { padding: 8px 6px 12px; }
+  .lu-section { margin: 10px 0 4px; font-size: 10px; letter-spacing: .08em; }
+  .lu-grid .lu-row { grid-template-columns: 20px minmax(0, 1fr) auto; column-gap: 5px; row-gap: 0; padding: 4px 3px; margin: 0 -3px; line-height: 1.25; }
+  .lu-grid .lu-row > span:nth-child(2), .lu-grid .lu-row .pts-cell { display: contents; }
+  .lu-grid .pos-tag { grid-column: 1; grid-row: 1; width: 20px; height: 20px; font-size: 10px; }
+  .lu-grid .lu-row .nm { grid-column: 2 / -1; grid-row: 1; font-size: 13px; }
+  .lu-grid .lu-row .meta-full { display: none !important; }
+  .lu-grid .lu-row .meta-short { display: block; grid-column: 1 / 3; grid-row: 2; font-size: 11px; }
+  .lu-grid .lu-row .pts { grid-column: 3; grid-row: 2; font-size: 14px; }
+  .lu-grid .lu-row .pred { grid-column: 1 / -1; grid-row: 3; justify-self: end; padding: 0; }
+  .lu-grid .pred-picker { gap: 3px; padding: 2px 0 6px; }
+  .lu-grid .pred-picker-label { display: none; }
+  .lu-grid .pred-picker button { flex: 1 1 28%; min-height: 30px; padding: 3px 2px; }
+  .lu-total { font-size: 12px; }
   .news-article { padding: 22px 16px 20px; }
   .news-pagers { grid-template-columns: minmax(0, 1fr); }
   .news-pager.newer { grid-column: auto; }
